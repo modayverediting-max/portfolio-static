@@ -401,14 +401,15 @@ img {
 .stat-number {
   font-size: 30px;
   font-weight: 700;
-  color: var(--brand1);
+  color: var(--text-light);
   margin-bottom: 4px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .stat-label {
-  color: var(--brand1);
+  color: rgba(250,248,243,0.8);
   font-size: 14px;
-  opacity: 0.8;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* ========================================
