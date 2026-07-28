@@ -438,6 +438,11 @@ img {
   border-radius: 12px;
   cursor: pointer;
   aspect-ratio: 16/9;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255,255,255,0.40);
+  box-shadow: 0 4px 20px rgba(100,160,230,0.18), inset 0 1px 0 rgba(255,255,255,0.3);
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
               box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -689,20 +694,20 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.08));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-  transition: background 0.3s, box-shadow 0.3s;
+  padding: 8px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255,255,255,0.40);
+  box-shadow: 0 4px 20px rgba(100,160,230,0.18), inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: transform 0.15s;
 }
 
 .about-image-wrapper img {
   max-width: 100%;
   height: auto;
-  border-radius: 16px;
+  border-radius: 14px;
   display: block;
 }
 
