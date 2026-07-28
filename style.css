@@ -75,6 +75,7 @@ img {
 .mt-xl { margin-top: 64px; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 .max-w-lg { max-width: 640px; }
+.max-w-2xl { max-width: 672px; }
 
 /* ========================================
    Grid System
@@ -133,7 +134,7 @@ img {
 .btn-secondary,
 .btn-tertiary {
   display: inline-block;
-  padding: 10px 24px;
+  padding: 12px 32px;
   border-radius: 9999px;
   font-size: 16px;
   font-weight: 600;
@@ -199,6 +200,13 @@ img {
    ======================================== */
 .gradient-hero {
   background-image: linear-gradient(0deg, rgba(255,255,255,0.5) 0%, rgb(61,126,224) 100%);
+  padding: 64px 0;
+}
+@media (min-width: 768px) {
+  .gradient-hero { padding: 96px 0; }
+}
+@media (min-width: 1024px) {
+  .gradient-hero { padding: 128px 0; }
 }
 
 .gradient-portfolio {
@@ -225,10 +233,10 @@ img {
    Text Colors
    ======================================== */
 .blue-text { color: rgb(2, 116, 169); }
-.blue-text-light { color: rgb(16, 126, 177); }
+.blue-text-light { color: rgb(2, 116, 169); }
 .text-white { color: white; }
 .text-white-muted { color: rgba(255,255,255,0.75); }
-.highlight { color: #FFFFFF; }
+.highlight { color: rgb(0, 102, 198); }
 
 /* ========================================
    Header
@@ -256,6 +264,13 @@ img {
   height: 48px;
   width: auto;
   object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 2px 8px rgba(255,255,255,0.2));
 }
 
 .desktop-nav {
@@ -372,7 +387,7 @@ img {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
-  max-width: 640px;
+  max-width: 672px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -423,6 +438,13 @@ img {
   border-radius: 12px;
   cursor: pointer;
   aspect-ratio: 16/9;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.video-thumbnail:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
 .video-thumbnail img {
@@ -430,11 +452,11 @@ img {
   height: 100%;
   object-fit: cover;
   border-radius: 12px;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .video-thumbnail:hover img {
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 
 .play-overlay {
@@ -665,23 +687,18 @@ img {
 
 .about-image-wrapper {
   position: relative;
-  padding: 10px;
+  padding: 5px;
   border-radius: 24px;
   background: white;
-  box-shadow: 0 0 0 2px white, 0 8px 32px rgba(0,0,0,0.25);
-  width: 100%;
-  max-width: 340px;
-  aspect-ratio: 1 / 1;
-  line-height: 0;
+  box-shadow: 0 0 0 4px white, 0 8px 32px rgba(0,0,0,0.25);
 }
 
 .about-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
   border-radius: 20px;
-  display: block;
-  vertical-align: middle;
+  max-height: 520px;
 }
 
 .profile-photo-hover {
@@ -708,6 +725,7 @@ img {
 .about-fullname {
   font-size: 16px;
   margin-bottom: 32px;
+  color: var(--text-light);
 }
 
 .social-links-about {
@@ -733,13 +751,12 @@ img {
   align-items: center;
   justify-content: center;
   color: #F4F8FC;
-  transition: background 0.3s, transform 0.3s;
+  transition: background 0.3s;
 }
 
 .social-links-about a:hover,
 .footer-social a:hover {
   background: rgba(255,255,255,0.4);
-  transform: translateY(-4px) scale(1.1);
 }
 
 /* ========================================
@@ -750,6 +767,19 @@ img {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 12px;
+  padding: 24px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+
+.channel-card:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
 }
 
 .channel-avatar {
@@ -798,7 +828,19 @@ img {
    Service Cards
    ======================================== */
 .service-card {
-  padding: 16px;
+  padding: 24px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
 .text-4xl {
@@ -878,15 +920,51 @@ img {
   width: auto;
 }
 
-.footer-tagline {
-  font-weight: 600;
-  color: #333;
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.footer-nav button {
+  background: none;
+  border: none;
+  color: var(--base2);
   font-size: 14px;
+  font-weight: 500;
+  font-family: 'Alexandria', sans-serif;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.footer-nav button:hover {
+  color: var(--brand1);
 }
 
 .footer-social {
   display: flex;
-  gap: 16px;
+  gap: 12px;
+  align-items: center;
+}
+
+.footer-social a {
+  width: auto;
+  height: auto;
+  background: none;
+  border-radius: 0;
+  color: #055a81;
+  transition: opacity 0.3s;
+}
+
+.footer-social a:hover {
+  background: none;
+  opacity: 0.7;
+}
+
+.footer-tagline {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
 }
 
 .footer-bottom {
