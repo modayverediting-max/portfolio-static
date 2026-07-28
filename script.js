@@ -74,9 +74,11 @@ document.addEventListener('DOMContentLoaded', function() {
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
+        var delay = entry.target.getAttribute('data-delay');
+        var delayMs = delay ? parseInt(delay, 10) : 0;
         setTimeout(function() {
           entry.target.classList.add('revealed');
-        }, 100);
+        }, delayMs);
         observer.unobserve(entry.target);
       }
     });
