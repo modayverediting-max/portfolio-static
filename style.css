@@ -686,17 +686,24 @@ img {
 }
 
 .about-image-wrapper {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    border-radius: 20px !important;
-    padding: 10px !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: background 0.3s;
 }
 
 .about-image-wrapper img {
-    border-radius: 15px !important;
-    display: block !important;
+  width: 92%;
+  height: 92%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .profile-photo-hover {
