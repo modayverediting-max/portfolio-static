@@ -665,13 +665,14 @@ img {
 
 .about-image-wrapper {
   position: relative;
-  padding: 4px;
+  padding: 10px;
   border-radius: 24px;
   background: white;
   box-shadow: 0 0 0 2px white, 0 8px 32px rgba(0,0,0,0.25);
   width: 100%;
   max-width: 340px;
   aspect-ratio: 1 / 1;
+  line-height: 0;
 }
 
 .about-image-wrapper img {
@@ -680,6 +681,7 @@ img {
   object-fit: cover;
   border-radius: 20px;
   display: block;
+  vertical-align: middle;
 }
 
 .profile-photo-hover {
