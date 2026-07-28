@@ -929,7 +929,7 @@ img {
    Footer
    ======================================== */
 .site-footer {
-  background: white;
+  background: #3D7EE0;
   padding: 40px 0;
 }
 
@@ -962,15 +962,15 @@ img {
 .footer-nav button {
   background: none;
   border: none;
-  color: var(--base2);
+  color: white;
   font-size: 14px;
   font-weight: 500;
   font-family: 'Alexandria', sans-serif;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: opacity 0.2s;
 }
 .footer-nav button:hover {
-  color: var(--brand1);
+  opacity: 0.7;
 }
 
 .footer-social {
@@ -984,7 +984,7 @@ img {
   height: auto;
   background: none;
   border-radius: 0;
-  color: #055a81;
+  color: white;
   transition: opacity 0.3s;
 }
 
@@ -995,19 +995,19 @@ img {
 
 .footer-tagline {
   font-weight: 600;
-  color: #333;
+  color: white;
   font-size: 14px;
 }
 
 .footer-bottom {
   margin-top: 32px;
   padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(255,255,255,0.2);
   text-align: center;
 }
 
 .footer-bottom p {
-  color: #999;
+  color: white;
   font-size: 14px;
 }
 
