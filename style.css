@@ -694,18 +694,15 @@ img {
 .about-image-wrapper img {
   max-width: 100%;
   height: auto;
-  border-radius: 20px;
   display: block;
 }
 
 .profile-photo-hover {
-  transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94),
-              box-shadow 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 
 .profile-photo-hover:hover {
   transform: scale(1.02);
-  box-shadow: 0 16px 50px rgba(40,100,200,0.35), 0 0 0 4px rgba(255,255,255,0.35);
 }
 
 .about-text {
