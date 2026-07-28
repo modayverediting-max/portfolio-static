@@ -245,7 +245,8 @@ img {
 .blue-text-light { color: rgb(2, 116, 169); }
 .text-white { color: white; }
 .text-white-muted { color: rgba(255,255,255,0.75); }
-.highlight { color: rgb(0, 102, 198); }
+.highlight { color: var(--brand1); }
+.about-fullname, .about-fullname span { color: var(--brand1) !important; }
 
 /* ========================================
    Header
