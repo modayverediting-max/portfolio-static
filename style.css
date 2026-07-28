@@ -412,11 +412,13 @@ img {
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 4px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.08);
 }
 
 .stat-label {
   color: #ffffff;
   font-size: 14px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.08);
 }
 
 /* ========================================
