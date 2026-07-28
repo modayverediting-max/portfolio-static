@@ -408,6 +408,7 @@
             <div class="success-msg" id="successMsg">&#10003; تم إرسال رسالتك بنجاح!</div>
 
             <form id="contactForm" onsubmit="handleSubmit(event)">
+              <input type="hidden" name="_captcha" value="false">
               <!-- Name -->
               <div class="form-group">
                 <label class="form-label">الاسم</label>
@@ -463,21 +464,28 @@
       document.getElementById('card2').style.transitionDelay = '0.5s';
     });
 
-    // Form submit via mailto
+    // Form submit via FormSubmit AJAX
     function handleSubmit(e) {
       e.preventDefault();
       var form = e.target;
-      var name = form.name.value;
-      var email = form.email.value;
-      var message = form.message.value;
-      var subject = encodeURIComponent('رسالة من ' + name);
-      var body = encodeURIComponent('الاسم: ' + name + '\nالبريد الإلكتروني: ' + email + '\n\nالرسالة:\n' + message);
-      window.location.href = 'mailto:modayver.editing@gmail.com?subject=' + subject + '&body=' + body;
-      document.getElementById('successMsg').classList.add('show');
-      form.reset();
-      setTimeout(function() {
-        document.getElementById('successMsg').classList.remove('show');
-      }, 4000);
+      var data = new FormData(form);
+      fetch('https://formsubmit.co/ajax/modayver.editing@gmail.com', {
+        method: 'POST',
+        body: data
+      })
+      .then(function(response) { return response.json(); })
+      .then(function(result) {
+        if (result.success) {
+          document.getElementById('successMsg').classList.add('show');
+          form.reset();
+          setTimeout(function() {
+            document.getElementById('successMsg').classList.remove('show');
+          }, 4000);
+        }
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
     }
 
     // Mobile menu
