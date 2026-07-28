@@ -925,6 +925,10 @@ img {
   font-size: 16px;
 }
 
+.gradient-cta .btn-secondary {
+  background: white;
+}
+
 /* ========================================
    Footer
    ======================================== */
