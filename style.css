@@ -929,6 +929,11 @@ img {
   background: white;
 }
 
+.gradient-ads .section-title,
+.gradient-ads .section-subtitle {
+  color: white;
+}
+
 /* ========================================
    Footer
    ======================================== */
