@@ -535,19 +535,20 @@ img {
 }
 
 .vfx-card {
-  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
+  padding: 5px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255,255,255,0.40);
+  box-shadow: 0 4px 20px rgba(100,160,230,0.18), inset 0 1px 0 rgba(255,255,255,0.3);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
 }
 
 .vfx-card:hover {
   transform: translateY(-4px);
-  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
   box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.1);
 }
 
@@ -555,12 +556,14 @@ img {
   position: relative;
   aspect-ratio: 16/9;
   overflow: hidden;
+  border-radius: 12px;
 }
 
 .vfx-card-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 12px;
   transition: transform 0.5s, filter 0.5s;
   filter: brightness(0.85);
 }
