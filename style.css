@@ -396,20 +396,27 @@ img {
   .hero-stats { grid-template-columns: 1fr 1fr 1fr; }
 }
 
-.stat-item { text-align: center; }
+.stat-item {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 10px;
+}
 
 .stat-number {
   font-size: 30px;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 4px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .stat-label {
   color: #ffffff;
   font-size: 14px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* ========================================
