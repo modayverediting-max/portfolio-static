@@ -1113,6 +1113,17 @@ img {
 /* ========================================
    Responsive Adjustments
    ======================================== */
+@media (max-width: 767px) {
+  .about-text,
+  .about-fullname,
+  .about-content > .btn-primary {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 @media (max-width: 639px) {
   .hero-stats {
     grid-template-columns: 1fr 1fr;
