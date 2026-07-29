@@ -1139,14 +1139,14 @@ img {
   .about-content > .btn-primary { order: 3; }
   .about-content > .social-links-about { order: 4; }
   .about-fullname {
-    padding: 2px 8px;
+    padding: 3px 10px;
     font-size: 14px;
-    width: 200px;
+    width: 230px;
     box-sizing: border-box;
     margin-bottom: 10px;
   }
   .about-content > .btn-primary {
-    width: 200px;
+    width: 230px;
     box-sizing: border-box;
     text-align: center;
     padding: 10px 20px;
