@@ -759,22 +759,25 @@ img {
     align-items: center;
     justify-content: center;
     margin: 15px auto 0 auto;
-    padding: 5px 20px;
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.06);
+    padding: 4px 15px;
+    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    box-shadow: 0 0 20px rgba(61, 126, 224, 0.12);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: fit-content;
 }
 
 .name-container p {
     margin: 0;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    font-weight: 500;
     color: white;
+    letter-spacing: 0.5px;
     padding: 0;
-    line-height: 1.4;
+    line-height: 1;
 }
 
 .social-links-about {
