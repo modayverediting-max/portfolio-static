@@ -757,14 +757,15 @@ img {
 .name-container {
   display: inline-block;
   font-weight: 700;
-  font-size: 15px;
-  padding: 4px 22px;
+  font-size: 14px;
+  padding: 3px 12px;
   border-radius: 50px;
   background: rgba(255,255,255,0.2);
   color: #F4F8FC;
   width: fit-content;
   margin-bottom: 20px;
   transition: background 0.3s;
+  line-height: 1.4;
 }
 .name-container:hover {
   background: rgba(255,255,255,0.4);
