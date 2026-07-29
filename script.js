@@ -74,12 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
-        var delay = entry.target.getAttribute('data-delay');
-        var delayMs = delay ? parseInt(delay, 10) : 0;
-        setTimeout(function() {
-          entry.target.classList.add('revealed');
-        }, delayMs);
-        observer.unobserve(entry.target);
+        entry.target.classList.add('revealed');
+      } else {
+        entry.target.classList.remove('revealed');
       }
     });
   }, { threshold: 0.12 });
