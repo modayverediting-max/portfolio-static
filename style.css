@@ -759,10 +759,10 @@ img {
     align-items: center;
     justify-content: center;
     margin: 15px auto 0 auto;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
     padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    background: transparent;
 }
 
 .name-container p {
@@ -770,7 +770,7 @@ img {
     text-align: center;
     font-size: 0.9rem;
     color: white;
-    padding: 0 12px;
+    padding: 0 8px;
     line-height: 1;
 }
 
