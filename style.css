@@ -758,21 +758,16 @@ img {
   display: inline-block;
   font-weight: 700;
   font-size: 15px;
-  padding: 6px 16px;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 22px;
   border-radius: 50px;
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 0 20px rgba(61, 126, 224, 0.15);
+  background: rgba(255,255,255,0.2);
+  color: #F4F8FC;
   width: fit-content;
   margin-bottom: 20px;
-  transition: all 0.3s ease;
+  transition: background 0.3s;
 }
 .name-container:hover {
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: 0 0 30px rgba(61, 126, 224, 0.3);
-  transform: translateY(-1px);
+  background: rgba(255,255,255,0.4);
 }
 
 .social-links-about {
