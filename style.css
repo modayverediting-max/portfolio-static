@@ -755,9 +755,11 @@ img {
 }
 
 .name-container {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin: 15px auto 0 auto;
-    padding: 6px 16px;
+    padding: 5px 16px;
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.05);
@@ -768,6 +770,7 @@ img {
     text-align: center;
     font-size: 0.85rem;
     color: white;
+    line-height: 1;
 }
 
 .social-links-about {
