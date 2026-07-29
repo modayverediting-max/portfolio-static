@@ -756,9 +756,24 @@ img {
 
 .name-container {
   display: inline-block;
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  padding: 8px 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px rgba(61, 126, 224, 0.15);
   width: fit-content;
   margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+.name-container:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 0 30px rgba(61, 126, 224, 0.3);
+  transform: translateY(-1px);
 }
 
 .social-links-about {
