@@ -1142,12 +1142,19 @@ img {
     align-items: center;
   }
   .about-text,
-  .name-container,
   .about-content > .btn-primary {
     text-align: center;
     display: block;
     margin-left: auto;
     margin-right: auto;
+  }
+  .name-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
   }
 }
 
