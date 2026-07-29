@@ -754,12 +754,14 @@ img {
   margin-bottom: 12px;
 }
 
-.about-fullname {
-  font-size: 15px;
-  font-weight: bold;
-  margin-bottom: 12px;
-  color: var(--text-light);
+.name-container {
   display: inline-block;
+  padding: 10px 25px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  width: fit-content;
+  margin-bottom: 20px;
 }
 
 .social-links-about {
@@ -1126,7 +1128,7 @@ img {
     align-items: center;
   }
   .about-text,
-  .about-fullname,
+  .name-container,
   .about-content > .btn-primary {
     text-align: center;
     display: block;
@@ -1143,7 +1145,7 @@ img {
     padding-right: 0;
   }
   .about-text { flex: 0 0 100%; }
-  .about-fullname {
+  .name-container {
     font-size: 14px;
     margin-bottom: 0;
   }
