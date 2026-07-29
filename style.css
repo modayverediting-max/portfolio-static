@@ -759,10 +759,13 @@ img {
     align-items: center;
     justify-content: center;
     margin: 15px auto 0 auto;
-    padding: 0;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 4px;
-    background: transparent;
+    padding: 5px 20px;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    box-shadow: 0 0 20px rgba(61, 126, 224, 0.12);
 }
 
 .name-container p {
@@ -770,8 +773,8 @@ img {
     text-align: center;
     font-size: 0.9rem;
     color: white;
-    padding: 0 8px;
-    line-height: 1;
+    padding: 0;
+    line-height: 1.4;
 }
 
 .social-links-about {
