@@ -1139,8 +1139,8 @@ img {
   .about-content > .btn-primary { order: 3; }
   .about-content > .social-links-about { order: 4; }
   .about-fullname {
-    padding: 12px 32px;
-    font-size: 18px;
+    padding: 8px 20px;
+    font-size: 16px;
     width: fit-content;
     margin-bottom: 16px;
   }
