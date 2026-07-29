@@ -1130,24 +1130,16 @@ img {
 }
 
 @media (min-width: 768px) {
-  .about-content {
-    display: flex;
-    flex-direction: column;
-  }
-  .about-content > .about-text { order: 1; }
-  .about-content > .about-fullname { order: 2; }
-  .about-content > .btn-primary { order: 3; }
-  .about-content > .social-links-about { order: 4; margin-top: -10px; }
   .about-fullname {
     padding: 4px 14px;
     font-size: 14px;
     width: fit-content;
     white-space: nowrap;
     box-sizing: border-box;
-    margin-bottom: 10px;
+    margin-bottom: 0;
   }
-  .about-content > .btn-primary {
-    padding: 8px 16px;
+  .social-links-about {
+    margin-top: 0;
   }
 }
 
