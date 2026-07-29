@@ -759,13 +759,6 @@ img {
   font-weight: bold;
   margin-bottom: 12px;
   color: var(--text-light);
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .social-links-about {
@@ -1136,17 +1129,14 @@ img {
   }
   .about-text { flex: 0 0 100%; }
   .about-fullname {
-    padding: 4px 14px;
     font-size: 14px;
-    width: fit-content;
-    white-space: nowrap;
-    box-sizing: border-box;
     margin-bottom: 0;
   }
   .social-links-about {
     margin-top: 0;
     justify-content: flex-start;
     align-items: center;
+    align-self: center;
   }
   .about-content > .btn-primary {
     flex: 0 0 100%;
