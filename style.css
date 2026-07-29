@@ -757,7 +757,7 @@ img {
 .about-fullname {
   font-size: 16px;
   font-weight: bold;
-  margin-bottom: 32px;
+  margin-bottom: 12px;
   color: var(--text-light);
   display: inline-block;
   padding: 5px 10px;
