@@ -1146,13 +1146,6 @@ img {
     box-sizing: border-box;
     margin-bottom: 10px;
   }
-  .about-content > .btn-primary {
-    width: fit-content;
-    padding: 4px 14px;
-    white-space: nowrap;
-    min-width: 280px;
-    box-sizing: border-box;
-  }
 }
 
 @media (max-width: 639px) {
