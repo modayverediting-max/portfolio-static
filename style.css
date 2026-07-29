@@ -1141,12 +1141,12 @@ img {
   .about-fullname {
     padding: 3px 10px;
     font-size: 14px;
-    width: 230px;
+    width: 260px;
     box-sizing: border-box;
     margin-bottom: 10px;
   }
   .about-content > .btn-primary {
-    width: 230px;
+    width: 260px;
     box-sizing: border-box;
     text-align: center;
     padding: 10px 20px;
