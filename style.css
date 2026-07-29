@@ -1117,11 +1117,8 @@ img {
   .about-content {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
-  .about-text { order: 1; }
-  .about-fullname { order: 2; }
-  .social-links-about { order: 3; }
-  .about-content > .btn-primary { order: 4; }
   .about-text,
   .about-fullname,
   .about-content > .btn-primary {
