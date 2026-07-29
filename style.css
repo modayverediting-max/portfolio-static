@@ -759,7 +759,7 @@ img {
     align-items: center;
     justify-content: center;
     margin: 15px auto 0 auto;
-    padding: 2px 16px;
+    padding: 0px 14px;
     border: 1px solid rgba(255, 255, 255, 0.4);
     border-radius: 20px;
     background: rgba(255, 255, 255, 0.05);
