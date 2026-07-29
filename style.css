@@ -1139,17 +1139,18 @@ img {
   .about-content > .btn-primary { order: 3; }
   .about-content > .social-links-about { order: 4; }
   .about-fullname {
-    padding: 3px 10px;
-    font-size: 14px;
-    width: 340px;
+    padding: 4px 16px;
+    font-size: 15px;
+    width: 400px;
+    white-space: nowrap;
     box-sizing: border-box;
     margin-bottom: 10px;
   }
   .about-content > .btn-primary {
-    width: 340px;
+    width: 400px;
     box-sizing: border-box;
     text-align: center;
-    padding: 10px 20px;
+    padding: 10px 24px;
   }
 }
 
