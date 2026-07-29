@@ -1138,6 +1138,12 @@ img {
   .about-content > .about-fullname { order: 2; }
   .about-content > .btn-primary { order: 3; }
   .about-content > .social-links-about { order: 4; }
+  .about-fullname {
+    padding: 12px 32px;
+    font-size: 18px;
+    width: fit-content;
+    margin-bottom: 16px;
+  }
 }
 
 @media (max-width: 639px) {
