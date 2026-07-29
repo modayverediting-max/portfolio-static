@@ -1134,6 +1134,7 @@ img {
   }
   .social-links-about {
     margin-top: 0;
+    margin-left: -8px;
     justify-content: flex-start;
     align-items: center;
     align-self: center;
