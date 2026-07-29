@@ -1127,6 +1127,8 @@ img {
   .about-content {
     display: flex;
     flex-flow: row wrap;
+    justify-content: space-between;
+    padding-right: 0;
   }
   .about-text { flex: 0 0 100%; }
   .about-fullname {
@@ -1135,7 +1137,6 @@ img {
   }
   .social-links-about {
     margin-top: 0;
-    margin-left: auto;
     justify-content: flex-start;
     align-items: center;
   }
