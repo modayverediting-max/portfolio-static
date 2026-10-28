@@ -3,51 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>خالد مودايفر - مونتير يوتيوب محترف</title>
-  <meta name="description" content="خالد مودايفر - مونتير يوتيوب محترف متخصص في المونتاج والمؤثرات البصرية والصوتية">
+  <script>
+    // Switch direction before the page paints, so English never flashes in Arabic layout
+    (function() {
+      try {
+        var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('modayver-lang');
+        if (l === 'en') {
+          document.documentElement.lang = 'en';
+          document.documentElement.dir = 'ltr';
+          document.documentElement.classList.add('i18n-pending');
+          setTimeout(function() { document.documentElement.classList.remove('i18n-pending'); }, 2000);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <title data-i18n="meta.title">خالد مودايفر - مونتير يوتيوب محترف</title>
+  <meta name="description" content="خالد مودايفر - مونتير يوتيوب محترف متخصص في المونتاج والمؤثرات البصرية والصوتية" data-i18n-attr="content:meta.desc">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
   <link rel="icon" type="image/png" href="./assets/images/modayver 001.png">
 </head>
-<body class="fade-in-element">
+<body class="fade-in-element home-page">
 
   <header class="site-header">
     <div class="container">
       <div class="header-inner">
         <div class="logo">
           <a href="#">
-            <img src="./assets/images/modayver 001.png" alt="خالد مودايفر">
+            <img src="./assets/images/modayver 001.png" alt="خالد مودايفر" data-i18n-attr="alt:common.logo_alt">
           </a>
         </div>
         <nav class="desktop-nav">
-          <button onclick="scrollToSection('hero')">الرئيسية</button>
-          <button onclick="scrollToSection('about')">من أنا</button>
-          <button onclick="scrollToSection('portfolio')">أعمالي</button>
+          <button onclick="scrollToSection('hero')" data-i18n="nav.home">الرئيسية</button>
+          <button onclick="scrollToSection('about')" data-i18n="nav.about">من أنا</button>
+          <button onclick="scrollToSection('portfolio')" data-i18n="nav.portfolio">أعمالي</button>
         </nav>
-        <div class="header-cta">
-          <a href="contact.html" class="btn-tertiary btn-sm">تواصل معي</a>
+        <div class="header-actions">
+          <div class="header-cta">
+            <a href="contact.html" class="btn-tertiary btn-sm" data-i18n="nav.contact">تواصل معي</a>
+          </div>
+          <button type="button" class="lang-switch" onclick="toggleLang()" aria-label="تغيير اللغة / Switch language">
+            <span class="lang-opt active" data-lang-opt="ar">AR</span>
+            <span class="lang-opt" data-lang-opt="en">EN</span>
+          </button>
+          <button class="mobile-menu-btn reveal-box reveal-up" onclick="toggleMobileMenu()" aria-label="قائمة التنقل" data-i18n-attr="aria-label:common.menu">
+            <svg class="menu-icon" width="26" height="19" viewBox="0 0 26 19" fill="none">
+              <path d="M0 0.8 L24 0.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0 8.8 L24 8.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9.6 16.8 L24 16.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none">
+              <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
-        <button class="mobile-menu-btn reveal-box reveal-up" onclick="toggleMobileMenu()" aria-label="قائمة التنقل">
-          <svg class="menu-icon" width="26" height="19" viewBox="0 0 26 19" fill="none">
-            <path d="M0 0.8 L24 0.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <path d="M0 8.8 L24 8.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <path d="M9.6 16.8 L24 16.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none">
-            <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
       </div>
     </div>
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
       <div class="mobile-menu-inner">
-        <button onclick="scrollToSection('hero')">الرئيسية</button>
-        <button onclick="scrollToSection('about')">من أنا</button>
-        <button onclick="scrollToSection('portfolio')">أعمالي</button>
-        <a href="contact.html" class="btn-tertiary btn-sm" style="margin-top:8px;text-align:center">تواصل معي</a>
+        <button onclick="scrollToSection('hero')" data-i18n="nav.home">الرئيسية</button>
+        <button onclick="scrollToSection('about')" data-i18n="nav.about">من أنا</button>
+        <button onclick="scrollToSection('portfolio')" data-i18n="nav.portfolio">أعمالي</button>
+        <a href="contact.html" class="btn-tertiary btn-sm" style="margin-top:8px;text-align:center" data-i18n="nav.contact">تواصل معي</a>
       </div>
     </div>
   </header>
@@ -56,13 +76,13 @@
   <section id="hero" class="gradient-hero">
     <div class="container">
       <div class="text-center">
-        <h1 class="hero-title reveal-box reveal-up">أهلاً بك في عالمي</h1>
+        <h1 class="hero-title reveal-box reveal-up" data-i18n="hero.title">أهلاً بك في عالمي</h1>
         <div class="hero-desc reveal-box reveal-up">
-          <p>حيث التفاصيل دم يجري في عروقي، والإبداع أكسجينْ أتنفسه. يشرفني أن أكون من يُترجم رسالتك إلى قصص بصرية تنبض بالحياة تصل إلى العالم.</p>
+          <p data-i18n="hero.desc">حيث التفاصيل دم يجري في عروقي، والإبداع أكسجينْ أتنفسه. يشرفني أن أكون من يُترجم رسالتك إلى قصص بصرية تنبض بالحياة تصل إلى العالم.</p>
         </div>
         <div class="hero-buttons">
-          <a href="contact.html" class="btn-primary reveal-box reveal-up" style="min-width:160px;text-align:center">تواصل معي</a>
-          <button onclick="scrollToSection('portfolio')" class="btn-tertiary reveal-box reveal-up" style="min-width:160px">معرض الأعمال</button>
+          <a href="contact.html" class="btn-primary reveal-box reveal-up" style="min-width:160px;text-align:center" data-i18n="nav.contact">تواصل معي</a>
+          <button onclick="scrollToSection('portfolio')" class="btn-tertiary reveal-box reveal-up" style="min-width:160px" data-i18n="hero.portfolio">معرض الأعمال</button>
         </div>
       </div>
     </div>
@@ -72,20 +92,20 @@
   <section id="portfolio" class="gradient-portfolio section-padding">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title blue-text reveal-box reveal-up">بعض من اعمالي</h2>
-        <p class="section-subtitle blue-text-light reveal-box reveal-up">الفيديوهات التي اشرفت عليها</p>
+        <h2 class="section-title blue-text reveal-box reveal-up" data-i18n="port.title">بعض من اعمالي</h2>
+        <p class="section-subtitle blue-text-light reveal-box reveal-up" data-i18n="port.sub">الفيديوهات التي اشرفت عليها</p>
       </div>
 
       <!-- Featured Videos Row - 2 large -->
       <div class="grid-2 gap-sm mb-sm">
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('CUgSm_KI-vw')">
-          <img src="https://img.youtube.com/vi/CUgSm_KI-vw/maxresdefault.jpg" alt="فيديو 1" onerror="this.src='https://img.youtube.com/vi/CUgSm_KI-vw/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/CUgSm_KI-vw/maxresdefault.jpg" alt="فيديو 1" data-i18n-attr="alt:port.v1" onerror="this.src='https://img.youtube.com/vi/CUgSm_KI-vw/hqdefault.jpg'">
           <div class="play-overlay">
             <div class="play-btn"><div class="play-triangle"></div></div>
           </div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('uPTEqUs_PEc')">
-          <img src="https://img.youtube.com/vi/uPTEqUs_PEc/maxresdefault.jpg" alt="فيديو 2" onerror="this.src='https://img.youtube.com/vi/uPTEqUs_PEc/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/uPTEqUs_PEc/maxresdefault.jpg" alt="فيديو 2" data-i18n-attr="alt:port.v2" onerror="this.src='https://img.youtube.com/vi/uPTEqUs_PEc/hqdefault.jpg'">
           <div class="play-overlay">
             <div class="play-btn"><div class="play-triangle"></div></div>
           </div>
@@ -95,27 +115,27 @@
       <!-- Remaining Videos Grid - 3 columns -->
       <div class="grid-3 gap-sm mb-lg">
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('ouBGoXsvYp8')">
-          <img src="https://img.youtube.com/vi/ouBGoXsvYp8/maxresdefault.jpg" alt="فيديو 3" onerror="this.src='https://img.youtube.com/vi/ouBGoXsvYp8/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/ouBGoXsvYp8/maxresdefault.jpg" alt="فيديو 3" data-i18n-attr="alt:port.v3" onerror="this.src='https://img.youtube.com/vi/ouBGoXsvYp8/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('0hIz4a_pnfQ')">
-          <img src="https://img.youtube.com/vi/0hIz4a_pnfQ/maxresdefault.jpg" alt="فيديو 4" onerror="this.src='https://img.youtube.com/vi/0hIz4a_pnfQ/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/0hIz4a_pnfQ/maxresdefault.jpg" alt="فيديو 4" data-i18n-attr="alt:port.v4" onerror="this.src='https://img.youtube.com/vi/0hIz4a_pnfQ/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('SzDuhdTOdDk')">
-          <img src="https://img.youtube.com/vi/SzDuhdTOdDk/maxresdefault.jpg" alt="فيديو 5" onerror="this.src='https://img.youtube.com/vi/SzDuhdTOdDk/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/SzDuhdTOdDk/maxresdefault.jpg" alt="فيديو 5" data-i18n-attr="alt:port.v5" onerror="this.src='https://img.youtube.com/vi/SzDuhdTOdDk/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('bttOYfUcUAE')">
-          <img src="https://img.youtube.com/vi/bttOYfUcUAE/maxresdefault.jpg" alt="فيديو 6" onerror="this.src='https://img.youtube.com/vi/bttOYfUcUAE/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/bttOYfUcUAE/maxresdefault.jpg" alt="فيديو 6" data-i18n-attr="alt:port.v6" onerror="this.src='https://img.youtube.com/vi/bttOYfUcUAE/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('sQ3-5pkzRmg')">
-          <img src="https://img.youtube.com/vi/sQ3-5pkzRmg/maxresdefault.jpg" alt="فيديو 7" onerror="this.src='https://img.youtube.com/vi/sQ3-5pkzRmg/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/sQ3-5pkzRmg/maxresdefault.jpg" alt="فيديو 7" data-i18n-attr="alt:port.v7" onerror="this.src='https://img.youtube.com/vi/sQ3-5pkzRmg/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('xsCsYK4loIA')">
-          <img src="https://img.youtube.com/vi/xsCsYK4loIA/maxresdefault.jpg" alt="فيديو 8" onerror="this.src='https://img.youtube.com/vi/xsCsYK4loIA/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/xsCsYK4loIA/maxresdefault.jpg" alt="فيديو 8" data-i18n-attr="alt:port.v8" onerror="this.src='https://img.youtube.com/vi/xsCsYK4loIA/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
         </div>
       </div>
@@ -127,15 +147,15 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
             <span>After Effects &middot; Motion Graphics &middot; Sound Design</span>
           </div>
-          <h2 class="section-title text-white reveal-box reveal-up">المؤثرات البصرية والصوتية</h2>
-          <p class="section-subtitle text-white-muted max-w-lg mx-auto reveal-box reveal-up">لقطات موشن جرافيك احترافية مصممة بالكامل على After Effects<br>لتعزيز السرد البصري وتحويل الأفكار إلى تجربة مركزة ومؤثرة</p>
+          <h2 class="section-title text-white reveal-box reveal-up" data-i18n="vfx.title">المؤثرات البصرية والصوتية</h2>
+          <p class="section-subtitle text-white-muted max-w-lg mx-auto reveal-box reveal-up" data-i18n="vfx.sub">لقطات موشن جرافيك احترافية مصممة بالكامل على After Effects<br>لتعزيز السرد البصري وتحويل الأفكار إلى تجربة مركزة ومؤثرة</p>
         </div>
 
         <div class="grid-3 gap-md mb-lg">
           <!-- Card 1: تحدي سيارة لامبورغيني -->
           <div class="vfx-card reveal-box reveal-up" onclick="openVideo('IavlhBIYFAY')">
             <div class="vfx-card-thumb">
-              <img src="https://img.youtube.com/vi/IavlhBIYFAY/maxresdefault.jpg" alt="تحدي سيارة لامبورغيني" onerror="this.src='https://img.youtube.com/vi/IavlhBIYFAY/hqdefault.jpg'">
+              <img src="https://img.youtube.com/vi/IavlhBIYFAY/maxresdefault.jpg" alt="تحدي سيارة لامبورغيني" data-i18n-attr="alt:vfx.c1_title" onerror="this.src='https://img.youtube.com/vi/IavlhBIYFAY/hqdefault.jpg'">
               <div class="vfx-play-overlay">
                 <div class="vfx-play-btn">
                   <div class="play-triangle-sm"></div>
@@ -148,11 +168,11 @@
                 <div class="vfx-icon-box">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z"/><rect x="1" y="6" width="14" height="12" rx="2" ry="2"/></svg>
                 </div>
-                <h3 class="vfx-card-title">تحدي سيارة لامبورغيني</h3>
+                <h3 class="vfx-card-title" data-i18n="vfx.c1_title">تحدي سيارة لامبورغيني</h3>
               </div>
-              <p class="vfx-card-desc">تصميم موشن جرافيك احترافي ببرنامج After Effects يوثق تحدي اليوتيوبر سبيد في القفز فوق سيارة لامبورغيني. توضح هذه اللقطة كيف نستخدم الموشن جرافيك لترسيخ لحظات الإثارة في السرد البصري Storytelling وجعلها أكثر تفاعلية للمشاهد.</p>
+              <p class="vfx-card-desc" data-i18n="vfx.c1_desc">تصميم موشن جرافيك احترافي ببرنامج After Effects يوثق تحدي اليوتيوبر سبيد في القفز فوق سيارة لامبورغيني. توضح هذه اللقطة كيف نستخدم الموشن جرافيك لترسيخ لحظات الإثارة في السرد البصري Storytelling وجعلها أكثر تفاعلية للمشاهد.</p>
               <div class="vfx-watch-link">
-                <span>شاهد اللقطة</span>
+                <span data-i18n="vfx.watch">شاهد اللقطة</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </div>
             </div>
@@ -161,7 +181,7 @@
           <!-- Card 2: تحدي السيكل -->
           <div class="vfx-card reveal-box reveal-up" onclick="openVideo('qo2V7FJmODk')">
             <div class="vfx-card-thumb">
-              <img src="https://img.youtube.com/vi/qo2V7FJmODk/maxresdefault.jpg" alt="تحدي السيكل" onerror="this.src='https://img.youtube.com/vi/qo2V7FJmODk/hqdefault.jpg'">
+              <img src="https://img.youtube.com/vi/qo2V7FJmODk/maxresdefault.jpg" alt="تحدي السيكل" data-i18n-attr="alt:vfx.c2_title" onerror="this.src='https://img.youtube.com/vi/qo2V7FJmODk/hqdefault.jpg'">
               <div class="vfx-play-overlay">
                 <div class="vfx-play-btn">
                   <div class="play-triangle-sm"></div>
@@ -174,11 +194,11 @@
                 <div class="vfx-icon-box">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
                 </div>
-                <h3 class="vfx-card-title">تحدي السيكل</h3>
+                <h3 class="vfx-card-title" data-i18n="vfx.c2_title">تحدي السيكل</h3>
               </div>
-              <p class="vfx-card-desc">مقدمة إبداعية ومصممة ببرنامج After Effects تمهّد لتحدي بين صانعي محتوى. هذا النوع من المقاطع نستخدمه كفواصل توضيحية Visual Explainer في فيديوهاتنا أو في المقدمات، حيث نقوم بتحويل الأفكار المعقدة إلى مشاهد مرئية سريعة لا تتجاوز الثواني، لترسيخ فكرة التحدي أو السرد البصري Storytelling في ذهن المشاهد وضمان فهمه لسياق القصة بسلاسة.</p>
+              <p class="vfx-card-desc" data-i18n="vfx.c2_desc">مقدمة إبداعية ومصممة ببرنامج After Effects تمهّد لتحدي بين صانعي محتوى. هذا النوع من المقاطع نستخدمه كفواصل توضيحية Visual Explainer في فيديوهاتنا أو في المقدمات، حيث نقوم بتحويل الأفكار المعقدة إلى مشاهد مرئية سريعة لا تتجاوز الثواني، لترسيخ فكرة التحدي أو السرد البصري Storytelling في ذهن المشاهد وضمان فهمه لسياق القصة بسلاسة.</p>
               <div class="vfx-watch-link">
-                <span>شاهد اللقطة</span>
+                <span data-i18n="vfx.watch">شاهد اللقطة</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </div>
             </div>
@@ -187,7 +207,7 @@
           <!-- Card 3: تنبؤ سبيد بكأس العالم -->
           <div class="vfx-card reveal-box reveal-up" onclick="openVideo('8k0r1Yj4_qI')">
             <div class="vfx-card-thumb">
-              <img src="https://img.youtube.com/vi/8k0r1Yj4_qI/maxresdefault.jpg" alt="تنبؤ سبيد بكأس العالم" onerror="this.src='https://img.youtube.com/vi/8k0r1Yj4_qI/hqdefault.jpg'">
+              <img src="https://img.youtube.com/vi/8k0r1Yj4_qI/maxresdefault.jpg" alt="تنبؤ سبيد بكأس العالم" data-i18n-attr="alt:vfx.c3_title" onerror="this.src='https://img.youtube.com/vi/8k0r1Yj4_qI/hqdefault.jpg'">
               <div class="vfx-play-overlay">
                 <div class="vfx-play-btn">
                   <div class="play-triangle-sm"></div>
@@ -200,11 +220,11 @@
                 <div class="vfx-icon-box">
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
                 </div>
-                <h3 class="vfx-card-title">تنبؤ سبيد بكأس العالم</h3>
+                <h3 class="vfx-card-title" data-i18n="vfx.c3_title">تنبؤ سبيد بكأس العالم</h3>
               </div>
-              <p class="vfx-card-desc">تصميم موشن جرافيك احترافي ببرنامج After Effects يجسد توقعات اليوتيوبر سبيد ورأيه الشخصي حول فوز البرتغال بكأس العالم. هذا المقطع لا يوثق نتيجة فعلية، بل هو تجسيد مرئي لآراء وتوقعات صانع المحتوى حول أحداث البطولة لتعزيز عملية السرد البصري Storytelling.</p>
+              <p class="vfx-card-desc" data-i18n="vfx.c3_desc">تصميم موشن جرافيك احترافي ببرنامج After Effects يجسد توقعات اليوتيوبر سبيد ورأيه الشخصي حول فوز البرتغال بكأس العالم. هذا المقطع لا يوثق نتيجة فعلية، بل هو تجسيد مرئي لآراء وتوقعات صانع المحتوى حول أحداث البطولة لتعزيز عملية السرد البصري Storytelling.</p>
               <div class="vfx-watch-link">
-                <span>شاهد اللقطة</span>
+                <span data-i18n="vfx.watch">شاهد اللقطة</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </div>
             </div>
@@ -214,7 +234,7 @@
 
       <!-- More Works Button -->
       <div class="text-center">
-        <a href="https://youtube.com/playlist?list=PLkg0kslwXX2gFCTHmM5pgX3vSwJdTLeC_&si=KebxnJ9C6bzHNlrB" target="_blank" rel="noopener noreferrer" class="btn-primary inline-block reveal-box reveal-up" style="padding:12px 32px">المزيد من اعمالي</a>
+        <a href="https://youtube.com/playlist?list=PLkg0kslwXX2gFCTHmM5pgX3vSwJdTLeC_&si=KebxnJ9C6bzHNlrB" target="_blank" rel="noopener noreferrer" class="btn-primary inline-block reveal-box reveal-up" style="padding:12px 32px" data-i18n="port.more">المزيد من اعمالي</a>
       </div>
     </div>
   </section>
@@ -225,15 +245,15 @@
       <div class="about-grid">
         <div class="about-image reveal-box reveal-up">
           <div class="about-image-wrapper">
-            <img src="./assets/images/3333333333333333333-1785192438271.jpg" alt="خالد بن لعيفاوي - مونتير يوتيوب" class="profile-photo-hover">
+            <img src="./assets/images/3333333333333333333-1785192438271.jpg" alt="خالد بن لعيفاوي - مونتير يوتيوب" data-i18n-attr="alt:about.img_alt" class="profile-photo-hover">
           </div>
         </div>
         <div class="about-content">
-          <h2 class="section-title text-white text-center-lg-right reveal-box reveal-up" style="font-size:clamp(36px,4vw,48px);letter-spacing:-1px;margin-bottom:24px">من انا ؟</h2>
+          <h2 class="section-title text-white text-center-lg-right reveal-box reveal-up" style="font-size:clamp(36px,4vw,48px);letter-spacing:-1px;margin-bottom:24px" data-i18n="about.title">من انا ؟</h2>
             <div class="about-text reveal-box reveal-up">
-              <p><strong>أنا خالد المعروف باسم <span class="highlight">{ MODAYVER }</span>،</strong></p>
-              <p><strong>مونتير فيديوهات… نعم، لكن الأمر بالنسبة لي ليس مجرد ترتيب مشاهد. بل انا امنتج بالفكرة، وأصنع الإيقاع، وأروي القصة التي لا تُقال بالكلام.</strong></p>
-              <p><strong>في رحلتي التي تجاوزت 4+ سنوات، صنعت أكثر من 400 فيديو تجاوزت مشاهداتها 235 مليون. كل واحدٍ منها كان لوحة، فيها لحظة، فيها شعور… فيها 'أنا'. لا أبحث عن عدد، بل عن أثر — عن فيديو يجعل المشاهد يتوقف، ويشعر، ويتفاعل. هذه ليست مهنة فقط… هذه طريقتي في التعبير.</strong></p>
+              <p><strong data-i18n="about.p1">أنا خالد المعروف باسم <span class="highlight">{ MODAYVER }</span>،</strong></p>
+              <p><strong data-i18n="about.p2">مونتير فيديوهات… نعم، لكن الأمر بالنسبة لي ليس مجرد ترتيب مشاهد. بل انا امنتج بالفكرة، وأصنع الإيقاع، وأروي القصة التي لا تُقال بالكلام.</strong></p>
+              <p><strong data-i18n="about.p3">في رحلتي التي تجاوزت 4+ سنوات، صنعت أكثر من 400 فيديو تجاوزت مشاهداتها 235 مليون. كل واحدٍ منها كان لوحة، فيها لحظة، فيها شعور… فيها 'أنا'. لا أبحث عن عدد، بل عن أثر — عن فيديو يجعل المشاهد يتوقف، ويشعر، ويتفاعل. هذه ليست مهنة فقط… هذه طريقتي في التعبير.</strong></p>
           </div>
           <div class="social-links-about reveal-box reveal-up">
             <a href="https://www.instagram.com/modayver/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
@@ -260,16 +280,25 @@
     <div class="container">
       <div class="hero-stats" style="margin-top:0">
         <div class="stat-item reveal-box reveal-up">
-          <div class="stat-number">+400</div>
-          <div class="stat-label">فيديو منجز</div>
+          <div class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z"/></svg>
+          </div>
+          <div class="stat-number" dir="ltr"><span class="stat-value">400</span><span class="stat-plus">+</span></div>
+          <div class="stat-label" data-i18n="stats.videos">فيديو منجز</div>
         </div>
         <div class="stat-item reveal-box reveal-up">
-          <div class="stat-number">235M+</div>
-          <div class="stat-label">مشاهدة</div>
+          <div class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="stat-number" dir="ltr"><span class="stat-value">235</span>M<span class="stat-plus">+</span></div>
+          <div class="stat-label" data-i18n="stats.views">مشاهدة</div>
         </div>
         <div class="stat-item reveal-box reveal-up">
-          <div class="stat-number">4+</div>
-          <div class="stat-label">سنوات خبرة</div>
+          <div class="stat-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.2 7 22l5-3 5 3-1.5-7.8"/></svg>
+          </div>
+          <div class="stat-number" dir="ltr"><span class="stat-value">4</span><span class="stat-plus">+</span></div>
+          <div class="stat-label" data-i18n="stats.years">سنوات خبرة</div>
         </div>
       </div>
     </div>
@@ -279,17 +308,17 @@
   <section class="gradient-channels section-padding">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title text-white reveal-box reveal-up">قنوات اشرفت عليها</h2>
-        <p class="section-subtitle text-white reveal-box reveal-up">بعض العملاء</p>
+        <h2 class="section-title text-white reveal-box reveal-up" data-i18n="ch.title">قنوات اشرفت عليها</h2>
+        <p class="section-subtitle text-white reveal-box reveal-up" data-i18n="ch.sub">بعض العملاء</p>
       </div>
       <div class="grid-3 gap-lg">
         <!-- Channel 1 -->
         <div class="channel-card reveal-box reveal-up">
           <div class="channel-avatar" style="border-color:rgb(220,30,30);box-shadow:0 0 18px 4px rgba(220,30,30,0.33)">
-            <img src="./assets/images/052320252151486830edf488a2d-1785191753201.png" alt="قناة وولف">
+            <img src="./assets/images/052320252151486830edf488a2d-1785191753201.png" alt="قناة وولف" data-i18n-attr="alt:ch.wolf_alt">
           </div>
-          <h4 class="channel-name" style="color:rgb(220,30,30)">وولف WOLF l</h4>
-          <p class="channel-subs" style="color:rgb(220,30,30)">900 الف مشترك</p>
+          <h4 class="channel-name" style="color:rgb(220,30,30)" data-i18n="ch.wolf_name">وولف WOLF l</h4>
+          <p class="channel-subs" style="color:rgb(220,30,30)" data-i18n="ch.wolf_subs">900 الف مشترك</p>
           <a href="https://www.youtube.com/@wolf9_99" target="_blank" rel="noopener noreferrer" class="channel-yt-link" style="color:rgb(220,30,30)">
             <svg width="36" height="36" viewBox="0 0 50 50" fill="none"><path d="M44.8984 14.5C44.5 12.3008 42.6016 10.6992 40.3984 10.1992C37.1016 9.5 31 9 24.3984 9C17.8008 9 11.6016 9.5 8.30078 10.1992C6.10156 10.6992 4.19922 12.1992 3.80078 14.5C3.39844 17 3 20.5 3 25C3 29.5 3.39844 33 3.89844 35.5C4.30078 37.6992 6.19922 39.3008 8.39844 39.8008C11.8984 40.5 17.8984 41 24.5 41C31.1016 41 37.1016 40.5 40.6016 39.8008C42.8008 39.3008 44.6992 37.8008 45.1016 35.5C45.5 33 46 29.3984 46.1016 25C45.8984 20.5 45.3984 17 44.8984 14.5ZM19 32V18L31.1992 25L19 32Z" fill="currentColor"/></svg>
           </a>
@@ -297,10 +326,10 @@
         <!-- Channel 2 -->
         <div class="channel-card reveal-box reveal-up">
           <div class="channel-avatar" style="border-color:rgb(180,0,220);box-shadow:0 0 18px 4px rgba(180,0,220,0.33)">
-            <img src="./assets/images/052320252143566830ec1cdfbeb-1785191281342.png" alt="قناة زيد">
+            <img src="./assets/images/052320252143566830ec1cdfbeb-1785191281342.png" alt="قناة زيد" data-i18n-attr="alt:ch.zaid_alt">
           </div>
-          <h4 class="channel-name" style="color:rgb(180,0,220)">زيد / Skelyy</h4>
-          <p class="channel-subs" style="color:rgb(180,0,220)">1.81 مليون مشترك</p>
+          <h4 class="channel-name" style="color:rgb(180,0,220)" data-i18n="ch.zaid_name">زيد / Skelyy</h4>
+          <p class="channel-subs" style="color:rgb(180,0,220)" data-i18n="ch.zaid_subs">1.81 مليون مشترك</p>
           <a href="https://www.youtube.com/@skelyy" target="_blank" rel="noopener noreferrer" class="channel-yt-link" style="color:rgb(180,0,220)">
             <svg width="36" height="36" viewBox="0 0 50 50" fill="none"><path d="M44.8984 14.5C44.5 12.3008 42.6016 10.6992 40.3984 10.1992C37.1016 9.5 31 9 24.3984 9C17.8008 9 11.6016 9.5 8.30078 10.1992C6.10156 10.6992 4.19922 12.1992 3.80078 14.5C3.39844 17 3 20.5 3 25C3 29.5 3.39844 33 3.89844 35.5C4.30078 37.6992 6.19922 39.3008 8.39844 39.8008C11.8984 40.5 17.8984 41 24.5 41C31.1016 41 37.1016 40.5 40.6016 39.8008C42.8008 39.3008 44.6992 37.8008 45.1016 35.5C45.5 33 46 29.3984 46.1016 25C45.8984 20.5 45.3984 17 44.8984 14.5ZM19 32V18L31.1992 25L19 32Z" fill="currentColor"/></svg>
           </a>
@@ -308,10 +337,10 @@
         <!-- Channel 3 -->
         <div class="channel-card reveal-box reveal-up">
           <div class="channel-avatar" style="border-color:rgb(220,30,30);box-shadow:0 0 18px 4px rgba(220,30,30,0.33)">
-            <img src="./assets/images/052320252152496830ee314d21c-1785191590783.png" alt="قناة MsToLHaCkEr">
+            <img src="./assets/images/052320252152496830ee314d21c-1785191590783.png" alt="قناة MsToLHaCkEr" data-i18n-attr="alt:ch.mst_alt">
           </div>
           <h4 class="channel-name" style="color:rgb(220,30,30)">MsToLHaCkEr</h4>
-          <p class="channel-subs" style="color:rgb(220,30,30)">1.55 مليون مشترك</p>
+          <p class="channel-subs" style="color:rgb(220,30,30)" data-i18n="ch.mst_subs">1.55 مليون مشترك</p>
           <a href="https://www.youtube.com/@MsToLHaCkEr" target="_blank" rel="noopener noreferrer" class="channel-yt-link" style="color:rgb(220,30,30)">
             <svg width="36" height="36" viewBox="0 0 50 50" fill="none"><path d="M44.8984 14.5C44.5 12.3008 42.6016 10.6992 40.3984 10.1992C37.1016 9.5 31 9 24.3984 9C17.8008 9 11.6016 9.5 8.30078 10.1992C6.10156 10.6992 4.19922 12.1992 3.80078 14.5C3.39844 17 3 20.5 3 25C3 29.5 3.39844 33 3.89844 35.5C4.30078 37.6992 6.19922 39.3008 8.39844 39.8008C11.8984 40.5 17.8984 41 24.5 41C31.1016 41 37.1016 40.5 40.6016 39.8008C42.8008 39.3008 44.6992 37.8008 45.1016 35.5C45.5 33 46 29.3984 46.1016 25C45.8984 20.5 45.3984 17 44.8984 14.5ZM19 32V18L31.1992 25L19 32Z" fill="currentColor"/></svg>
           </a>
@@ -324,66 +353,72 @@
   <section class="gradient-ads section-padding">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title blue-text reveal-box reveal-up">تصميم فيديوهات اعلانية</h2>
-        <p class="section-subtitle blue-text-light reveal-box reveal-up">طريقة مونتاج فيديو اعلانية</p>
+        <h2 class="section-title blue-text reveal-box reveal-up" data-i18n="ads.title">تصميم فيديوهات اعلانية</h2>
+        <p class="section-subtitle blue-text-light reveal-box reveal-up" data-i18n="ads.sub">طريقة مونتاج فيديو اعلانية</p>
       </div>
 
       <!-- Services Cards -->
       <div class="grid-4 gap-sm mb-xl">
         <div class="service-card text-center reveal-box reveal-up">
-          <div class="text-4xl mb-sm">&#9986;</div>
-          <h3 class="service-title">مونتاج احترافي</h3>
-          <p class="service-desc">تحرير ومونتاج فيديوهات يوتيوب بأسلوب احترافي</p>
-        </div>
-        <div class="service-card text-center reveal-box reveal-up">
-          <div class="text-4xl mb-sm">&#10024;</div>
-          <h3 class="service-title">موشن جرافيكس</h3>
-          <p class="service-desc">تصميم مؤثرات بصرية وانتقالات سلسة</p>
-        </div>
-        <div class="service-card text-center reveal-box reveal-up">
-          <div class="service-icon mb-sm">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgb(2,116,169)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M6 8l4 4-4 4"/><line x1="13" y1="14" x2="18" y2="14"/></svg>
+          <div class="service-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
           </div>
-          <h3 class="service-title">برامج المونتاج والإنتاج</h3>
-          <p class="service-desc">نعتمد على Adobe Premiere Pro و After Effects لضمان أعلى جودة</p>
+          <h3 class="service-title" data-i18n="ads.s1_title">مونتاج احترافي</h3>
+          <p class="service-desc" data-i18n="ads.s1_desc">تحرير ومونتاج فيديوهات يوتيوب بأسلوب احترافي</p>
         </div>
         <div class="service-card text-center reveal-box reveal-up">
-          <div class="text-4xl mb-sm">&#128249;</div>
-          <h3 class="service-title">فيديوهات إعلانية</h3>
-          <p class="service-desc">إنتاج فيديوهات إعلانية احترافية</p>
+          <div class="service-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 18C13 18 11 6 17.5 6"/><path d="M4 15.5 6.5 18 4 20.5 1.5 18z" fill="currentColor"/><path d="M20 3.5 22.5 6 20 8.5 17.5 6z" fill="currentColor"/></svg>
+          </div>
+          <h3 class="service-title" data-i18n="ads.s2_title">موشن جرافيكس</h3>
+          <p class="service-desc" data-i18n="ads.s2_desc">تصميم مؤثرات بصرية وانتقالات سلسة</p>
+        </div>
+        <div class="service-card text-center reveal-box reveal-up">
+          <div class="service-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="8.5" height="3" rx="1.2" fill="currentColor" fill-opacity=".55" stroke="none"/><rect x="7" y="11.5" width="14" height="3" rx="1.2" fill="currentColor" fill-opacity=".55" stroke="none"/><rect x="3" y="16" width="11" height="3" rx="1.2" fill="currentColor" fill-opacity=".55" stroke="none"/><path d="M14 5v16"/><path d="M11.8 2.5h4.4L14 5.2z" fill="currentColor"/></svg>
+          </div>
+          <h3 class="service-title" data-i18n="ads.s3_title">برامج المونتاج والإنتاج</h3>
+          <p class="service-desc" data-i18n="ads.s3_desc">نعتمد على Adobe Premiere Pro و After Effects لضمان أعلى جودة</p>
+        </div>
+        <div class="service-card text-center reveal-box reveal-up">
+          <div class="service-badge" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3z"/><circle cx="7" cy="12" r="0.6" fill="currentColor"/></svg>
+          </div>
+          <h3 class="service-title" data-i18n="ads.s4_title">فيديوهات إعلانية</h3>
+          <p class="service-desc" data-i18n="ads.s4_desc">إنتاج فيديوهات إعلانية احترافية</p>
         </div>
       </div>
 
       <!-- Ad Videos Row 1 - 3 equal -->
       <div class="grid-3 gap-sm mb-sm">
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('bKnjU5Ra6Xg')">
-          <img src="https://img.youtube.com/vi/bKnjU5Ra6Xg/maxresdefault.jpg" alt="فيديو اعلان لشركة Yango Play" onerror="this.src='https://img.youtube.com/vi/bKnjU5Ra6Xg/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/bKnjU5Ra6Xg/maxresdefault.jpg" alt="فيديو اعلان لشركة Yango Play" data-i18n-attr="alt:ads.v1" onerror="this.src='https://img.youtube.com/vi/bKnjU5Ra6Xg/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p>فيديو اعلان لشركة Yango Play</p></div>
+          <div class="video-title-overlay"><p data-i18n="ads.v1">فيديو اعلان لشركة Yango Play</p></div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('cAEsLxWnCEM')">
-          <img src="https://img.youtube.com/vi/cAEsLxWnCEM/maxresdefault.jpg" alt="دورة تعليمية" onerror="this.src='https://img.youtube.com/vi/cAEsLxWnCEM/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/cAEsLxWnCEM/maxresdefault.jpg" alt="دورة تعليمية" data-i18n-attr="alt:ads.v2_alt" onerror="this.src='https://img.youtube.com/vi/cAEsLxWnCEM/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p>دورة تعليمية في مجال التداول بمونتاج احترافي</p></div>
+          <div class="video-title-overlay"><p data-i18n="ads.v2">دورة تعليمية في مجال التداول بمونتاج احترافي</p></div>
         </div>
         <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('wWPLLHCo_xU')">
-          <img src="https://img.youtube.com/vi/wWPLLHCo_xU/maxresdefault.jpg" alt="اعلان للعبة تحدي الملوك" onerror="this.src='https://img.youtube.com/vi/wWPLLHCo_xU/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/wWPLLHCo_xU/maxresdefault.jpg" alt="اعلان للعبة تحدي الملوك" data-i18n-attr="alt:ads.v3" onerror="this.src='https://img.youtube.com/vi/wWPLLHCo_xU/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p>اعلان للعبة تحدي الملوك</p></div>
+          <div class="video-title-overlay"><p data-i18n="ads.v3">اعلان للعبة تحدي الملوك</p></div>
         </div>
       </div>
 
       <!-- Ad Videos Row 2 - 2 centered -->
       <div class="flex-center gap-sm">
         <div class="video-thumbnail ad-video-half reveal-box reveal-up" onclick="openVideo('SSJhjvOIJQg')">
-          <img src="https://img.youtube.com/vi/SSJhjvOIJQg/maxresdefault.jpg" alt="اعلان لمتجر PC" onerror="this.src='https://img.youtube.com/vi/SSJhjvOIJQg/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/SSJhjvOIJQg/maxresdefault.jpg" alt="اعلان لمتجر PC" data-i18n-attr="alt:ads.v4_alt" onerror="this.src='https://img.youtube.com/vi/SSJhjvOIJQg/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p>اعلان لمتجر بيع تجميعات PC gaming</p></div>
+          <div class="video-title-overlay"><p data-i18n="ads.v4">اعلان لمتجر بيع تجميعات PC gaming</p></div>
         </div>
         <div class="video-thumbnail ad-video-half reveal-box reveal-up" onclick="openVideo('NINpruxaZjM')">
-          <img src="https://img.youtube.com/vi/NINpruxaZjM/maxresdefault.jpg" alt="فيديو تقديمي" onerror="this.src='https://img.youtube.com/vi/NINpruxaZjM/hqdefault.jpg'">
+          <img src="https://img.youtube.com/vi/NINpruxaZjM/maxresdefault.jpg" alt="فيديو تقديمي" data-i18n-attr="alt:ads.v5" onerror="this.src='https://img.youtube.com/vi/NINpruxaZjM/hqdefault.jpg'">
           <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p>فيديو تقديمي</p></div>
+          <div class="video-title-overlay"><p data-i18n="ads.v5">فيديو تقديمي</p></div>
         </div>
       </div>
     </div>
@@ -393,11 +428,11 @@
   <section class="gradient-cta section-padding">
     <div class="container">
       <div class="text-center">
-        <h2 class="cta-heading reveal-box reveal-up">يشرفني أن أكون من يُترجم رسالتك إلى عمل مرئي يصل إلى العالم.</h2>
-        <p class="cta-subtext reveal-box reveal-up">جاهز نبدأ مشروعك؟ تواصل معي الآن من خلال الأزرار في الأسفل.</p>
+        <h2 class="cta-heading reveal-box reveal-up" data-i18n="cta.title">يشرفني أن أكون من يُترجم رسالتك إلى عمل مرئي يصل إلى العالم.</h2>
+        <p class="cta-subtext reveal-box reveal-up" data-i18n="cta.sub">جاهز نبدأ مشروعك؟ تواصل معي الآن من خلال الأزرار في الأسفل.</p>
         <div class="hero-buttons">
-          <a href="https://youtube.com/playlist?list=PLkg0kslwXX2gFCTHmM5pgX3vSwJdTLeC_&si=KebxnJ9C6bzHNlrB" target="_blank" rel="noopener noreferrer" class="btn-secondary reveal-box reveal-up" style="min-width:180px;text-align:center;padding:12px 32px">المزيد من اعمالي</a>
-          <a href="contact.html" class="btn-primary reveal-box reveal-up" style="min-width:180px;text-align:center;padding:12px 32px">تواصل معي</a>
+          <a href="https://youtube.com/playlist?list=PLkg0kslwXX2gFCTHmM5pgX3vSwJdTLeC_&si=KebxnJ9C6bzHNlrB" target="_blank" rel="noopener noreferrer" class="btn-secondary reveal-box reveal-up" style="min-width:180px;text-align:center;padding:12px 32px" data-i18n="port.more">المزيد من اعمالي</a>
+          <a href="contact.html" class="btn-primary reveal-box reveal-up" style="min-width:180px;text-align:center;padding:12px 32px" data-i18n="nav.contact">تواصل معي</a>
         </div>
       </div>
     </div>
@@ -409,14 +444,14 @@
       <div class="footer-inner">
         <div class="footer-logo">
           <a href="#">
-            <img src="./assets/images/modayver 001.png" alt="خالد مودايفر">
+            <img src="./assets/images/modayver 001.png" alt="خالد مودايفر" data-i18n-attr="alt:common.logo_alt">
           </a>
         </div>
         <nav class="footer-nav">
-          <button onclick="scrollToSection('hero')">الصفحة الرئيسية</button>
-          <button onclick="scrollToSection('about')">من أنا</button>
-          <button onclick="scrollToSection('portfolio')">أعمالي</button>
-          <button onclick="scrollToSection('hero')">تواصل</button>
+          <button onclick="scrollToSection('hero')" data-i18n="footer.home">الصفحة الرئيسية</button>
+          <button onclick="scrollToSection('about')" data-i18n="nav.about">من أنا</button>
+          <button onclick="scrollToSection('portfolio')" data-i18n="nav.portfolio">أعمالي</button>
+          <button onclick="scrollToSection('hero')" data-i18n="footer.contact">تواصل</button>
         </nav>
         <div class="footer-social">
           <a href="https://wa.me/+213775051301" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
@@ -439,13 +474,16 @@
   <!-- Video Modal -->
   <div class="video-modal" id="videoModal" onclick="closeVideo(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
-      <button class="modal-close" onclick="closeVideo(event)" aria-label="&#1573;&#1594;&#1604;&#1575;&#1602;">
+      <button class="modal-close" onclick="closeVideo(event)" aria-label="&#1573;&#1594;&#1604;&#1575;&#1602;" data-i18n-attr="aria-label:common.close">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
-      <iframe id="modalIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="&#1581;&#1584;&#1601;"></iframe>
+      <img class="modal-poster" id="modalPoster" src="data:," alt="">
+      <iframe id="modalIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="&#1581;&#1584;&#1601;" data-i18n-attr="title:common.video"></iframe>
       </div>
     </div>
 
-  <script src="script.js"></script>
+  <script src="translations.js?v=4"></script>
+  <script src="i18n.js?v=4"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>

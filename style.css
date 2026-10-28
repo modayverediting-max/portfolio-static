@@ -1192,3 +1192,730 @@ img {
     grid-column: 1 / -1;
   }
 }
+
+/* ========================================
+   Language Switch (AR / EN)
+   ======================================== */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* The header frame keeps the Arabic arrangement in both languages,
+   so the logo and the AR / EN switch never jump sides */
+.site-header .header-inner {
+  direction: rtl;
+}
+[dir="ltr"] .site-header .desktop-nav {
+  direction: ltr;
+}
+
+/* Always reads "AR EN" left to right; a white pill slides between them */
+.lang-switch {
+  position: relative;
+  direction: ltr;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.5);
+  font-family: 'Alexandria', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.lang-switch:hover {
+  background: rgba(255,255,255,0.28);
+}
+.lang-switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: 38px;
+  border-radius: 9999px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,55,108,0.18);
+  transition: transform 0.6s var(--ease-land);
+}
+/* data-lang-ui flips the instant the switch is pressed, before the page text changes */
+html[lang="en"]:not([data-lang-ui="ar"]) .lang-switch::before,
+html[data-lang-ui="en"] .lang-switch::before {
+  transform: translateX(38px);
+}
+.lang-opt {
+  position: relative;
+  z-index: 1;
+  width: 38px;
+  padding: 7px 0;
+  text-align: center;
+  border-radius: 9999px;
+  color: rgba(255,255,255,0.8);
+  letter-spacing: 0.5px;
+  transition: color 0.45s var(--ease-land);
+}
+.lang-opt.active {
+  color: var(--brand1);
+}
+
+/* Soft light that rises from the AR / EN switch while the language changes
+   (a gentle version of the white flash at a cut; peak set in i18n.js) */
+.lang-light {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at var(--lx, 50%) var(--ly, 0px),
+              rgba(255,255,255,0.45) 0%,
+              rgba(240,248,255,0.22) 40%,
+              rgba(240,248,255,0.1) 100%);
+}
+
+/* Hides the Arabic flash while an English page is being translated */
+.i18n-pending body {
+  visibility: hidden;
+}
+
+/* English (left-to-right) layout. Arabic keeps the rules above untouched. */
+[dir="ltr"] body {
+  direction: ltr;
+}
+@media (min-width: 1024px) {
+  [dir="ltr"] .text-center-lg-right { text-align: left; }
+}
+[dir="ltr"] .mobile-menu-inner button,
+[dir="ltr"] .video-title-overlay p {
+  text-align: left;
+}
+[dir="ltr"] .vfx-card:hover .vfx-watch-link {
+  transform: translateX(4px);
+}
+
+/* ========================================
+   Motion — MODAYVER easing
+   The curves come from Khalid's own After Effects keyframes.
+   AE influence "Out% → In%" is written as cubic-bezier(Out, 0, 1 - In, 1).
+   ======================================== */
+:root {
+  --ease-land: cubic-bezier(0.05, 0, 0, 1);     /* هبوط ناعم: fast in, long soft tail (5% → 100%) */
+  --ease-calm: cubic-bezier(0.33, 0, 0, 1);     /* حركة هادية (33% → 100%) */
+  --ease-exit: cubic-bezier(1, 0, 0.63, 1);     /* خروج عنصر (100% → 37%) */
+  --ease-sweep: cubic-bezier(0.28, 0, 0.22, 1); /* لمعة Light Sweep (28% → 78%) */
+}
+
+/* Page entrance */
+.fade-in-element {
+  animation: pageFadeIn 0.6s var(--ease-calm);
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.site-header {
+  animation: headerDrop 1s var(--ease-land) both;
+}
+@keyframes headerDrop {
+  from { opacity: 0; transform: translateY(-18px); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+
+.mobile-menu.open {
+  animation: menuDrop 0.5s var(--ease-land);
+}
+@keyframes menuDrop {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Scroll reveal: a focus pull — blurred and low, landing sharp. Elements
+   that appear together enter one after another (delay set in script.js) */
+.reveal-box {
+  filter: blur(8px);
+  transition: opacity 0.9s var(--ease-land),
+              transform 1.1s var(--ease-land),
+              filter 0.9s var(--ease-land);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal-box.revealed {
+  filter: none;
+}
+
+/* Leaving the screen: a calm, quick fade (no stagger) */
+.reveal-box:not(.revealed) {
+  transition: opacity 0.6s var(--ease-calm),
+              transform 0.7s var(--ease-calm),
+              filter 0.6s var(--ease-calm);
+}
+/* Scrolled past upward: waits above, so it comes back down */
+.reveal-up.reveal-from-top {
+  transform: translateY(-35px);
+}
+
+/* Once an element has landed, hovers react quickly again */
+.reveal-box.reveal-done {
+  transition: opacity 0.4s var(--ease-calm),
+              transform 0.45s var(--ease-calm),
+              box-shadow 0.45s var(--ease-calm),
+              background-color 0.35s var(--ease-calm),
+              color 0.35s var(--ease-calm),
+              border-color 0.35s var(--ease-calm),
+              filter 0.3s var(--ease-calm);
+  transition-delay: 0s;
+}
+.video-thumbnail.reveal-done:hover {
+  transform: scale(1.02) !important;
+}
+.vfx-card.reveal-done:hover {
+  transform: translateY(-4px) !important;
+}
+.channel-card.reveal-done:hover {
+  transform: scale(1.05) !important;
+}
+.btn-primary.reveal-done:hover,
+.btn-secondary.reveal-done:hover,
+.btn-tertiary.reveal-done:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+}
+.btn-primary.reveal-done:active,
+.btn-secondary.reveal-done:active,
+.btn-tertiary.reveal-done:active {
+  transform: scale(0.97) !important;
+}
+
+/* ========================================
+   Stats Cards (400+ / 235M+ / 4+)
+   ======================================== */
+.hero-stats {
+  max-width: 760px;
+  gap: 20px;
+}
+.stat-item {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 26px 18px 22px;
+  border-radius: 22px;
+  background: linear-gradient(160deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.06) 100%);
+  border: 1px solid rgba(255,255,255,0.38);
+  box-shadow: 0 12px 32px rgba(0,40,110,0.18), inset 0 1px 0 rgba(255,255,255,0.5);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+/* Bright edge along the top, like light catching glass */
+.stat-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 18%;
+  right: 18%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent);
+}
+/* Same light sweep as the thumbnails, on hover */
+.stat-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.22) 50%, transparent 62%);
+  transform: translateX(120%);
+}
+.stat-item:hover::after {
+  transform: translateX(-120%);
+  transition: transform 1s var(--ease-sweep);
+}
+.stat-item.reveal-done:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 18px 40px rgba(0,40,110,0.26), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  color: white;
+  background: linear-gradient(160deg, rgba(255,255,255,0.32), rgba(255,255,255,0.1));
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 6px 16px rgba(0,40,110,0.18), inset 0 1px 0 rgba(255,255,255,0.55);
+}
+.stat-icon svg {
+  width: 22px;
+  height: 22px;
+}
+.stat-number {
+  unicode-bidi: isolate;
+  font-size: clamp(32px, 3.6vw, 42px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 0;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 4px 18px rgba(0,40,110,0.25);
+}
+.stat-plus {
+  display: inline-block;
+  margin-inline-start: 2px;
+  font-size: 0.6em;
+  vertical-align: 0.55em;
+  color: #cfe6ff;
+}
+.stat-label {
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: 0.2px;
+}
+.stat-label::before {
+  content: '';
+  display: block;
+  width: 26px;
+  height: 2px;
+  margin: 0 auto 10px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.45);
+}
+
+/* ========================================
+   Service Cards (ads section) — liquid glass, like Apple's interface
+   Frosted white panel, a thin rim of light that is brightest where the
+   light hits (top corner), and a glare that follows the cursor.
+   ======================================== */
+.service-card {
+  position: relative;
+  overflow: hidden;
+  padding: 30px 22px 26px;
+  border-radius: 26px;
+  border: none;
+  background: linear-gradient(160deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.26) 100%);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow: 0 18px 40px rgba(30,90,180,0.16),
+              0 2px 6px rgba(30,90,180,0.08),
+              inset 0 1px 0 rgba(255,255,255,0.9),
+              inset 0 -1px 0 rgba(255,255,255,0.3);
+}
+.service-card > * {
+  position: relative;
+  z-index: 1;
+}
+/* Rim of light */
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.35) 28%, rgba(255,255,255,0.08) 55%, rgba(255,255,255,0.6) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+/* Glare that follows the cursor (position set in script.js) */
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,0.6), rgba(255,255,255,0) 60%);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-calm);
+}
+.service-card:hover {
+  background: linear-gradient(160deg, rgba(255,255,255,0.74) 0%, rgba(255,255,255,0.36) 100%);
+}
+.service-card:hover::after {
+  opacity: 1;
+}
+.service-card.reveal-done:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 26px 50px rgba(30,90,180,0.24),
+              0 4px 10px rgba(30,90,180,0.10),
+              inset 0 1px 0 rgba(255,255,255,1),
+              inset 0 -1px 0 rgba(255,255,255,0.4);
+}
+/* Icon tile: translucent brand-blue glass. A soft light in the top corner,
+   light refracting up from the bottom edge, and a bright rim. */
+.service-badge {
+  position: relative;
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  color: white;
+  overflow: hidden;
+  background: linear-gradient(150deg, rgba(120,178,255,0.78) 0%, rgba(61,126,224,0.72) 45%, rgba(0,55,108,0.86) 100%);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  box-shadow: 0 12px 26px rgba(0,55,108,0.28),
+              0 2px 6px rgba(0,55,108,0.18),
+              inset 0 1px 1px rgba(255,255,255,0.85),
+              inset 0 -3px 6px rgba(0,30,80,0.22);
+  /* Springy, like Apple's glass controls */
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s var(--ease-land);
+}
+.service-badge::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(85% 60% at 25% 5%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 60%),
+              radial-gradient(75% 55% at 75% 110%, rgba(170,215,255,0.65) 0%, rgba(170,215,255,0) 70%);
+}
+.service-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.15) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.55) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.service-badge svg {
+  position: relative;
+  z-index: 1;
+  width: 27px;
+  height: 27px;
+  filter: drop-shadow(0 1px 1.5px rgba(0,30,80,0.45));
+}
+.service-card:hover .service-badge {
+  transform: translateY(-3px) scale(1.09);
+  box-shadow: 0 16px 32px rgba(0,55,108,0.34),
+              0 3px 8px rgba(0,55,108,0.2),
+              inset 0 1px 1px rgba(255,255,255,0.95),
+              inset 0 -3px 6px rgba(0,30,80,0.22);
+}
+.service-title {
+  color: var(--brand1);
+  margin-bottom: 10px;
+}
+.service-desc {
+  color: #4a5b72;
+  line-height: 1.8;
+}
+
+/* ========================================
+   Header hover motion (home page only — the contact page keeps its own)
+   ======================================== */
+.home-page .desktop-nav button {
+  position: relative;
+  padding: 4px 0;
+  transition: opacity 0.35s var(--ease-calm), color 0.35s var(--ease-calm), transform 0.5s var(--ease-land);
+}
+/* Underline grows out from the middle */
+.home-page .desktop-nav button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  border-radius: 2px;
+  background: white;
+  transform: scaleX(0);
+  transition: transform 0.55s var(--ease-land);
+}
+.home-page .desktop-nav button:hover {
+  opacity: 1;
+  color: white;
+  transform: translateY(-2px);
+}
+.home-page .desktop-nav button:hover::after {
+  transform: scaleX(1);
+}
+.home-page .desktop-nav:hover button:not(:hover) {
+  opacity: 0.6;
+}
+
+/* «تواصل معي»: fills white, glows, and a light-blue sweep passes over it */
+.home-page .header-cta .btn-tertiary {
+  transition: background-color 0.45s var(--ease-calm),
+              color 0.45s var(--ease-calm),
+              transform 0.5s var(--ease-land),
+              box-shadow 0.5s var(--ease-land);
+}
+.home-page .header-cta .btn-tertiary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(128,194,255,0.5) 50%, transparent 65%);
+  transform: translateX(120%);
+}
+.home-page .header-cta .btn-tertiary:hover {
+  box-shadow: 0 8px 24px rgba(255,255,255,0.35);
+}
+.home-page .header-cta .btn-tertiary:hover::after {
+  transform: translateX(-120%);
+  transition: transform 0.9s var(--ease-sweep);
+}
+
+/* AR / EN: lifts and glows; the other language lights up as a hint */
+.home-page .lang-switch {
+  transition: background 0.3s, transform 0.5s var(--ease-land), box-shadow 0.5s var(--ease-land);
+}
+.home-page .lang-switch:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255,255,255,0.28);
+}
+.home-page .lang-switch:hover .lang-opt:not(.active) {
+  color: white;
+}
+.home-page .lang-switch:active {
+  transform: scale(0.96);
+}
+
+.home-page .logo img {
+  transition: transform 0.6s var(--ease-land), filter 0.6s var(--ease-land);
+}
+.home-page .logo img:hover {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+/* ========================================
+   About section social icons
+   ======================================== */
+.social-links-about a {
+  position: relative;
+  transition: transform 0.55s var(--ease-land),
+              color 0.4s var(--ease-calm),
+              opacity 0.4s var(--ease-calm),
+              box-shadow 0.55s var(--ease-land);
+}
+.social-links-about a svg {
+  position: relative;
+  z-index: 1;
+}
+/* White fill blooms out from the center */
+.social-links-about a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: white;
+  transform: scale(0);
+  transition: transform 0.5s var(--ease-land);
+}
+/* A ring ripples out once */
+.social-links-about a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.7);
+  opacity: 0;
+  pointer-events: none;
+}
+.social-links-about a:hover {
+  color: var(--base2);
+  transform: translateY(-5px) scale(1.08);
+  box-shadow: 0 10px 24px rgba(0,55,108,0.28);
+}
+.social-links-about a:hover::before {
+  transform: scale(1);
+}
+.social-links-about a:hover::after {
+  animation: iconRipple 0.9s var(--ease-land);
+}
+@keyframes iconRipple {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.6); }
+}
+.social-links-about:hover a:not(:hover) {
+  opacity: 0.6;
+}
+.social-links-about a:active {
+  transform: translateY(-2px) scale(0.98);
+}
+
+/* ========================================
+   Footer hover motion
+   ======================================== */
+.footer-social a {
+  position: relative;
+  transition: transform 0.55s var(--ease-land), opacity 0.4s var(--ease-calm);
+}
+.footer-social a svg {
+  position: relative;
+  z-index: 1;
+}
+/* A soft white halo blooms behind the icon */
+.footer-social a::before {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.38) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+  transition: opacity 0.5s var(--ease-land), transform 0.6s var(--ease-land);
+}
+.footer-social a:hover {
+  opacity: 1;
+  transform: translateY(-5px) scale(1.12);
+}
+.footer-social a:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+.footer-social a:active {
+  transform: translateY(-2px) scale(0.98);
+}
+/* The other icons and links step back while one is in focus */
+.footer-social:hover a:not(:hover),
+.footer-nav:hover button:not(:hover) {
+  opacity: 0.55;
+}
+
+.footer-nav button {
+  position: relative;
+  padding: 4px 0;
+  transition: opacity 0.35s var(--ease-calm), transform 0.5s var(--ease-land);
+}
+/* Underline grows out from the middle */
+.footer-nav button::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
+  background: white;
+  transform: scaleX(0);
+  transition: transform 0.55s var(--ease-land);
+}
+.footer-nav button:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+.footer-nav button:hover::after {
+  transform: scaleX(1);
+}
+
+.footer-logo img {
+  transition: transform 0.6s var(--ease-land), filter 0.6s var(--ease-land);
+}
+.footer-logo img:hover {
+  transform: scale(1.06) rotate(-2deg);
+  filter: drop-shadow(0 6px 14px rgba(255,255,255,0.35));
+}
+
+/* Light sweep across thumbnails on hover, right to left */
+.video-thumbnail::after,
+.vfx-card-thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,0.32) 50%, transparent 62%);
+  transform: translateX(120%);
+}
+.video-thumbnail:hover::after,
+.vfx-card:hover .vfx-card-thumb::after {
+  transform: translateX(-120%);
+  transition: transform 1s var(--ease-sweep);
+}
+
+.play-btn {
+  transform: scale(0.8);
+  transition: transform 0.6s var(--ease-land);
+}
+.video-thumbnail:hover .play-btn {
+  transform: scale(1);
+}
+.vfx-play-btn {
+  transition: transform 0.6s var(--ease-land);
+}
+
+/* Video player: grows out of the clicked thumbnail (script.js) */
+/* Brand navy instead of black, still dark enough to focus on the video */
+.video-modal {
+  background: rgba(0,28,64,0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.modal-content {
+  background: #001c40;
+  box-shadow: 0 30px 80px rgba(0,20,60,0.55);
+}
+.modal-poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.modal-content iframe {
+  position: relative;
+  border: 0;
+  opacity: 0;
+  transition: opacity 0.6s var(--ease-calm);
+}
+.modal-content.video-ready iframe {
+  opacity: 1;
+}
+.modal-content.video-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 46px;
+  height: 46px;
+  margin: -23px 0 0 -23px;
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.25);
+  border-top-color: white;
+  pointer-events: none;
+  animation: modalSpin 0.9s linear infinite;
+}
+@keyframes modalSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Contact page cards land with the same focus pull */
+html .contact-outer-card,
+html .glass-card {
+  filter: blur(10px);
+  transition: opacity 1s var(--ease-land),
+              transform 1.2s var(--ease-land),
+              filter 1s var(--ease-land);
+}
+html .contact-outer-card.revealed,
+html .glass-card.revealed {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+  .reveal-box,
+  html .contact-outer-card,
+  html .glass-card {
+    filter: none;
+  }
+}

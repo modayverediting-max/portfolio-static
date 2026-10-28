@@ -3,12 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تواصل معي - خالد مودايفر</title>
-  <meta name="description" content="تواصل مع خالد مودايفر - مونتير يوتيوب محترف">
+  <script>
+    // Switch direction before the page paints, so English never flashes in Arabic layout
+    (function() {
+      try {
+        var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('modayver-lang');
+        if (l === 'en') {
+          document.documentElement.lang = 'en';
+          document.documentElement.dir = 'ltr';
+          document.documentElement.classList.add('i18n-pending');
+          setTimeout(function() { document.documentElement.classList.remove('i18n-pending'); }, 2000);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <title data-i18n="contact.meta_title">تواصل معي - خالد مودايفر</title>
+  <meta name="description" content="تواصل مع خالد مودايفر - مونتير يوتيوب محترف" data-i18n-attr="content:contact.meta_desc">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=4">
   <link rel="icon" type="image/png" href="./assets/images/modayver 001.png">
   <style>
     body {
@@ -258,6 +272,22 @@
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
     }
+    /* English (left-to-right) layout */
+    [dir="ltr"] .glass-card-title {
+      direction: ltr;
+    }
+    [dir="ltr"] .contact-input-icon,
+    [dir="ltr"] .contact-input-icon-textarea {
+      right: auto;
+      left: 12px;
+    }
+    [dir="ltr"] .contact-input {
+      padding-right: 14px;
+      padding-left: 36px;
+    }
+    [dir="ltr"] .form-label {
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -272,30 +302,36 @@
           </a>
         </div>
         <nav class="desktop-nav">
-          <a href="index.html" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;">الرئيسية</a>
-          <a href="index.html#about" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;">من أنا</a>
-          <a href="index.html#portfolio" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;">أعمالي</a>
+          <a href="index.html" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;" data-i18n="nav.home">الرئيسية</a>
+          <a href="index.html#about" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;" data-i18n="nav.about">من أنا</a>
+          <a href="index.html#portfolio" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;" data-i18n="nav.portfolio">أعمالي</a>
         </nav>
-        <div class="header-cta">
-          <a href="contact.html" class="btn-tertiary btn-sm">تواصل بنا</a>
+        <div class="header-actions">
+          <div class="header-cta">
+            <a href="contact.html" class="btn-tertiary btn-sm" data-i18n="contact.cta">تواصل بنا</a>
+          </div>
+          <button type="button" class="lang-switch" onclick="toggleLang()" aria-label="تغيير اللغة / Switch language">
+            <span class="lang-opt active" data-lang-opt="ar">AR</span>
+            <span class="lang-opt" data-lang-opt="en">EN</span>
+          </button>
+          <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="قائمة التنقل" data-i18n-attr="aria-label:common.menu">
+            <svg class="menu-icon" width="26" height="19" viewBox="0 0 26 19" fill="none">
+              <path d="M0 0.8 L24 0.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0 8.8 L24 8.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9.6 16.8 L24 16.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none">
+              <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
         </div>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="قائمة التنقل">
-          <svg class="menu-icon" width="26" height="19" viewBox="0 0 26 19" fill="none">
-            <path d="M0 0.8 L24 0.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <path d="M0 8.8 L24 8.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
-            <path d="M9.6 16.8 L24 16.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-          <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none">
-            <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
       </div>
     </div>
     <div class="mobile-menu" id="mobileMenu">
       <div class="mobile-menu-inner">
-        <a href="index.html" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2);">الرئيسية</a>
-        <a href="index.html#about" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2);">من أنا</a>
-        <a href="index.html#portfolio" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;">أعمالي</a>
+        <a href="index.html" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2);" data-i18n="nav.home">الرئيسية</a>
+        <a href="index.html#about" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2);" data-i18n="nav.about">من أنا</a>
+        <a href="index.html#portfolio" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;" data-i18n="nav.portfolio">أعمالي</a>
       </div>
     </div>
   </header>
@@ -308,7 +344,7 @@
 
         <!-- LEFT: Photo Panel -->
         <div class="contact-photo-panel">
-          <img src="./assets/images/profile-contact.jpg" alt="صورة شخصية لخالد مودايفر">
+          <img src="./assets/images/profile-contact.jpg" alt="صورة شخصية لخالد مودايفر" data-i18n-attr="alt:contact.photo_alt">
           <div class="contact-photo-glow"></div>
 
           <!-- Circuit Top Right -->
@@ -370,7 +406,7 @@
 
           <!-- Card 1: Social Links -->
           <div class="glass-card" id="card1">
-            <h2 class="glass-card-title">تواصل معي من خلال</h2>
+            <h2 class="glass-card-title" data-i18n="contact.reach_title">تواصل معي من خلال</h2>
             <div class="social-icons-row">
               <!-- WhatsApp -->
               <a href="https://wa.me/+213775051301" target="_blank" rel="noopener noreferrer" class="glass-icon-btn">
@@ -403,25 +439,25 @@
 
           <!-- Card 2: Contact Form -->
           <div class="glass-card" id="card2" style="flex:1">
-            <h2 class="glass-card-title" style="font-size:24px">أرسل رسالة</h2>
+            <h2 class="glass-card-title" style="font-size:24px" data-i18n="contact.form_title">أرسل رسالة</h2>
 
-            <div class="success-msg" id="successMsg">&#10003; تم إرسال رسالتك بنجاح!</div>
+            <div class="success-msg" id="successMsg" data-i18n="contact.success">&#10003; تم إرسال رسالتك بنجاح!</div>
 
             <form id="contactForm" onsubmit="handleSubmit(event)">
               <input type="hidden" name="_captcha" value="false">
               <!-- Name -->
               <div class="form-group">
-                <label class="form-label">الاسم</label>
+                <label class="form-label" data-i18n="contact.name">الاسم</label>
                 <div class="contact-input-wrap">
                   <span class="contact-input-icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                   </span>
-                  <input type="text" name="name" required placeholder="اكتب اسمك هنا" class="contact-input" dir="rtl">
+                  <input type="text" name="name" required placeholder="اكتب اسمك هنا" class="contact-input" dir="rtl" data-i18n-attr="placeholder:contact.name_ph;dir:contact.input_dir">
                 </div>
               </div>
               <!-- Email -->
               <div class="form-group">
-                <label class="form-label">البريد الإلكتروني</label>
+                <label class="form-label" data-i18n="contact.email">البريد الإلكتروني</label>
                 <div class="contact-input-wrap">
                   <span class="contact-input-icon">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
@@ -431,18 +467,18 @@
               </div>
               <!-- Message -->
               <div class="form-group">
-                <label class="form-label">الرسالة</label>
+                <label class="form-label" data-i18n="contact.message">الرسالة</label>
                 <div class="contact-input-wrap">
                   <span class="contact-input-icon-textarea">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   </span>
-                  <textarea name="message" required rows="4" placeholder="اكتب وسالك هنا" class="contact-input" style="resize:none;min-height:100px" dir="rtl"></textarea>
+                  <textarea name="message" required rows="4" placeholder="اكتب وسالك هنا" class="contact-input" style="resize:none;min-height:100px" dir="rtl" data-i18n-attr="placeholder:contact.message_ph;dir:contact.input_dir"></textarea>
                 </div>
               </div>
               <!-- Submit -->
               <button type="submit" class="submit-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                <span>إرسال الرسالة</span>
+                <span data-i18n="contact.send">إرسال الرسالة</span>
               </button>
             </form>
           </div>
@@ -503,5 +539,7 @@
       }
     }
   </script>
+  <script src="translations.js?v=4"></script>
+  <script src="i18n.js?v=4"></script>
 </body>
 </html>
