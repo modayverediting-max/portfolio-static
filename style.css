@@ -1961,3 +1961,159 @@ html .glass-card.revealed {
     filter: none;
   }
 }
+
+/* ========================================
+   Channel cards — liquid glass, like the service cards
+   The card, name, subscriber pill and button use the brand's white and blue;
+   each channel keeps its own colour (--ch) only in the ring around its logo.
+   ======================================== */
+.channel-card {
+  position: relative;
+  overflow: hidden;
+  gap: 12px;
+  padding: 30px 24px 28px;
+  border-radius: 26px;
+  border: none;
+  background: linear-gradient(160deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.26) 100%);
+  backdrop-filter: blur(22px) saturate(170%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  box-shadow: 0 18px 40px rgba(30,90,180,0.16),
+              0 2px 6px rgba(30,90,180,0.08),
+              inset 0 1px 0 rgba(255,255,255,0.9),
+              inset 0 -1px 0 rgba(255,255,255,0.3);
+}
+.channel-card > * {
+  position: relative;
+  z-index: 1;
+}
+/* Rim of light */
+.channel-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.35) 28%, rgba(255,255,255,0.08) 55%, rgba(255,255,255,0.6) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+/* Glare that follows the cursor (position set in script.js) */
+.channel-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,0.6), rgba(255,255,255,0) 60%);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-calm);
+}
+.channel-card:hover {
+  background: linear-gradient(160deg, rgba(255,255,255,0.74) 0%, rgba(255,255,255,0.36) 100%);
+}
+.channel-card:hover::after {
+  opacity: 1;
+}
+.channel-card.reveal-done:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 26px 50px rgba(30,90,180,0.24),
+              0 4px 10px rgba(30,90,180,0.10),
+              inset 0 1px 0 rgba(255,255,255,1),
+              inset 0 -1px 0 rgba(255,255,255,0.4);
+}
+
+/* Logo in a ring: white light into the channel's own colour */
+.channel-avatar {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  padding: 5px;
+  margin-bottom: 10px;
+  border: none;
+  overflow: visible;
+  background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(var(--ch, 61,126,224), 0.9) 45%, rgba(var(--ch, 61,126,224), 0.55) 75%, rgba(255,255,255,0.7) 100%);
+  box-shadow: 0 14px 30px rgba(var(--ch, 61,126,224), 0.26), 0 4px 10px rgba(0,55,108,0.14);
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.6s var(--ease-land);
+}
+/* A soft glow of the channel's colour behind the logo */
+.channel-avatar::before {
+  content: '';
+  position: absolute;
+  inset: -22px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(var(--ch, 61,126,224), 0.4) 74%, rgba(var(--ch, 61,126,224), 0) 100%);
+  filter: blur(6px);
+  transition: transform 0.7s var(--ease-land), opacity 0.6s var(--ease-calm);
+  opacity: 0.8;
+}
+.channel-avatar img {
+  border-radius: 50%;
+  background: #111;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.25);
+}
+.channel-card:hover .channel-avatar {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 20px 38px rgba(var(--ch, 61,126,224), 0.34), 0 6px 14px rgba(0,55,108,0.16);
+}
+.channel-card:hover .channel-avatar::before {
+  transform: scale(1.12);
+  opacity: 1;
+}
+
+.channel-name {
+  color: var(--brand1);
+  margin-bottom: 0;
+}
+
+/* Subscribers: a small brand-blue glass pill */
+.channel-subs {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding: 6px 15px;
+  border-radius: 9999px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  background: linear-gradient(150deg, rgba(120,178,255,0.85) 0%, rgba(61,126,224,0.85) 50%, rgba(0,55,108,0.9) 100%);
+  box-shadow: 0 6px 14px rgba(0,55,108,0.22), inset 0 1px 1px rgba(255,255,255,0.7);
+}
+.channel-subs::before {
+  content: '';
+  flex: none;
+  width: 15px;
+  height: 15px;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* The channel's link: a white glass button that fills brand blue on hover */
+.channel-yt-link {
+  width: 50px;
+  height: 50px;
+  margin-top: 6px;
+  color: var(--brand1);
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(255,255,255,0.95);
+  box-shadow: 0 6px 16px rgba(0,55,108,0.16), inset 0 1px 0 #fff;
+  transition: transform 0.5s var(--ease-land), background-color 0.35s var(--ease-calm),
+              color 0.35s var(--ease-calm), box-shadow 0.5s var(--ease-land);
+}
+.channel-yt-link svg {
+  width: 26px;
+  height: 26px;
+}
+.channel-yt-link:hover {
+  opacity: 1;
+  color: #fff;
+  background-color: var(--base2);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 10px 22px rgba(0,55,108,0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+}
+@media (prefers-reduced-motion: reduce) {
+  .channel-avatar, .channel-avatar::before, .channel-yt-link { transition: none; }
+}
