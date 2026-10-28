@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
   <style>
     body {
@@ -264,59 +264,83 @@
     }
     @keyframes btn-spin { to { transform: rotate(360deg); } }
 
-    /* Sent: the form fades out and a white-and-blue glass confirmation takes its place and stays */
-    #contactForm { transition: opacity 0.26s cubic-bezier(1,0,0.63,1), filter 0.26s cubic-bezier(1,0,0.63,1), transform 0.26s cubic-bezier(1,0,0.63,1); }
-    #contactForm.is-leaving { opacity: 0; filter: blur(6px); transform: translateY(-8px); pointer-events: none; }
-    .sent-panel {
-      text-align: center;
-      padding: 28px 16px 22px;
-      border-radius: 16px;
-      /* Brand-blue glass, so the white text reads on the page's light lower half too */
-      background: linear-gradient(160deg, rgba(61,126,224,0.94), rgba(0,55,108,0.92));
-      border: 1.5px solid rgba(255,255,255,0.45);
-      box-shadow: 0 14px 36px rgba(0,55,108,0.35), inset 0 1px 0 rgba(255,255,255,0.45);
-      color: #fff;
-      animation: sent-in 0.8s cubic-bezier(0.05,0,0,1) both;
+    /* Sent: the card's title and form fade out, and the card itself becomes the confirmation.
+       The badge is the same liquid glass as the service icons on the home page. */
+    #card2 > .glass-card-title, #contactForm {
+      transition: opacity 0.26s cubic-bezier(1,0,0.63,1), filter 0.26s cubic-bezier(1,0,0.63,1), transform 0.26s cubic-bezier(1,0,0.63,1);
     }
+    #card2.is-leaving > .glass-card-title, #card2.is-leaving #contactForm { opacity: 0; filter: blur(6px); transform: translateY(-8px); pointer-events: none; }
+    #card2.is-sent { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #card2.is-sent > .glass-card-title, #card2.is-sent .send-error { display: none; }
+    .sent-panel { text-align: center; color: #fff; max-width: 380px; padding: 8px 6px; }
     .sent-panel[hidden] { display: none; }
-    /* The confirmation sits in the middle of the space the form left */
-    .glass-card.is-sent { display: flex; flex-direction: column; }
-    .glass-card.is-sent .sent-panel { margin: auto 0; }
-    .sent-mark { position: relative; width: 68px; height: 68px; margin: 0 auto 16px; }
-    /* One soft ring ripples out of the badge as it lands */
+    /* Each line lands with the site's focus pull, one after another */
+    .sent-panel > * { animation: sent-rise 0.9s cubic-bezier(0.05,0,0,1) both; }
+    .sent-panel > :nth-child(2) { animation-delay: 0.18s; }
+    .sent-panel > :nth-child(3) { animation-delay: 0.27s; }
+    .sent-panel > :nth-child(4) { animation-delay: 0.36s; }
+    .sent-mark { position: relative; width: 80px; height: 80px; margin: 0 auto 22px; }
+    /* A soft white glow blooms behind the badge and settles */
     .sent-mark::before {
-      content: ''; position: absolute; inset: 0; border-radius: 50%;
-      border: 2px solid rgba(255,255,255,0.85); opacity: 0;
-      animation: sent-ring 1s 0.45s cubic-bezier(0.33,0,0,1) both;
+      content: ''; position: absolute; inset: -34px; border-radius: 50%; pointer-events: none;
+      background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 62%);
+      animation: sent-halo 1.4s 0.3s cubic-bezier(0.33,0,0,1) both;
     }
-    .sent-check { width: 68px; height: 68px; display: block; filter: drop-shadow(0 6px 16px rgba(0,55,108,0.35)); }
-    .sent-check circle {
-      fill: #fff; stroke: none;
-      transform-origin: center; animation: sent-pop 0.55s 0.15s cubic-bezier(0.34,1.56,0.64,1) both;
+    .sent-badge {
+      position: relative; width: 80px; height: 80px; border-radius: 26px; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(150deg, rgba(120,178,255,0.82) 0%, rgba(61,126,224,0.78) 45%, rgba(0,55,108,0.9) 100%);
+      backdrop-filter: blur(10px) saturate(180%); -webkit-backdrop-filter: blur(10px) saturate(180%);
+      box-shadow: 0 16px 34px rgba(0,55,108,0.32), 0 3px 8px rgba(0,55,108,0.2),
+                  inset 0 1px 1px rgba(255,255,255,0.9), inset 0 -3px 7px rgba(0,30,80,0.24);
+      animation: sent-pop 0.8s 0.05s cubic-bezier(0.34,1.56,0.64,1) both;
     }
+    .sent-badge::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(85% 60% at 25% 5%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 60%),
+                  radial-gradient(75% 55% at 75% 110%, rgba(170,215,255,0.65) 0%, rgba(170,215,255,0) 70%);
+    }
+    .sent-badge::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
+      background: linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.15) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.55) 100%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+    }
+    /* One light sweep crosses the badge once the check is drawn, like the name badge */
+    .sent-shine {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.55) 50%, transparent 65%);
+      transform: translateX(120%);
+      animation: badgeSweep 1.2s 0.95s cubic-bezier(0.28,0,0.22,1) both;
+    }
+    .sent-check { position: relative; z-index: 1; width: 44px; height: 44px; filter: drop-shadow(0 1px 1.5px rgba(0,30,80,0.45)); }
     .sent-check path {
-      fill: none; stroke: #00376C; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round;
-      stroke-dasharray: 40; stroke-dashoffset: 40; animation: sent-draw 0.45s 0.5s cubic-bezier(0.33,0,0,1) forwards;
+      fill: none; stroke: #fff; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 24; stroke-dashoffset: 24; animation: sent-draw 0.5s 0.5s cubic-bezier(0.33,0,0,1) forwards;
     }
-    .sent-title { font-size: 21px; font-weight: 700; margin-bottom: 8px; animation: sent-rise 0.7s 0.3s cubic-bezier(0.05,0,0,1) both; }
-    .sent-text { font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.92); animation: sent-rise 0.7s 0.42s cubic-bezier(0.05,0,0,1) both; }
-    .sent-email { display: inline-block; margin-top: 8px; padding: 5px 14px; border-radius: 9999px;
-      background: rgba(255,255,255,0.92); color: #00376C; font-weight: 600; word-break: break-all;
-      box-shadow: 0 4px 12px rgba(0,55,108,0.18); }
+    .sent-title { font-size: 22px; font-weight: 700; margin: 0 0 8px; text-shadow: 0 1px 2px rgba(0,40,90,0.35), 0 0 14px rgba(0,55,108,0.28); }
+    .sent-text { font-size: 14.5px; line-height: 1.9; margin: 0 0 18px; color: #fff; font-weight: 500; text-shadow: 0 1px 2px rgba(0,40,90,0.4), 0 0 12px rgba(0,55,108,0.3); }
+    .sent-email {
+      display: inline-flex; align-items: center; gap: 8px; max-width: 100%;
+      padding: 8px 16px 8px 14px; border-radius: 18px;
+      background: rgba(255,255,255,0.92); color: #00376C; font-size: 14px; font-weight: 600;
+      box-shadow: 0 8px 20px rgba(0,55,108,0.18), inset 0 1px 0 #fff;
+    }
+    .sent-email svg { flex: none; }
+    .sent-email span { word-break: break-all; }
     .send-error {
       margin-bottom: 12px; padding: 12px; border-radius: 12px; font-size: 14px; text-align: center;
       background: rgba(239,68,68,0.16); border: 1px solid rgba(239,68,68,0.45); color: #fff;
     }
     .send-error[hidden] { display: none; }
-    @keyframes sent-in { from { opacity: 0; filter: blur(8px); transform: translateY(12px) scale(0.97); } to { opacity: 1; filter: blur(0); transform: none; } }
-    @keyframes sent-rise { from { opacity: 0; filter: blur(4px); transform: translateY(8px); } to { opacity: 1; filter: blur(0); transform: none; } }
-    @keyframes sent-pop { from { transform: scale(0); } to { transform: scale(1); } }
+    @keyframes sent-rise { from { opacity: 0; filter: blur(8px); transform: translateY(14px); } to { opacity: 1; filter: blur(0); transform: none; } }
+    @keyframes sent-pop { from { transform: scale(0.55) rotate(-8deg); } to { transform: none; } }
     @keyframes sent-draw { to { stroke-dashoffset: 0; } }
-    @keyframes sent-ring { 0% { opacity: 0.9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.7); } }
+    @keyframes sent-halo { 0% { opacity: 0; transform: scale(0.5); } 45% { opacity: 1; } 100% { opacity: 0.45; transform: scale(1); } }
     @media (prefers-reduced-motion: reduce) {
-      #contactForm { transition: none; }
-      .sent-panel, .sent-title, .sent-text, .sent-check circle { animation: none; }
-      .sent-mark::before { animation: none; display: none; }
+      #card2 > .glass-card-title, #contactForm { transition: none; }
+      .sent-panel > *, .sent-badge, .sent-mark::before { animation: none; }
+      .sent-shine { display: none; }
       .sent-check path { animation: none; stroke-dashoffset: 0; }
       .btn-spinner { animation-duration: 2s; }
     }
@@ -498,13 +522,20 @@
             <h2 class="glass-card-title" style="font-size:24px" data-i18n="contact.form_title">أرسل رسالة</h2>
 
             <div class="sent-panel" id="sentPanel" role="status" aria-live="polite" hidden>
-              <div class="sent-mark"><svg class="sent-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25"/><path d="M15 27l7.5 7.5L38 19"/></svg></div>
-              <div class="sent-title" data-i18n="contact.sent_title">تم إرسال رسالتك بنجاح</div>
-              <div class="sent-text">
-                <span data-i18n="contact.sent_text">شكراً لتواصلك، سأتواصل معك قريباً عبر بريدك الإلكتروني:</span><br>
-                <span class="sent-email" id="sentEmail" dir="ltr"></span>
+              <div class="sent-mark">
+                <div class="sent-badge">
+                  <svg class="sent-check" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+                  <span class="sent-shine"></span>
+                </div>
+              </div>
+              <h3 class="sent-title" data-i18n="contact.sent_title">تم إرسال رسالتك بنجاح</h3>
+              <p class="sent-text" data-i18n="contact.sent_text">شكراً لتواصلك، سأتواصل معك قريباً عبر بريدك الإلكتروني</p>
+              <div class="sent-email" dir="ltr">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <span id="sentEmail"></span>
               </div>
             </div>
+
             <div class="send-error" id="sendError" role="alert" data-i18n="contact.send_error" hidden>لم يتم إرسال الرسالة، تأكد من اتصالك بالإنترنت وحاول مرة أخرى.</div>
 
             <form id="contactForm" onsubmit="handleSubmit(event)">
@@ -600,8 +631,8 @@
         url = 'https://api.web3forms.com/submit';
         data = new FormData();
         data.append('access_key', WEB3FORMS_KEY);
-        data.append('from_name', 'عميل محتمل - موقع مودايفر');
-        data.append('subject', 'عميل محتمل من معرض الأعمال: ' + name);
+        data.append('from_name', 'عميل محتمل');
+        data.append('subject', 'رسالة جديدة من موقع مودايفر: ' + name);
         data.append('name', name);
         data.append('email', email);
         data.append('message', fields['message'].value.trim());
@@ -623,11 +654,14 @@
         if (!result || String(result.success) !== 'true') throw new Error(result && result.message);
         formState = 'sent';
         document.getElementById('sentEmail').textContent = email;
-        // The form fades out first, then the confirmation lands in its place
-        form.classList.add('is-leaving');
+        // The card's title and form fade out, then the card becomes the confirmation.
+        // It keeps its height, so nothing jumps on phones.
+        var card = document.getElementById('card2');
+        card.style.minHeight = card.offsetHeight + 'px';
+        card.classList.add('is-leaving');
         setTimeout(function() {
           form.hidden = true;
-          document.getElementById('card2').classList.add('is-sent');
+          card.classList.add('is-sent');
           var panel = document.getElementById('sentPanel');
           panel.hidden = false;
           panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -657,7 +691,7 @@
       }
     }
   </script>
-  <script src="translations.js?v=14"></script>
-  <script src="i18n.js?v=14"></script>
+  <script src="translations.js?v=15"></script>
+  <script src="i18n.js?v=15"></script>
 </body>
 </html>

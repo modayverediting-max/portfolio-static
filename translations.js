@@ -100,7 +100,7 @@ window.TRANSLATIONS_EN = {
   'contact.reach_title': 'Reach me on',
   'contact.form_title': 'Send a message',
   'contact.sent_title': 'Your message was sent successfully',
-  'contact.sent_text': 'Thanks for reaching out! I\'ll get back to you soon by email at:',
+  'contact.sent_text': 'Thanks for reaching out! I\'ll get back to you soon by email.',
   'contact.send_error': 'Your message didn\'t go through. Check your connection and try again.',
   'contact.sending': 'Sending…',
   'contact.name': 'Name',
