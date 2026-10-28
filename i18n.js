@@ -19,11 +19,28 @@ function getSavedLang() {
   }
 }
 
+// Keeps the address bar shareable: English pages end in ?lang=en,
+// Arabic pages keep the clean address (no reload, no extra history entry)
+function syncLangUrl(lang) {
+  try {
+    var url = new URL(window.location.href);
+    if (lang === 'en') {
+      url.searchParams.set('lang', 'en');
+    } else {
+      url.searchParams.delete('lang');
+    }
+    if (url.href !== window.location.href) {
+      history.replaceState(history.state, '', url.href);
+    }
+  } catch (e) {}
+}
+
 function applyLang(lang) {
   var en = window.TRANSLATIONS_EN || {};
   var html = document.documentElement;
   html.lang = lang;
   html.dir = lang === 'en' ? 'ltr' : 'rtl';
+  syncLangUrl(lang);
 
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
     var key = el.getAttribute('data-i18n');
