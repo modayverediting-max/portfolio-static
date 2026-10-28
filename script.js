@@ -210,9 +210,9 @@ function countUp(el) {
 }
 
 /* ========================================
-   Liquid glass: the glare on the service and channel cards follows the cursor
+   Liquid glass: the glare on the service, channel and stat cards follows the cursor
    ======================================== */
-document.querySelectorAll('.service-card, .channel-card').forEach(function(card) {
+document.querySelectorAll('.service-card, .channel-card, .stat-item').forEach(function(card) {
   card.addEventListener('pointermove', function(e) {
     var r = card.getBoundingClientRect();
     card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
