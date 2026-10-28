@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>html, body { margin: 0; background: #3D7EE0; }</style>
+  <!-- Same gradient the contact page opens with, so opening it never flashes -->
+  <style>
+    html { background: #fff; }
+    body { margin: 0; min-height: 100vh; background: linear-gradient(0deg, rgba(255,255,255,0.5) 0%, #3D7EE0 100%); }
+  </style>
   <script>
     // modayver.com/contact.html — the contact page.
     // Chat apps (Instagram, WhatsApp…) build link previews from this file
