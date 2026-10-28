@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=13">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
   <style>
     body {
@@ -250,19 +250,74 @@
     .submit-btn:active {
       transform: scale(0.95);
     }
-    .success-msg {
-      margin-bottom: 12px;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 14px;
-      text-align: center;
-      display: none;
-      background: rgba(34,197,94,0.15);
-      border: 1px solid rgba(34,197,94,0.4);
-      color: #86efac;
+    /* Sending: the button locks after the first press and shows a spinner, so one message goes out once */
+    .submit-btn .btn-sending { display: none; }
+    .submit-btn.is-sending { cursor: progress; opacity: 0.85; }
+    .submit-btn.is-sending:active { transform: none; }
+    .submit-btn.is-sending .btn-icon,
+    .submit-btn.is-sending .btn-label { display: none; }
+    .submit-btn.is-sending .btn-sending { display: inline-flex; align-items: center; gap: 10px; }
+    .btn-spinner {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2.5px solid rgba(255,255,255,0.35); border-top-color: #fff;
+      animation: btn-spin 0.8s linear infinite;
     }
-    .success-msg.show {
-      display: block;
+    @keyframes btn-spin { to { transform: rotate(360deg); } }
+
+    /* Sent: the form fades out and a white-and-blue glass confirmation takes its place and stays */
+    #contactForm { transition: opacity 0.26s cubic-bezier(1,0,0.63,1), filter 0.26s cubic-bezier(1,0,0.63,1), transform 0.26s cubic-bezier(1,0,0.63,1); }
+    #contactForm.is-leaving { opacity: 0; filter: blur(6px); transform: translateY(-8px); pointer-events: none; }
+    .sent-panel {
+      text-align: center;
+      padding: 28px 16px 22px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
+      border: 1.5px solid rgba(255,255,255,0.5);
+      box-shadow: 0 12px 32px rgba(0,55,108,0.22), inset 0 1px 0 rgba(255,255,255,0.6);
+      color: #fff;
+      animation: sent-in 0.8s cubic-bezier(0.05,0,0,1) both;
+    }
+    .sent-panel[hidden] { display: none; }
+    /* The confirmation sits in the middle of the space the form left */
+    .glass-card.is-sent { display: flex; flex-direction: column; }
+    .glass-card.is-sent .sent-panel { margin: auto 0; }
+    .sent-mark { position: relative; width: 68px; height: 68px; margin: 0 auto 16px; }
+    /* One soft ring ripples out of the badge as it lands */
+    .sent-mark::before {
+      content: ''; position: absolute; inset: 0; border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.85); opacity: 0;
+      animation: sent-ring 1s 0.45s cubic-bezier(0.33,0,0,1) both;
+    }
+    .sent-check { width: 68px; height: 68px; display: block; filter: drop-shadow(0 6px 16px rgba(0,55,108,0.35)); }
+    .sent-check circle {
+      fill: #fff; stroke: none;
+      transform-origin: center; animation: sent-pop 0.55s 0.15s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .sent-check path {
+      fill: none; stroke: #00376C; stroke-width: 4.5; stroke-linecap: round; stroke-linejoin: round;
+      stroke-dasharray: 40; stroke-dashoffset: 40; animation: sent-draw 0.45s 0.5s cubic-bezier(0.33,0,0,1) forwards;
+    }
+    .sent-title { font-size: 21px; font-weight: 700; margin-bottom: 8px; animation: sent-rise 0.7s 0.3s cubic-bezier(0.05,0,0,1) both; }
+    .sent-text { font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.92); animation: sent-rise 0.7s 0.42s cubic-bezier(0.05,0,0,1) both; }
+    .sent-email { display: inline-block; margin-top: 8px; padding: 5px 14px; border-radius: 9999px;
+      background: rgba(255,255,255,0.92); color: #00376C; font-weight: 600; word-break: break-all;
+      box-shadow: 0 4px 12px rgba(0,55,108,0.18); }
+    .send-error {
+      margin-bottom: 12px; padding: 12px; border-radius: 12px; font-size: 14px; text-align: center;
+      background: rgba(239,68,68,0.16); border: 1px solid rgba(239,68,68,0.45); color: #fff;
+    }
+    .send-error[hidden] { display: none; }
+    @keyframes sent-in { from { opacity: 0; filter: blur(8px); transform: translateY(12px) scale(0.97); } to { opacity: 1; filter: blur(0); transform: none; } }
+    @keyframes sent-rise { from { opacity: 0; filter: blur(4px); transform: translateY(8px); } to { opacity: 1; filter: blur(0); transform: none; } }
+    @keyframes sent-pop { from { transform: scale(0); } to { transform: scale(1); } }
+    @keyframes sent-draw { to { stroke-dashoffset: 0; } }
+    @keyframes sent-ring { 0% { opacity: 0.9; transform: scale(1); } 100% { opacity: 0; transform: scale(1.7); } }
+    @media (prefers-reduced-motion: reduce) {
+      #contactForm { transition: none; }
+      .sent-panel, .sent-title, .sent-text, .sent-check circle { animation: none; }
+      .sent-mark::before { animation: none; display: none; }
+      .sent-check path { animation: none; stroke-dashoffset: 0; }
+      .btn-spinner { animation-duration: 2s; }
     }
     .contact-bottom-line {
       position: absolute;
@@ -441,7 +496,15 @@
           <div class="glass-card" id="card2" style="flex:1">
             <h2 class="glass-card-title" style="font-size:24px" data-i18n="contact.form_title">أرسل رسالة</h2>
 
-            <div class="success-msg" id="successMsg" data-i18n="contact.success">&#10003; تم إرسال رسالتك بنجاح!</div>
+            <div class="sent-panel" id="sentPanel" role="status" aria-live="polite" hidden>
+              <div class="sent-mark"><svg class="sent-check" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="25"/><path d="M15 27l7.5 7.5L38 19"/></svg></div>
+              <div class="sent-title" data-i18n="contact.sent_title">تم إرسال رسالتك بنجاح</div>
+              <div class="sent-text">
+                <span data-i18n="contact.sent_text">شكراً لتواصلك، سأتواصل معك قريباً عبر بريدك الإلكتروني:</span><br>
+                <span class="sent-email" id="sentEmail" dir="ltr"></span>
+              </div>
+            </div>
+            <div class="send-error" id="sendError" role="alert" data-i18n="contact.send_error" hidden>لم يتم إرسال الرسالة، تأكد من اتصالك بالإنترنت وحاول مرة أخرى.</div>
 
             <form id="contactForm" onsubmit="handleSubmit(event)">
               <input type="hidden" name="_captcha" value="false">
@@ -479,9 +542,10 @@
                 </div>
               </div>
               <!-- Submit -->
-              <button type="submit" class="submit-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                <span data-i18n="contact.send">إرسال الرسالة</span>
+              <button type="submit" class="submit-btn" id="submitBtn">
+                <svg class="btn-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span class="btn-label" data-i18n="contact.send">إرسال الرسالة</span>
+                <span class="btn-sending"><span class="btn-spinner"></span><span data-i18n="contact.sending">جاري الإرسال…</span></span>
               </button>
             </form>
           </div>
@@ -511,27 +575,69 @@
       }
     });
 
-    // Form submit via FormSubmit AJAX
+    // Form submit. With a Web3Forms key the email arrives under our own sender name
+    // (FormSubmit can't change its "FormSubmit" sender name); without one it falls back to FormSubmit.
+    var WEB3FORMS_KEY = '';
+    var formState = 'idle';   // idle → sending → sent. Once sent, the form is gone: one message, sent once.
     function handleSubmit(e) {
       e.preventDefault();
+      if (formState !== 'idle') return;
       var form = e.target;
+      var fields = form.elements;
+      // Spaces alone don't count as a name or a message
+      var empty = ['name', 'email', 'message'].filter(function(n) { return !fields[n].value.trim(); });
+      if (empty.length) {
+        empty.forEach(function(n) { fields[n].value = ''; });
+        form.reportValidity();
+        return;
+      }
+      var name = fields['name'].value.trim();
+      var email = fields['email'].value.trim();
       var data = new FormData(form);
-      fetch('https://formsubmit.co/ajax/modayver.editing@gmail.com', {
+      var url = 'https://formsubmit.co/ajax/modayver.editing@gmail.com';
+      if (WEB3FORMS_KEY) {
+        url = 'https://api.web3forms.com/submit';
+        data = new FormData();
+        data.append('access_key', WEB3FORMS_KEY);
+        data.append('from_name', 'عميل محتمل - موقع مودايفر');
+        data.append('subject', 'عميل محتمل من معرض الأعمال: ' + name);
+        data.append('name', name);
+        data.append('email', email);
+        data.append('message', fields['message'].value.trim());
+      }
+      var btn = document.getElementById('submitBtn');
+      var error = document.getElementById('sendError');
+      formState = 'sending';
+      btn.disabled = true;
+      btn.classList.add('is-sending');
+      error.hidden = true;
+      fetch(url, {
         method: 'POST',
+        headers: { 'Accept': 'application/json' },
         body: data
       })
       .then(function(response) { return response.json(); })
       .then(function(result) {
-        if (result.success) {
-          document.getElementById('successMsg').classList.add('show');
-          form.reset();
-          setTimeout(function() {
-            document.getElementById('successMsg').classList.remove('show');
-          }, 4000);
-        }
+        // FormSubmit answers success as the text "true", Web3Forms as true
+        if (!result || String(result.success) !== 'true') throw new Error(result && result.message);
+        formState = 'sent';
+        document.getElementById('sentEmail').textContent = email;
+        // The form fades out first, then the confirmation lands in its place
+        form.classList.add('is-leaving');
+        setTimeout(function() {
+          form.hidden = true;
+          document.getElementById('card2').classList.add('is-sent');
+          var panel = document.getElementById('sentPanel');
+          panel.hidden = false;
+          panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 260);
       })
-      .catch(function(error) {
-        console.error(error);
+      .catch(function(err) {
+        console.error(err);
+        formState = 'idle';
+        btn.disabled = false;
+        btn.classList.remove('is-sending');
+        error.hidden = false;
       });
     }
 
@@ -550,7 +656,7 @@
       }
     }
   </script>
-  <script src="translations.js?v=11"></script>
-  <script src="i18n.js?v=11"></script>
+  <script src="translations.js?v=13"></script>
+  <script src="i18n.js?v=13"></script>
 </body>
 </html>
