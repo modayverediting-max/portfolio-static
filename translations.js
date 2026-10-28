@@ -52,7 +52,7 @@ window.TRANSLATIONS_EN = {
 
   'about.img_alt': 'Khalid Benlaifaoui - YouTube video editor',
   'about.title': 'Who am I?',
-  'about.p1': 'I\'m Khalid, known as <span class="highlight">{ MODAYVER }</span>,',
+  'about.p1': 'I\'m Khalid, known as <span class="highlight">{ MODAYVER }</span>.',
   'about.p2': 'A video editor… yes, but for me it\'s never just arranging scenes. I edit around the idea, create the rhythm, and tell the story that words can\'t.',
   'about.p3': 'Over a journey of more than 4 years, I\'ve made 400+ videos with over 235 million views. Each one was a canvas — a moment, a feeling… a piece of me. I\'m not chasing numbers; I\'m chasing impact — a video that makes the viewer stop, feel, and engage. This isn\'t just a job… it\'s how I express myself.',
 
