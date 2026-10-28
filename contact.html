@@ -24,6 +24,14 @@
         document.write(html);
         document.close();
 
+        // Browsers skip the tab icon of a page written in place: add it again
+        var icon = document.querySelector('link[rel~=icon]');
+        if (icon) {
+          var freshIcon = icon.cloneNode();
+          icon.remove();
+          document.head.appendChild(freshIcon);
+        }
+
         var cover = document.getElementById('shell-cover');
         var shown = false;
         function reveal() {

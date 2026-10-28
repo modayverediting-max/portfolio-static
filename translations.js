@@ -21,7 +21,7 @@ window.TRANSLATIONS_EN = {
   'footer.contact': 'Contact',
 
   /* ---------- Home page (index.html) ---------- */
-  'meta.title': 'Khalid Modayver - Professional YouTube Video Editor',
+  'meta.title': 'MODAYVER',
   'meta.desc': 'Khalid Modayver - professional YouTube video editor specializing in editing, visual effects and sound design',
 
   'hero.title': 'Welcome to my world',
@@ -93,7 +93,7 @@ window.TRANSLATIONS_EN = {
   'cta.sub': 'Ready to start your project? Contact me now using the buttons below.',
 
   /* ---------- Contact page (contact.html) ---------- */
-  'contact.meta_title': 'Contact me - Khalid Modayver',
+  'contact.meta_title': 'MODAYVER',
   'contact.meta_desc': 'Get in touch with Khalid Modayver - professional YouTube video editor',
   'contact.cta': 'Contact me',
   'contact.photo_alt': 'Portrait of Khalid Modayver',
