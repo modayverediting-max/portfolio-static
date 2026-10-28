@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Same white canvas the home page fades in from, so opening it never flashes -->
-  <style>html, body { margin: 0; background: #fff; }</style>
+  <!-- The same loading backdrop as home.html (the hero's blue at the top),
+       so the very first frame already looks like the site, never a white page -->
+  <style>
+    html { background: linear-gradient(0deg, #fff 0%, #3D7EE0 100%) top / 100% 490px no-repeat #fff; }
+    @media (min-width: 768px) { html { background-size: 100% 435px; } }
+    @media (min-width: 1024px) { html { background-size: 100% 520px; } }
+    body { margin: 0; }
+  </style>
   <script>
     // modayver.com — the home page.
     // Chat apps (Instagram, WhatsApp…) build link previews from this file
@@ -14,9 +20,9 @@
     fetch('home.html', { cache: 'no-cache' })
       .then(function(r) { return r.text(); })
       .then(function(html) {
-        // Keep the page hidden until its design (CSS) has loaded,
-        // so the raw unstyled page never shows
-        html = html.replace('<head>', '<head><style id="shell-cover">body > * { visibility: hidden; }</style>');
+        // Keep the page hidden until its design (CSS) has loaded, so the raw
+        // unstyled page never shows; meanwhile the backdrop shows through
+        html = html.replace('<head>', '<head><style id="shell-cover">body > * { visibility: hidden; } body { background: transparent !important; }</style>');
         document.open();
         document.write(html);
         document.close();

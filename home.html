@@ -3,6 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Loading backdrop: from the very first frame the top of the screen already
+       shows the hero's blue (the same colors the hero has over the white page,
+       about as tall), so opening the site never shows a white page. Once the
+       page has faded in, it covers this completely. -->
+  <style>
+    html { background: linear-gradient(0deg, #fff 0%, #3D7EE0 100%) top / 100% 490px no-repeat #fff; }
+    @media (min-width: 768px) { html { background-size: 100% 435px; } }
+    @media (min-width: 1024px) { html { background-size: 100% 520px; } }
+  </style>
   <script>
     // Switch direction before the page paints, so English never flashes in Arabic layout
     (function() {
