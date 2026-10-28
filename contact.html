@@ -19,8 +19,20 @@
     fetch('contact-page.html', { cache: 'no-cache' })
       .then(function(r) { return r.text(); })
       .then(function(html) {
-        // Keep the page hidden until its design (CSS) has loaded,
-        // so the raw unstyled page never shows
+        // Start loading the photo now, before the page is written, so it
+        // is ready together with the panels (found by reading the page,
+        // so this file itself never names an image)
+        var photoReady = Promise.resolve();
+        var photoTag = new DOMParser().parseFromString(html, 'text/html').querySelector('.contact-photo-panel img');
+        if (photoTag) {
+          var photo = new Image();
+          photo.src = photoTag.getAttribute('src');
+          photoReady = (photo.decode ? photo.decode() : new Promise(function(done) { photo.onload = photo.onerror = done; }))
+            .catch(function() {});
+        }
+
+        // Keep the page hidden until its design (CSS) and the photo are ready,
+        // so the raw unstyled page never shows and the photo never pops in late
         html = html.replace('<head>', '<head><style id="shell-cover">body > * { visibility: hidden; }</style>');
         document.open();
         document.write(html);
@@ -40,6 +52,8 @@
           if (shown) return;
           shown = true;
           if (cover) cover.remove();
+          // Lets the page start its entrance motion now that it is visible
+          document.dispatchEvent(new Event('shell-revealed'));
         }
         var sheets = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'));
         Promise.all(sheets.map(function(link) {
@@ -48,7 +62,7 @@
             link.addEventListener('load', done);
             link.addEventListener('error', done);
           });
-        })).then(reveal);
+        }).concat([photoReady])).then(reveal);
         setTimeout(reveal, 2500);
       })
       .catch(function() { location.replace('contact-page.html' + location.search); });
