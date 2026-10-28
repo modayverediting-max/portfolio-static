@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
   <style>
     body {
@@ -271,9 +271,10 @@
       text-align: center;
       padding: 28px 16px 22px;
       border-radius: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.08));
-      border: 1.5px solid rgba(255,255,255,0.5);
-      box-shadow: 0 12px 32px rgba(0,55,108,0.22), inset 0 1px 0 rgba(255,255,255,0.6);
+      /* Brand-blue glass, so the white text reads on the page's light lower half too */
+      background: linear-gradient(160deg, rgba(61,126,224,0.94), rgba(0,55,108,0.92));
+      border: 1.5px solid rgba(255,255,255,0.45);
+      box-shadow: 0 14px 36px rgba(0,55,108,0.35), inset 0 1px 0 rgba(255,255,255,0.45);
       color: #fff;
       animation: sent-in 0.8s cubic-bezier(0.05,0,0,1) both;
     }
@@ -656,7 +657,7 @@
       }
     }
   </script>
-  <script src="translations.js?v=13"></script>
-  <script src="i18n.js?v=13"></script>
+  <script src="translations.js?v=14"></script>
+  <script src="i18n.js?v=14"></script>
 </body>
 </html>
