@@ -1,0 +1,29 @@
+# Link previews off: messaging and social apps show the plain link only.
+# Search engines (Google and others) can still read the whole site.
+
+User-agent: facebookexternalhit
+Disallow: /
+
+User-agent: Facebot
+Disallow: /
+
+User-agent: WhatsApp
+Disallow: /
+
+User-agent: Twitterbot
+Disallow: /
+
+User-agent: TelegramBot
+Disallow: /
+
+User-agent: LinkedInBot
+Disallow: /
+
+User-agent: Slackbot
+Disallow: /
+
+User-agent: Discordbot
+Disallow: /
+
+User-agent: *
+Allow: /

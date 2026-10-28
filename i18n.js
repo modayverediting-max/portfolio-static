@@ -8,7 +8,9 @@ var LANG_KEY = 'modayver-lang';
 
 function getSavedLang() {
   try {
-    var fromUrl = new URLSearchParams(window.location.search).get('lang');
+    // ?lang=… wins; the English home page (en.html, served at /en) says so itself
+    var fromUrl = new URLSearchParams(window.location.search).get('lang') ||
+                  document.documentElement.getAttribute('data-force-lang');
     if (fromUrl === 'ar' || fromUrl === 'en') {
       localStorage.setItem(LANG_KEY, fromUrl);
       return fromUrl;
@@ -19,15 +21,25 @@ function getSavedLang() {
   }
 }
 
-// Keeps the address bar shareable: English pages end in ?lang=en,
-// Arabic pages keep the clean address (no reload, no extra history entry)
+// Keeps the address bar shareable (no reload, no extra history entry):
+// the home page is modayver.com/en in English and modayver.com in Arabic;
+// other pages add ?lang=en in English and keep the clean address in Arabic.
+function isHomePage() {
+  var path = window.location.pathname;
+  return /\/$/.test(path) || /\/(index|en)(\.html)?$/.test(path);
+}
+
 function syncLangUrl(lang) {
   try {
     var url = new URL(window.location.href);
-    if (lang === 'en') {
+    url.searchParams.delete('lang');
+    if (isHomePage()) {
+      // On the live site GitHub Pages serves en.html at /en; locally use the file name
+      var live = /(^|\.)modayver\.com$/.test(url.hostname);
+      var home = lang === 'en' ? (live ? '/en' : 'en.html') : (live ? '/' : 'index.html');
+      url.pathname = new URL(home, url).pathname;
+    } else if (lang === 'en') {
       url.searchParams.set('lang', 'en');
-    } else {
-      url.searchParams.delete('lang');
     }
     if (url.href !== window.location.href) {
       history.replaceState(history.state, '', url.href);
