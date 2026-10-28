@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=15">
+  <link rel="stylesheet" href="style.css?v=16">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
   <style>
     body {
@@ -541,7 +541,7 @@
             <form id="contactForm" onsubmit="handleSubmit(event)">
               <input type="hidden" name="_captcha" value="false">
               <!-- How the message arrives in the inbox: the subject names the site, the body is a neat table -->
-              <input type="hidden" name="_subject" value="رسالة جديدة من موقع مودايفر">
+              <input type="hidden" name="_subject" value="عميل محتمل - رسالة جديدة من موقع مودايفر">
               <input type="hidden" name="_template" value="table">
               <!-- Name -->
               <div class="form-group">
@@ -626,13 +626,16 @@
       var name = fields['name'].value.trim();
       var email = fields['email'].value.trim();
       var data = new FormData(form);
+      // FormSubmit can't rename its sender, so «عميل محتمل» leads the subject line instead
+      var subject = 'عميل محتمل - رسالة جديدة من ' + name;
+      data.set('_subject', subject);
       var url = 'https://formsubmit.co/ajax/modayver.editing@gmail.com';
       if (WEB3FORMS_KEY) {
         url = 'https://api.web3forms.com/submit';
         data = new FormData();
         data.append('access_key', WEB3FORMS_KEY);
         data.append('from_name', 'عميل محتمل');
-        data.append('subject', 'رسالة جديدة من موقع مودايفر: ' + name);
+        data.append('subject', subject);
         data.append('name', name);
         data.append('email', email);
         data.append('message', fields['message'].value.trim());
@@ -691,7 +694,7 @@
       }
     }
   </script>
-  <script src="translations.js?v=15"></script>
-  <script src="i18n.js?v=15"></script>
+  <script src="translations.js?v=16"></script>
+  <script src="i18n.js?v=16"></script>
 </body>
 </html>
