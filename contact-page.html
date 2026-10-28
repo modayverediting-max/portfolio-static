@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=16">
+  <link rel="stylesheet" href="style.css?v=17">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
   <style>
     body {
@@ -642,19 +642,18 @@
       }
       var btn = document.getElementById('submitBtn');
       var error = document.getElementById('sendError');
+      // No connection at all: say so at once, nothing is sent
+      if (navigator.onLine === false) {
+        error.hidden = false;
+        return;
+      }
       formState = 'sending';
       btn.disabled = true;
       btn.classList.add('is-sending');
       error.hidden = true;
-      fetch(url, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: data
-      })
-      .then(function(response) { return response.json(); })
-      .then(function(result) {
-        // FormSubmit answers success as the text "true", Web3Forms as true
-        if (!result || String(result.success) !== 'true') throw new Error(result && result.message);
+
+      function showSent() {
+        if (formState === 'sent') return;
         formState = 'sent';
         document.getElementById('sentEmail').textContent = email;
         // The card's title and form fade out, then the card becomes the confirmation.
@@ -669,13 +668,36 @@
           panel.hidden = false;
           panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, 260);
-      })
-      .catch(function(err) {
+      }
+      function showError(err) {
         console.error(err);
+        if (formState !== 'sending') return;   // the confirmation is already up
         formState = 'idle';
         btn.disabled = false;
         btn.classList.remove('is-sending');
         error.hidden = false;
+      }
+
+      // FormSubmit can take many seconds to answer, and has answered with an error
+      // while the email still arrived. So once the message has been on its way for 2s
+      // the confirmation shows; keepalive lets the request finish even if the visitor leaves.
+      var patience = setTimeout(showSent, 2000);
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: data,
+        keepalive: true
+      })
+      .then(function(response) { return response.json(); })
+      .then(function(result) {
+        clearTimeout(patience);
+        // FormSubmit answers success as the text "true", Web3Forms as true
+        if (!result || String(result.success) !== 'true') throw new Error(result && result.message);
+        showSent();
+      })
+      .catch(function(err) {
+        clearTimeout(patience);
+        showError(err);
       });
     }
 
@@ -694,7 +716,7 @@
       }
     }
   </script>
-  <script src="translations.js?v=16"></script>
-  <script src="i18n.js?v=16"></script>
+  <script src="translations.js?v=17"></script>
+  <script src="i18n.js?v=17"></script>
 </body>
 </html>
