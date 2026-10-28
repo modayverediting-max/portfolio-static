@@ -5,20 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>html, body { margin: 0; background: #3D7EE0; }</style>
   <script>
-    // modayver.com/en — the English home page.
+    // modayver.com/en — the home page in English.
     // Chat apps (Instagram, WhatsApp…) build link previews from this file
     // without running scripts, so they find no title and no image and show
-    // the plain link. Visitors get the full home page, in English: it is
-    // fetched from index.html and written in place (the address stays /en).
-    fetch('index.html', { cache: 'no-cache' })
+    // the plain link. Visitors get the real page (home.html) switched to
+    // English, fetched and written in place; the address stays /en.
+    fetch('home.html', { cache: 'no-cache' })
       .then(function(r) { return r.text(); })
       .then(function(html) {
         html = html.replace('<html lang="ar" dir="rtl">', '<html lang="en" dir="ltr" data-force-lang="en">');
         document.open();
         document.write(html);
         document.close();
+        if (location.hash) {
+          setTimeout(function() {
+            var target = document.getElementById(location.hash.slice(1));
+            if (target) target.scrollIntoView();
+          }, 60);
+        }
       })
-      .catch(function() { location.replace('index.html?lang=en'); });
+      .catch(function() { location.replace('home.html?lang=en'); });
   </script>
 </head>
 <body></body>

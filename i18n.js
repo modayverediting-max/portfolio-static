@@ -26,7 +26,7 @@ function getSavedLang() {
 // other pages add ?lang=en in English and keep the clean address in Arabic.
 function isHomePage() {
   var path = window.location.pathname;
-  return /\/$/.test(path) || /\/(index|en)(\.html)?$/.test(path);
+  return /\/$/.test(path) || /\/(index|en|home)(\.html)?$/.test(path);
 }
 
 function syncLangUrl(lang) {
