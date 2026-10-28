@@ -1692,6 +1692,48 @@ html[data-lang-ui="en"] .lang-switch::before {
 }
 
 /* ========================================
+   Name badge (FULL NAME: …) — quiet glass motion
+   A light sweep crosses it once when it lands; on hover it lifts,
+   its rim brightens and the letters open up slightly.
+   ======================================== */
+.name-container {
+  position: relative;
+  overflow: hidden;
+}
+.name-container::before,
+.name-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.45) 50%, transparent 65%);
+  transform: translateX(120%);
+}
+.name-container.reveal-done::before {
+  animation: badgeSweep 1.3s var(--ease-sweep) 0.15s;
+}
+@keyframes badgeSweep {
+  from { transform: translateX(120%); }
+  to { transform: translateX(-120%); }
+}
+.name-container:hover::after {
+  transform: translateX(-120%);
+  transition: transform 1s var(--ease-sweep);
+}
+.name-container.reveal-done:hover {
+  transform: translateY(-2px) !important;
+  background-color: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.75);
+  box-shadow: 0 10px 26px rgba(0,55,108,0.22), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+.name-container p span {
+  transition: letter-spacing 0.6s var(--ease-land);
+}
+.name-container:hover p span {
+  letter-spacing: 0.6px;
+}
+
+/* ========================================
    About section social icons
    ======================================== */
 .social-links-about a {
