@@ -14,15 +14,33 @@
     fetch('home.html', { cache: 'no-cache' })
       .then(function(r) { return r.text(); })
       .then(function(html) {
+        // Keep the page hidden until its design (CSS) has loaded,
+        // so the raw unstyled page never shows
+        html = html.replace('<head>', '<head><style id="shell-cover">body > * { visibility: hidden; }</style>');
         document.open();
         document.write(html);
         document.close();
-        if (location.hash) {
-          setTimeout(function() {
+
+        var cover = document.getElementById('shell-cover');
+        var shown = false;
+        function reveal() {
+          if (shown) return;
+          shown = true;
+          if (cover) cover.remove();
+          if (location.hash) {
             var target = document.getElementById(location.hash.slice(1));
-            if (target) target.scrollIntoView();
-          }, 60);
+            if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
+          }
         }
+        var sheets = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'));
+        Promise.all(sheets.map(function(link) {
+          return new Promise(function(done) {
+            if (link.sheet) { done(); return; }
+            link.addEventListener('load', done);
+            link.addEventListener('error', done);
+          });
+        })).then(reveal);
+        setTimeout(reveal, 2500);
       })
       .catch(function() { location.replace('home.html' + location.search + location.hash); });
   </script>

@@ -17,9 +17,29 @@
     fetch('contact-page.html', { cache: 'no-cache' })
       .then(function(r) { return r.text(); })
       .then(function(html) {
+        // Keep the page hidden until its design (CSS) has loaded,
+        // so the raw unstyled page never shows
+        html = html.replace('<head>', '<head><style id="shell-cover">body > * { visibility: hidden; }</style>');
         document.open();
         document.write(html);
         document.close();
+
+        var cover = document.getElementById('shell-cover');
+        var shown = false;
+        function reveal() {
+          if (shown) return;
+          shown = true;
+          if (cover) cover.remove();
+        }
+        var sheets = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'));
+        Promise.all(sheets.map(function(link) {
+          return new Promise(function(done) {
+            if (link.sheet) { done(); return; }
+            link.addEventListener('load', done);
+            link.addEventListener('error', done);
+          });
+        })).then(reveal);
+        setTimeout(reveal, 2500);
       })
       .catch(function() { location.replace('contact-page.html' + location.search); });
   </script>
