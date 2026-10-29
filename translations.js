@@ -103,6 +103,8 @@ window.TRANSLATIONS_EN = {
   'contact.sent_text': 'Thanks for reaching out! I\'ll get back to you soon by email.',
   'contact.dc_app': 'Open in the Discord app',
   'contact.dc_web': 'Open in the browser',
+  'contact.dc_opening': 'Opening the Discord app…',
+  'contact.dc_failed': 'Didn\'t open? The Discord app needs to be installed on your computer, or open the profile in the browser.',
   'contact.send_error': 'Your message didn\'t go through. Check your connection and try again.',
   'contact.sending': 'Sending…',
   'contact.name': 'Name',

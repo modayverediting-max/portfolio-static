@@ -22,7 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=24">
+  <link rel="stylesheet" href="style.css?v=25">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
   <style>
     body {
@@ -222,6 +222,20 @@
     }
     .dc-option:hover { background-color: rgba(61,126,224,0.12); transform: translateY(-1px); }
     .dc-option { white-space: nowrap; }
+    .dc-status {
+      margin: 2px 4px 2px;
+      max-width: 228px;
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: #2b4a6e;
+      text-align: center;
+    }
+    .dc-status[hidden] { display: none; }
+    .dc-menu.is-waiting .dc-option-app { opacity: 0.75; pointer-events: none; }
+    .dc-menu.is-failed .dc-option:not(.dc-option-app) {
+      background-color: rgba(61,126,224,0.14);
+      box-shadow: inset 0 0 0 1px rgba(61,126,224,0.35);
+    }
     .dc-option svg { flex: none; width: 18px; height: 18px; }
     .dc-option-app {
       color: #fff;
@@ -670,6 +684,7 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       <span data-i18n="contact.dc_web">فتح في المتصفح</span>
     </a>
+    <p class="dc-status" id="dcStatus" role="status" aria-live="polite" hidden data-opening="جاري فتح تطبيق ديسكورد…" data-failed="ما انفتح التطبيق؟ لازم يكون تطبيق ديسكورد مثبّت على جهازك، أو افتح الحساب في المتصفح."></p>
   </div>
 
   <script>
@@ -808,6 +823,7 @@
         if (menu.hidden) return;
         menu.hidden = true;
         btn.setAttribute('aria-expanded', 'false');
+        reset();
       }
       btn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -816,15 +832,46 @@
         place();
         btn.setAttribute('aria-expanded', 'true');
       });
+      var status = document.getElementById('dcStatus');
+      var watch = null;
+      function say(key) {
+        status.textContent = (document.documentElement.lang === 'en' && (window.TRANSLATIONS_EN || {})['contact.dc_' + key]) || status.getAttribute('data-' + key);
+        status.hidden = false;
+      }
+      function reset() {
+        clearTimeout(watch);
+        menu.classList.remove('is-waiting', 'is-failed');
+        status.hidden = true;
+      }
       menu.addEventListener('click', function(e) {
-        if (e.target.closest('a')) setTimeout(close, 0);
+        var link = e.target.closest('a');
+        if (!link) return;
+        if (!link.classList.contains('dc-option-app')) { setTimeout(close, 0); return; }
+        // The link itself asks the browser to open the app. When the app (or the browser's
+        // "Open Discord?" prompt) takes focus, the page loses it: then the menu can close.
+        // If nothing takes focus within 2.5s, the app isn't there: point to the browser option.
+        reset();
+        menu.classList.add('is-waiting');
+        say('opening');
+        var left = false;
+        function gone() { left = true; }
+        window.addEventListener('blur', gone, { once: true });
+        document.addEventListener('visibilitychange', gone, { once: true });
+        watch = setTimeout(function() {
+          window.removeEventListener('blur', gone);
+          document.removeEventListener('visibilitychange', gone);
+          menu.classList.remove('is-waiting');
+          if (left) { close(); return; }
+          menu.classList.add('is-failed');
+          say('failed');
+        }, 2500);
       });
       document.addEventListener('click', function(e) {
         if (!menu.contains(e.target) && !btn.contains(e.target)) close();
       });
       document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
       window.addEventListener('resize', close);
-      window.addEventListener('scroll', close, { passive: true });
+      window.addEventListener('scroll', function() { if (!menu.classList.contains('is-waiting')) close(); }, { passive: true });
     })();
 
     // Mobile menu
@@ -842,7 +889,7 @@
       }
     }
   </script>
-  <script src="translations.js?v=24"></script>
-  <script src="i18n.js?v=24"></script>
+  <script src="translations.js?v=25"></script>
+  <script src="i18n.js?v=25"></script>
 </body>
 </html>
