@@ -79,8 +79,8 @@
     vLen: ['المدة', 'Length'],
     vLenPh: ['مثلًا: 60 ثانية', 'e.g. 60 sec'],
     vPrice: ['السعر', 'Price'],
-    vDate: ['موعد المعاينة', 'Preview date'],
-    vDateHint: ['موعد المعاينة: هو موعد إرسال الفريلانسر أول نسخة كاملة من الفيديو.', 'Preview date = when the freelancer sends the first full version of the video.'],
+    vDate: ['موعد التسليم', 'Delivery date'],
+    vDateHint: ['موعد التسليم: هو موعد إرسال الفريلانسر النسخة الأولى الكاملة من الفيديو للمراجعة.', 'Delivery date = when the freelancer sends the first full version of the video for review.'],
     add: ['+ أضف فيديو', '+ Add a video'],
     remove: ['حذف', 'Remove'],
     total: ['المجموع', 'Total'],
@@ -94,7 +94,7 @@
     kLenPh: ['مثلًا: من 30 إلى 60 ثانية', 'e.g. 30–60 seconds'],
     kSched: ['جدول التسليم', 'Delivery schedule'],
     kSchedPh: ['مثلًا: 5 فيديوهات أسبوعيًا', 'e.g. 5 videos a week'],
-    kLast: ['آخر موعد لمعاينات كل الفيديوهات', 'Deadline for all previews'],
+    kLast: ['آخر موعد لتسليم كل الفيديوهات', 'Last date for all videos'],
     kHint: ['لا حاجة إلى إدخال كل فيديو على حدة؛ يكفي العدد والسعر.', 'No need to list every video: the count and the price are enough.'],
     needPackage: ['اكتب عدد الفيديوهات وسعر الباقة (بالأرقام فقط).', 'Enter the number of videos and the package price (numbers only).'],
     // step 4
@@ -105,17 +105,17 @@
     payBy: ['طريقة الدفع', 'Payment method'],
     account: ['بيانات الحساب', 'Account details'],
     accountPh: ['مثلًا: بريد PayPal أو رقم الحساب البنكي', 'e.g. PayPal email or account number'],
-    deposit: ['الدفعة المقدمة', 'Upfront payment'],
-    depositHint: ['تُدفع قبل بدء العمل، ويُدفع الباقي بعد الموافقة على المعاينة.', 'Paid before work starts; the rest after the preview is approved.'],
+    deposit: ['الدفعة المقدمة (العربون)', 'Upfront payment (deposit)'],
+    depositHint: ['تُدفع قبل بدء العمل، ويُدفع الباقي بعد موافقة العميل على الفيديو.', 'Paid before work starts; the rest after the client approves the video.'],
     scope: ['يُحسب الدفع', 'Payment applies'],
     fees: ['من يتحمّل رسوم التحويل؟', 'Who pays transfer fees?'],
     // step 6
-    rounds: ['جولات التعديل لكل فيديو', 'Revision rounds per video'],
-    extra: ['سعر الجولة الإضافية', 'Price of an extra round'],
-    review: ['مدة مراجعة المعاينة', 'Time to review the preview'],
-    turn: ['مدة تنفيذ كل جولة تعديل', 'Time to apply each revision'],
-    notice: ['مهلة الانقطاع', 'No-reply grace period'],
-    noticeHint: ['إذا انقطع أحد الطرفين، فهذه هي المدة التي ينتظرها الآخر قبل أن يُعدّ ذلك إلغاءً.', 'If one side goes silent, how long the other waits before it counts as cancelling.'],
+    rounds: ['مرات التعديل المجانية لكل فيديو', 'Free revisions per video'],
+    extra: ['سعر مرة التعديل الإضافية', 'Price of an extra revision'],
+    review: ['مدة مراجعة العميل للفيديو', 'Time for the client to review'],
+    turn: ['مدة تنفيذ كل مرة تعديل', 'Time to apply each revision'],
+    notice: ['المهلة عند عدم الرد', 'Wait time if someone stops replying'],
+    noticeHint: ['إذا توقف أحد الطرفين عن الرد، فهذه هي المدة التي ينتظرها الآخر قبل أن يُعتبر ذلك إلغاءً.', 'If one side stops replying, how long the other waits before it counts as cancelling.'],
     workDays: ['أيام العمل والتوقيت', 'Work days & time zone'],
     workDaysPh: ['مثلًا: من الأحد إلى الخميس، بتوقيت مكة', 'e.g. Sun–Thu, Mecca time'],
     workDaysHint: ['إن تُركت فارغة، تُعتمد أيام العمل الرسمية وتوقيت بلد الفريلانسر.', "If left empty: the official work days and time zone of the freelancer's country."],
@@ -149,7 +149,20 @@
     making: ['جارٍ تجهيز الملف…', 'Preparing the file…'],
     fileFail: ['تعذّر تجهيز الملف. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.', 'We couldn’t prepare the file. Check your connection and try again.'],
     code: ['رمز العقد', 'Contract code'],
-    ver: ['النسخة', 'Version']
+    ver: ['النسخة', 'Version'],
+    // sending
+    attachHint: ['نزّلنا ملف العقد. أرفقه في محادثة {ch} مع الرسالة، ثم أرسل.', 'The contract file is downloaded. Attach it in the {ch} chat with the message, then send.'],
+    attachMail: ['نزّلنا ملف العقد. أرفقه في رسالة البريد، ثم أرسل.', 'The contract file is downloaded. Attach it to the email, then send.'],
+    attachCopy: ['نسخنا الرسالة ونزّلنا ملف العقد. الصق الرسالة في {ch} وأرفق معها الملف، ثم أرسل.', 'Message copied and file downloaded. Paste the message on {ch}, attach the file, then send.'],
+    openChat: ['افتح {ch}', 'Open {ch}'],
+    tapSend: ['الملف جاهز — اضغط للإرسال', 'File ready — tap to send'],
+    // the deal at a glance (above the clauses)
+    sumTotal: ['المبلغ الإجمالي', 'Total'],
+    sumPack: ['سعر الباقة', 'Package price'],
+    sumPay: ['الدفع', 'Payment'],
+    sumRev: ['التعديلات المجانية', 'Free revisions'],
+    sumDate: ['موعد التسليم', 'Delivery date'],
+    sumLast: ['آخر موعد للتسليم', 'Last delivery date']
   };
 
   function t(key, vars) {
@@ -324,11 +337,33 @@
     });
   }
   // Filled-in values. Phone numbers, links and codes have no letters to set their
-  // direction, so they are pinned left-to-right (an Arabic line would flip them)
+  // direction, so they are pinned left-to-right (an Arabic line would flip them).
+  // Anything with Arabic letters is pinned right-to-left, even when it starts with a
+  // Latin word («PayPal، تحويل بنكي…» would otherwise be laid out backwards).
   function V(x) {
-    var s = String(x == null ? '' : x);
-    var ltr = !/[֐-ࣿ]/.test(s) && /[0-9A-Za-z+@]/.test(s);
-    return '<bdi class="cm-v"' + (ltr ? ' dir="ltr"' : '') + '>' + esc(s) + '</bdi>';
+    var s = String(x == null ? '' : x).trim();   // display only: the data (and so the code) stays as typed
+    var rtl =/[֐-ࣿ]/.test(s), ltr = !rtl && /[0-9A-Za-z+@]/.test(s);
+    return '<bdi class="cm-v"' + (rtl ? ' dir="rtl"' : ltr ? ' dir="ltr"' : '') + '>' + esc(s) + '</bdi>';
+  }
+  // A link is shown short (no tracking tail) and opens in a new tab; any other text stays
+  // as it is. The data can come from anyone's link, so only plain http(s) addresses become links.
+  function refLink(x) {
+    var raw = String(x == null ? '' : x).trim(), u;
+    if (!/^https?:\/\/[^\s<>"']+$/i.test(raw)) return V(raw);
+    try { u = new URL(raw); } catch (e) { return V(raw); }
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return V(raw);
+    var host = u.hostname.replace(/^www\./, '').toLowerCase();
+    var social = /(^|\.)(instagram\.com|tiktok\.com|facebook\.com|fb\.watch|twitter\.com|x\.com|snapchat\.com|threads\.net)$/.test(host);
+    var yt = /(^|\.)youtube\.com$|^youtu\.be$/.test(host);
+    var keep = [];
+    if (!social) u.searchParams.forEach(function (val, key) {
+      if (yt ? /^(v|t|list)$/.test(key) : !/^(utm_|fbclid$|gclid$|igsh|si$|feature$|mibextid$)/i.test(key)) keep.push(key + (val ? '=' + val : ''));
+    });
+    var path = u.pathname.replace(/\/+$/, '');
+    try { path = decodeURI(path); } catch (e) {}
+    var show = host + path + (keep.length ? '?' + keep.join('&') : '');
+    if (show.length > 60) show = show.slice(0, 57) + '…';
+    return '<a class="cm-v cm-url" dir="ltr" href="' + esc(u.href) + '" target="_blank" rel="noopener noreferrer nofollow">' + esc(show) + '</a>';
   }
   function digits(x) { return String(x || '').replace(/[٠-٩]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(d); }).replace(/[٫,]/g, '.').trim(); }
   function price(x) { var n = parseFloat(digits(x)); return isNaN(n) || n < 0 || !/^\d+(\.\d+)?$/.test(digits(x)) ? null : n; }
@@ -349,14 +384,15 @@
   function days(n) {
     if (isEn()) return n + (n === 1 ? ' work day' : ' work days');
     if (n === 1) return 'يوم عمل واحد';
-    if (n === 2) return 'يوما عمل';
+    if (n === 2) return 'يومي عمل';   // always after «خلال» or «مهلة», so this form
     return n + (n <= 10 ? ' أيام عمل' : ' يوم عمل');
   }
+  // How many times the client may ask for changes, as in «التعديل مرتين»
   function rounds(n) {
-    if (isEn()) return n + (n === 1 ? ' revision round' : ' revision rounds');
-    if (n === 1) return 'جولة تعديل واحدة';
-    if (n === 2) return 'جولتا تعديل';
-    return n + (n <= 10 ? ' جولات تعديل' : ' جولة تعديل');
+    if (isEn()) return n + (n === 1 ? ' revision' : ' revisions');
+    if (n === 1) return 'مرة واحدة';
+    if (n === 2) return 'مرتين';
+    return n + (n <= 10 ? ' مرات' : ' مرة');
   }
   function videosCount(n) {
     if (isEn()) return n + (n === 1 ? ' video' : ' videos');
@@ -366,12 +402,17 @@
   }
   function listJoin(arr) {
     if (arr.length < 2) return arr.join('');
-    return isEn() ? arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1] : arr.slice(0, -1).join('، ') + ' و' + arr[arr.length - 1];
+    if (isEn()) return arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1];
+    var last = arr[arr.length - 1];   // «و» joins an Arabic word, but stands apart before a Latin one (و USDT)
+    return arr.slice(0, -1).join('، ') + (/^[؀-ۿ]/.test(last) ? ' و' : ' و ') + last;
   }
 
   /* ---------- the contract text (Arabic + English) ---------- */
+  // Plain, everyday words on purpose: both sides should get every clause on the first
+  // read — «النسخة الأولى» not «المعاينة», «مرة تعديل» not «جولة»، «برسالة» not «كتابيًا».
+  // Changing these words never changes a contract's code (the code comes from the data).
   function sections(s, code) {
-    var N = videoCount(s), sum = total(s), en = isEn(), pack = s.md === 'p';
+    var N = videoCount(s), sum = total(s), pack = s.md === 'p';
     var type = s.ty === 'ot' ? (s.to || optLabel('ty', 'ot')) : optLabel('ty', s.ty);
     var size = s.sz === 'ot' ? (s.so || optLabel('sz', 'ot')) : optLabel('sz', s.sz);
     var qual = s.q === 'ot' ? (s.qo || optLabel('q', 'ot')) : optLabel('q', s.q);
@@ -393,23 +434,23 @@
     s1.push(L('نوع الفيديو: ' + V(type) + (s.st ? '، والستايل المطلوب: ' + V(s.st) : '') + '.',
               'Video type: ' + V(type) + (s.st ? '; requested style: ' + V(s.st) : '') + '.'));
     s1.push(s.rf
-      ? L('الفيديو المرجعي: ' + V(s.rf) + '، ويُعدّ جزءًا من الاتفاق.', 'Reference video: ' + V(s.rf) + ' — it is part of this agreement.')
-      : L('لا يوجد فيديو مرجعي، فيختار الفريلانسر الستايل المناسب لنوع الفيديو.', 'There is no reference video, so the freelancer picks a style that suits the video type.'));
+      ? L('الفيديو المرجعي (مثال على الستايل المطلوب): ' + refLink(s.rf) + '، وهو جزء من هذا الاتفاق.', 'Reference video (an example of the wanted style): ' + refLink(s.rf) + ' — it is part of this agreement.')
+      : L('لا يوجد فيديو مرجعي، لذلك يختار الفريلانسر الستايل المناسب لنوع الفيديو.', 'There is no reference video, so the freelancer picks a style that suits the video type.'));
     s1.push(L('المقاس: ' + V(size) + '، والجودة النهائية: ' + V(qual) + '.', 'Size: ' + V(size) + '; final quality: ' + V(qual) + '.'));
     s1.push(incl.length
-      ? L('يشمل السعر: ' + V(listJoin(incl)) + '. وأي عمل غير مذكور يُعدّ عملًا إضافيًا (البند 4).', 'The price includes: ' + V(listJoin(incl)) + '. Anything not listed is extra work (section 4).')
-      : L('لم تُحدَّد أعمال داخلة في السعر، فأي عمل يُتفق عليه كتابيًا قبل البدء.', 'No included work was chosen, so any work is agreed in writing before starting.'));
-    s1.push(L('يرسل العميل كل المواد اللازمة بجودة صالحة، ويضمن أن له حق استخدامها. ولا يتحمل الفريلانسر ضعف جودة المواد الأصلية.',
-              'The client sends all needed materials in usable quality and confirms they have the right to use them. The freelancer isn’t responsible for poor quality in the original footage.'));
+      ? L('يشمل السعر: ' + V(listJoin(incl)) + '. وأي عمل غير مذكور هنا يُعتبر عملًا إضافيًا له سعر منفصل (البند 4).', 'The price includes: ' + V(listJoin(incl)) + '. Anything not listed here is extra work with its own price (section 4).')
+      : L('لم يُحدَّد ما يشمله السعر، لذلك يُتفق على أي عمل برسالة مكتوبة قبل البدء.', 'Nothing was listed as included, so any work is agreed in a written message before starting.'));
+    s1.push(L('يرسل العميل كل المواد المطلوبة بجودة جيدة، ويتأكد أن له حق استخدامها. والفريلانسر غير مسؤول عن ضعف جودة المواد الأصلية.',
+              'The client sends all needed materials in good quality and makes sure they have the right to use them. The freelancer isn’t responsible for poor quality in the original footage.'));
     if (!pack) {
-      s1.push(L('موعد التسليم هو موعد إرسال أول نسخة معاينة كاملة لكل فيديو، كما في الجدول.',
-                'The delivery date is when the first full preview of each video is sent, as in the table.'));
+      s1.push(L('موعد التسليم في الجدول هو موعد إرسال النسخة الأولى الكاملة من كل فيديو للمراجعة.',
+                'The delivery date in the table is when the first full version of each video is sent for review.'));
     } else if (s.ks || s.kt) {
-      s1.push(L('موعد التسليم هو موعد إرسال أول نسخة معاينة كاملة لكل فيديو' + (s.ks ? '، حسب جدول التسليم: ' + V(s.ks) : '') + (s.kt ? '، وآخر موعد لمعاينات كل الفيديوهات ' + V(fmtDate(s.kt)) : '') + '.',
-                'The delivery date is when the first full preview of each video is sent' + (s.ks ? ', following the schedule: ' + V(s.ks) : '') + (s.kt ? '; the deadline for all previews is ' + V(fmtDate(s.kt)) : '') + '.'));
+      s1.push(L('موعد التسليم هو موعد إرسال النسخة الأولى الكاملة من كل فيديو للمراجعة' + (s.ks ? '، حسب جدول التسليم: ' + V(s.ks) : '') + (s.kt ? '، وآخر موعد لتسليم كل الفيديوهات ' + V(fmtDate(s.kt)) : '') + '.',
+                'The delivery date is when the first full version of each video is sent for review' + (s.ks ? ', following the schedule: ' + V(s.ks) : '') + (s.kt ? '; the last date for all videos is ' + V(fmtDate(s.kt)) : '') + '.'));
     } else {
-      s1.push(L('موعد التسليم هو موعد إرسال أول نسخة معاينة كاملة لكل فيديو، ويُتفق عليه كتابيًا قبل بدء العمل على الفيديو.',
-                'The delivery date is when the first full preview of each video is sent; it is agreed in writing before work on that video starts.'));
+      s1.push(L('موعد التسليم هو موعد إرسال النسخة الأولى الكاملة من كل فيديو للمراجعة، ويُتفق عليه برسالة قبل بدء العمل على الفيديو.',
+                'The delivery date is when the first full version of each video is sent for review; it is agreed in a message before work on that video starts.'));
     }
     out.push({ t: L('تفاصيل المشروع', 'Project details'), items: s1 });
 
@@ -420,127 +461,142 @@
           'Package price: ' + V(amount(sum, s)) + ' for ' + V(videosCount(N)) + ', i.e. ' + V(amount(perVideo(s), s)) + ' per video.')
       : L('السعر الإجمالي: ' + V(amount(sum, s)) + '.', 'Total price: ' + V(amount(sum, s)) + '.'));
     if (s.dp === 0) {
-      s2.push(L('لا توجد دفعة مقدمة، ويبدأ العمل ويُحسب موعد التسليم من يوم استلام كل المواد.',
-                'There is no upfront payment; work starts, and the delivery date counts, from the day all materials are received.'));
+      s2.push(L('لا يوجد عربون (دفعة مقدمة)، ويبدأ العمل ويُحسب موعد التسليم من يوم وصول كل المواد.',
+                'There is no upfront payment; work starts, and the delivery date counts, from the day all materials arrive.'));
     } else if (s.dp === 100) {
-      s2.push(L('يُدفع المبلغ كاملًا قبل بدء العمل، ويبدأ العمل ويُحسب موعد التسليم من يوم استلامه مع كل المواد.',
-                'The full amount is paid before work starts; work starts, and the delivery date counts, from the day it’s received along with all materials.'));
+      s2.push(L('يُدفع المبلغ كاملًا قبل بدء العمل، ويبدأ العمل ويُحسب موعد التسليم من يوم وصوله مع كل المواد.',
+                'The full amount is paid before work starts; work starts, and the delivery date counts, from the day it arrives along with all materials.'));
     } else {
-      s2.push(L('الدفعة المقدمة: ' + V(s.dp + '% = ' + amount(dep, s)) + '، تُدفع قبل بدء العمل، ويبدأ العمل ويُحسب موعد التسليم من يوم استلامها مع كل المواد.',
-                'Upfront payment: ' + V(s.dp + '% = ' + amount(dep, s)) + ', paid before work starts; work starts, and the delivery date counts, from the day it’s received along with all materials.'));
-      s2.push(L('المبلغ المتبقي: ' + V((100 - s.dp) + '% = ' + amount(rest, s)) + '، يُدفع بعد موافقة العميل على المعاينة، وقبل تسليم النسخة النهائية.',
-                'The remaining ' + V((100 - s.dp) + '% = ' + amount(rest, s)) + ' is paid after the client approves the preview and before the final version is delivered.'));
+      s2.push(L('العربون (الدفعة المقدمة): ' + V(s.dp + '% = ' + amount(dep, s)) + '، يُدفع قبل بدء العمل، ويبدأ العمل ويُحسب موعد التسليم من يوم وصوله مع كل المواد.',
+                'Upfront payment (deposit): ' + V(s.dp + '% = ' + amount(dep, s)) + ', paid before work starts; work starts, and the delivery date counts, from the day it arrives along with all materials.'));
+      s2.push(L('باقي المبلغ: ' + V((100 - s.dp) + '% = ' + amount(rest, s)) + '، يُدفع بعد موافقة العميل على الفيديو، وقبل استلام النسخة النهائية.',
+                'The rest, ' + V((100 - s.dp) + '% = ' + amount(rest, s)) + ', is paid after the client approves the video and before receiving the final version.'));
     }
-    if (N > 1) s2.push(L('يُطبَّق الدفع ' + V(s.sc === 'p' ? 'على المشروع كاملًا' : 'على كل فيديو على حدة') + '.', 'Payment applies ' + V(s.sc === 'p' ? 'to the whole project' : 'to each video separately') + '.'));
-    if (s.ca.length) s2.push(L('يمكن الدفع أيضًا بالعملات التالية: ' + V(listJoin(otherCurrencies(s))) + '، ويُحسب المبلغ بسعر الصرف يوم الدفع، بحيث يصل للفريلانسر ما يعادل المبلغ المتفق عليه.',
+    if (N > 1) s2.push(L('يكون الدفع ' + V(s.sc === 'p' ? 'للمشروع كاملًا مرة واحدة' : 'لكل فيديو على حدة') + '.', 'Payment is made ' + V(s.sc === 'p' ? 'for the whole project at once' : 'for each video separately') + '.'));
+    if (s.ca.length) s2.push(L('يمكن الدفع أيضًا بالعملات التالية: ' + V(listJoin(otherCurrencies(s))) + '، ويُحوَّل المبلغ بسعر الصرف يوم الدفع، بحيث يصل للفريلانسر ما يساوي المبلغ المتفق عليه.',
                                'Payment is also accepted in: ' + V(listJoin(otherCurrencies(s))) + ', converted at the exchange rate on the payment day, so the freelancer receives the equivalent of the agreed amount.'));
-    if (pays.length) s2.push(L('طريقة الدفع: ' + V(listJoin(pays)) + (s.ac ? '. بيانات الحساب: ' + V(s.ac) : '') + '.', 'Payment method: ' + V(listJoin(pays)) + (s.ac ? '. Account details: ' + V(s.ac) : '') + '.'));
+    if (pays.length) s2.push(L('طريقة الدفع: ' + V(listJoin(pays)) + (s.ac ? '. بيانات الحساب: ' + refLink(s.ac) : '') + '.', 'Payment method: ' + V(listJoin(pays)) + (s.ac ? '. Account details: ' + refLink(s.ac) : '') + '.'));
     var payer = { c: L('العميل', 'the client'), f: L('الفريلانسر', 'the freelancer'), h: L('الطرفين مناصفة', 'both sides, split equally') }[s.fe];
     s2.push(L('رسوم التحويل وفرق العملة على ' + V(payer) + (s.fe === 'c' ? '، بحيث يصل للفريلانسر المبلغ المتفق عليه كاملًا' : '') + '.',
               'Transfer fees and currency differences are paid by ' + V(payer) + (s.fe === 'c' ? ', so the freelancer receives the full agreed amount' : '') + '.'));
     out.push({ t: L('السعر والدفع', 'Price & payment'), items: s2 });
 
-    // 3 Preview & delivery
+    // 3 Delivery & review
     var s3 = [];
-    s3.push(L('يرسل الفريلانسر نسخة معاينة كاملة بجودة أقل أو بعلامة مائية' + (s.dp < 100 ? '، قبل دفع المبلغ المتبقي' : '') + '.',
-              'The freelancer sends a full preview in lower quality or with a watermark' + (s.dp < 100 ? ', before the remaining amount is paid' : '') + '.'));
-    s3.push(L('يراجع العميل المعاينة خلال ' + V(days(s.rv)) + '، ويرسل كل ملاحظاته مكتوبة في رسالة واحدة.',
-              'The client reviews the preview within ' + V(days(s.rv)) + ' and sends all notes in writing, in one message.'));
-    s3.push(L('سكوت العميل لا يُعدّ موافقة. وإذا انتهت مدة المراجعة دون رد، يذكّره الفريلانسر كتابيًا، ثم تُطبَّق قاعدة الانقطاع (البند 7).',
-              'Silence is not approval. If the review time ends with no reply, the freelancer reminds the client in writing, then the no-reply rule applies (section 7).'));
-    s3.push(L('الموافقة على المعاينة تكون مكتوبة في ' + V(ch) + '، مثل: «موافق على الفيديو».',
-              'Approving the preview is done in writing on ' + V(ch) + ', e.g. “Approved”.'));
-    s3.push(L('يرسل الفريلانسر النسخة النهائية خلال يوم عمل واحد من ' + (s.dp < 100 ? 'استلام المبلغ المتبقي' : 'الموافقة على المعاينة') + '، بالجودة المتفق عليها وبدون علامة مائية.',
-              'The freelancer sends the final version within one work day of ' + (s.dp < 100 ? 'receiving the remaining amount' : 'the preview approval') + ', in the agreed quality and without a watermark.'));
-    if (s.dp < 100) s3.push(L('لا يجوز نشر المعاينة أو استخدامها قبل السداد الكامل، وإذا نُشرت يصبح المبلغ المتبقي مستحقًا فورًا.',
-                              'The preview may not be published or used before full payment; if it is, the remaining amount is due at once.'));
-    out.push({ t: L('المعاينة والتسليم', 'Preview & delivery'), items: s3 });
+    s3.push(L('يرسل الفريلانسر النسخة الأولى كاملة للمراجعة، بجودة أقل أو بعلامة مائية' + (s.dp < 100 ? '، إلى أن يُدفع باقي المبلغ' : '') + '.',
+              'The freelancer sends the first full version for review, in lower quality or with a watermark' + (s.dp < 100 ? ', until the rest is paid' : '') + '.'));
+    s3.push(L('يراجع العميل الفيديو خلال ' + V(days(s.rv)) + '، ويرسل كل ملاحظاته مكتوبة في رسالة واحدة.',
+              'The client reviews it within ' + V(days(s.rv)) + ' and sends all notes in writing, in one message.'));
+    s3.push(L('عدم رد العميل لا يعني أنه موافق. وإذا انتهت مدة المراجعة دون رد، يذكّره الفريلانسر برسالة، ثم يُطبَّق بند «عدم الرد» (البند 7).',
+              'No reply doesn’t mean approval. If the review time ends with no reply, the freelancer reminds the client by message, then the “no reply” rule applies (section 7).'));
+    s3.push(L('موافقة العميل على الفيديو تكون برسالة مكتوبة في ' + V(ch) + '، مثل: «موافق على الفيديو».',
+              'The client approves the video by a written message on ' + V(ch) + ', e.g. “Approved”.'));
+    s3.push(L('يرسل الفريلانسر النسخة النهائية خلال يوم عمل واحد من ' + (s.dp < 100 ? 'وصول باقي المبلغ' : 'موافقة العميل على الفيديو') + '، بالجودة المتفق عليها وبدون علامة مائية.',
+              'The freelancer sends the final version within one work day of ' + (s.dp < 100 ? 'receiving the rest of the payment' : 'the client’s approval') + ', in the agreed quality and without a watermark.'));
+    if (s.dp < 100) s3.push(L('لا يحق للعميل نشر أي نسخة أو استخدامها قبل الدفع الكامل، وإذا نشرها يجب عليه دفع باقي المبلغ فورًا.',
+                              'The client may not publish or use any version before paying in full; if they do, the rest is due at once.'));
+    out.push({ t: L('التسليم والمراجعة', 'Delivery & review'), items: s3 });
 
     // 4 Revisions
     var s4 = [];
     if (s.rd === 0) {
-      s4.push(L('لا يشمل السعر جولات تعديل، وأي تعديل يُتفق على سعره كتابيًا قبل تنفيذه.', 'The price includes no revision rounds; any revision is priced in writing before it’s done.'));
+      s4.push(L('لا يشمل السعر أي تعديل، وأي تعديل يُتفق على سعره برسالة قبل تنفيذه.', 'The price includes no revisions; any revision is priced in a message before it’s done.'));
     } else {
-      s4.push(L('يشمل السعر ' + V(rounds(s.rd)) + ' لكل فيديو. ' + (s.ex ? 'وكل جولة إضافية بسعر ' + V(s.ex + ' ' + curName(s)) + '.' : 'وسعر أي جولة إضافية يُتفق عليه كتابيًا قبل تنفيذها.'),
-                'The price includes ' + V(rounds(s.rd)) + ' per video. ' + (s.ex ? 'Each extra round costs ' + V(s.ex + ' ' + curName(s)) + '.' : 'Any extra round is priced in writing before it’s done.')));
-      s4.push(L('جولة التعديل: أن يجمع العميل كل ملاحظاته على النسخة ويرسلها مرة واحدة. وأي ملاحظات تُرسل بعدها على النسخة نفسها تُحسب جولة جديدة.',
-                'A revision round means the client gathers all notes on a version and sends them at once. Notes sent later on the same version count as a new round.'));
+      s4.push(L('يشمل السعر التعديل ' + V(rounds(s.rd)) + ' لكل فيديو. ' + (s.ex ? 'وكل مرة تعديل إضافية بسعر ' + V(s.ex + ' ' + curName(s)) + '.' : 'وسعر أي تعديل إضافي يُتفق عليه برسالة قبل تنفيذه.'),
+                'The price includes ' + V(rounds(s.rd)) + ' per video. ' + (s.ex ? 'Each extra revision costs ' + V(s.ex + ' ' + curName(s)) + '.' : 'Any extra revision is priced in a message before it’s done.')));
+      s4.push(L('معنى «مرة تعديل»: أن يجمع العميل كل ملاحظاته على النسخة ويرسلها في رسالة واحدة. وأي ملاحظات جديدة بعدها على النسخة نفسها تُحسب مرة جديدة.',
+                'One revision means the client gathers all notes on a version and sends them in one message. New notes later on the same version count as another revision.'));
     }
-    s4.push(L('التعديل المشمول: تغيير داخل الفكرة والستايل المتفق عليهما، مثل القص والتوقيت والنصوص والألوان والموسيقى.',
-              'Included revisions are changes within the agreed idea and style — cuts, timing, text, colors, music.'));
-    s4.push(L('العمل الإضافي: تغيير الفكرة أو الستايل أو المرجع، أو إضافة مقاطع أو فيديوهات جديدة، ويُتفق على سعره ومدته كتابيًا قبل تنفيذه.',
-              'Extra work means changing the idea, style or reference, or adding new clips or videos; its price and time are agreed in writing before it’s done.'));
-    s4.push(L('ينفّذ الفريلانسر كل جولة خلال ' + V(days(s.tn)) + ' من استلام الملاحظات.', 'The freelancer applies each round within ' + V(days(s.tn)) + ' of receiving the notes.'));
-    s4.push(L('أخطاء الفريلانسر التي تخالف المتفق عليه يصححها مجانًا، ولا تُحسب من الجولات.', 'The freelancer fixes their own mistakes for free; these don’t count as rounds.'));
-    s4.push(L('بعد تسليم النسخة النهائية، أي تعديل جديد يُعدّ عملًا إضافيًا، ما عدا أخطاء الفريلانسر التي يُبلَّغ عنها خلال 7 أيام.',
-              'After the final delivery, any new change is extra work — except the freelancer’s mistakes reported within 7 days.'));
+    s4.push(L('التعديل هو تغيير داخل الفكرة والستايل المتفق عليهما، مثل: القص والتوقيت والنصوص والألوان والموسيقى.',
+              'A revision is a change within the agreed idea and style — cuts, timing, text, colors, music.'));
+    s4.push(L('أما تغيير الفكرة أو الستايل أو الفيديو المرجعي، أو إضافة مقاطع أو فيديوهات جديدة، فهو عمل إضافي يُتفق على سعره ومدته برسالة قبل تنفيذه.',
+              'Changing the idea, style or reference, or adding new clips or videos, is extra work; its price and time are agreed in a message before it’s done.'));
+    s4.push(L('ينفّذ الفريلانسر كل مرة تعديل خلال ' + V(days(s.tn)) + ' من وصول الملاحظات.', 'The freelancer applies each revision within ' + V(days(s.tn)) + ' of receiving the notes.'));
+    s4.push(L('أخطاء الفريلانسر (أي شيء يخالف المتفق عليه) يصلحها مجانًا، ولا تُحسب من مرات التعديل.', 'The freelancer fixes their own mistakes (anything against what was agreed) for free; these don’t count as revisions.'));
+    s4.push(L('بعد تسليم النسخة النهائية، أي تعديل جديد يُعتبر عملًا إضافيًا، إلا أخطاء الفريلانسر التي يُبلَّغ عنها خلال 7 أيام.',
+              'After the final version is delivered, any new change is extra work — except the freelancer’s mistakes reported within 7 days.'));
     out.push({ t: L('التعديلات', 'Revisions'), items: s4 });
 
     // 5 Timing & communication
     var s5 = [];
-    s5.push(L('قناة التواصل المعتمدة: ' + V(ch) + '. وكلمة «كتابيًا» في هذا العقد تعني رسالة مكتوبة فيها، ولا تُعتمد الموافقات الشفهية أو بالمكالمات.',
-              'Agreed channel: ' + V(ch) + '. “In writing” in this contract means a written message there; verbal or call approvals don’t count.'));
-    s5.push(L('يرد كل طرف خلال 24 ساعة في أيام العمل، أو يبلّغ الطرف الآخر متى سيرد.', 'Each side replies within 24 hours on work days, or says when they will reply.'));
+    s5.push(L('وسيلة التواصل المتفق عليها: ' + V(ch) + '. وأي اتفاق أو موافقة في هذا العقد تكون برسالة مكتوبة فيها، ولا تُعتمد المكالمات أو الكلام الشفهي.',
+              'Agreed channel: ' + V(ch) + '. Every agreement or approval in this contract is a written message there; calls and spoken agreements don’t count.'));
+    s5.push(L('يرد كل طرف خلال 24 ساعة في أيام العمل، أو يخبر الطرف الآخر متى سيرد.', 'Each side replies within 24 hours on work days, or says when they will reply.'));
     s5.push(s.wd
-      ? L('أيام العمل والتوقيت: ' + V(s.wd) + '، وكل المواعيد تُحسب بها.', 'Work days and time zone: ' + V(s.wd) + '; all deadlines follow them.')
-      : L('أيام العمل والتوقيت: أيام العمل الرسمية وتوقيت بلد الفريلانسر' + (s.fc ? ' (' + V(s.fc) + ')' : '') + '، وكل المواعيد تُحسب بها.',
+      ? L('أيام العمل والتوقيت: ' + V(s.wd) + '، وكل المواعيد تُحسب على أساسها.', 'Work days and time zone: ' + V(s.wd) + '; all deadlines follow them.')
+      : L('أيام العمل والتوقيت: أيام العمل الرسمية وتوقيت بلد الفريلانسر' + (s.fc ? ' (' + V(s.fc) + ')' : '') + '، وكل المواعيد تُحسب على أساسها.',
           'Work days and time zone: the official work days and time zone of the freelancer’s country' + (s.fc ? ' (' + V(s.fc) + ')' : '') + '; all deadlines follow them.'));
-    s5.push(L('إذا تأخر العميل في إرسال الدفعة أو المواد أو الملاحظات، يتأخر موعد التسليم بعدد أيام التأخير نفسه.',
+    s5.push(L('إذا تأخر العميل في إرسال الدفعة أو المواد أو الملاحظات، يتأخر موعد التسليم بنفس عدد أيام التأخير.',
               'If the client is late sending payment, materials or notes, the delivery date moves by the same number of days.'));
-    s5.push(L('إذا توقّع الفريلانسر تأخرًا، يبلّغ العميل قبل الموعد ويتفقان كتابيًا على موعد جديد. وإذا تأخر دون اتفاق، يحق للعميل الإلغاء وتُطبَّق قاعدة إلغاء الفريلانسر (البند 7).',
-              'If the freelancer expects a delay, they tell the client before the deadline and agree a new date in writing. If they’re late without agreement, the client may cancel and the freelancer-cancellation rule applies (section 7).'));
-    s5.push(L('الظروف الطارئة (مثل المرض أو انقطاع الكهرباء أو الإنترنت): يبلّغ الطرف المتأثر فورًا وتتمدد المواعيد بقدرها. وإذا زادت عن 7 أيام، يحق للطرف الآخر الإلغاء، ويُعامَل كأنه إلغاء من الطرف المتأثر.',
-              'Emergencies (illness, power or internet outage): the affected side tells the other at once and deadlines extend by the same time. Beyond 7 days, the other side may cancel, treated as a cancellation by the affected side.'));
+    s5.push(L('إذا توقّع الفريلانسر أنه سيتأخر، يخبر العميل قبل الموعد ويتفقان برسالة على موعد جديد. وإذا تأخر بدون اتفاق، يحق للعميل الإلغاء، ويُعتبر الإلغاء من الفريلانسر (البند 7).',
+              'If the freelancer expects a delay, they tell the client before the deadline and agree a new date in a message. If they’re late without agreement, the client may cancel, and it counts as a cancellation by the freelancer (section 7).'));
+    s5.push(L('الظروف الطارئة (مثل المرض أو انقطاع الكهرباء أو الإنترنت): يخبر صاحب الظرف الطرف الآخر فورًا، وتتأخر المواعيد بنفس المدة. وإذا زادت عن 7 أيام، يحق للطرف الآخر الإلغاء، ويُعتبر الإلغاء من صاحب الظرف.',
+              'Emergencies (illness, power or internet outage): the affected side tells the other at once, and deadlines move by the same time. Beyond 7 days, the other side may cancel, and it counts as a cancellation by the affected side.'));
     out.push({ t: L('المواعيد والتواصل', 'Timing & communication'), items: s5 });
 
     // 6 Rights & privacy
     var s6 = [];
-    s6.push(L('يبقى الفيديو ملكًا للفريلانسر حتى السداد الكامل. وبعد السداد، يحق للعميل استخدام النسخة النهائية ونشرها في أي منصة أو غرض.',
-              'The video belongs to the freelancer until full payment. After payment, the client may use and publish the final version on any platform, for any purpose.'));
+    s6.push(L('يبقى الفيديو ملكًا للفريلانسر حتى يُدفع المبلغ كاملًا. وبعد الدفع، يحق للعميل استخدام النسخة النهائية ونشرها في أي منصة ولأي غرض.',
+              'The video belongs to the freelancer until it is paid in full. After payment, the client may use and publish the final version on any platform, for any purpose.'));
     var src = s.in.indexOf('src') !== -1;
-    s6.push(L('ملفات المشروع المفتوحة: ' + V(src ? 'مشمولة في السعر وتُسلَّم مع النسخة النهائية' : 'غير مشمولة ولا تُسلَّم') + '.',
+    s6.push(L('ملفات المشروع المفتوحة (القابلة للتعديل): ' + V(src ? 'مشمولة في السعر وتُسلَّم مع النسخة النهائية' : 'غير مشمولة ولا تُسلَّم') + '.',
               'Editable project files: ' + V(src ? 'included and delivered with the final version' : 'not included and not delivered') + '.'));
-    s6.push(L('قوالب الفريلانسر وإعداداته ومؤثراته الخاصة تبقى ملكه، ويُستخدم ما فيها داخل الفيديو فقط.', 'The freelancer’s own templates, presets and effects stay theirs and are used inside the video only.'));
+    s6.push(L('القوالب والإعدادات الجاهزة والمؤثرات الخاصة بالفريلانسر تبقى ملكه، ويستخدمها داخل الفيديو فقط.', 'The freelancer’s own templates, presets and effects stay theirs and are used inside the video only.'));
     s6.push({
-      c: L('الموسيقى والعناصر الخارجية يرسلها العميل، وهي على مسؤوليته.', 'Music and outside elements come from the client, at the client’s responsibility.'),
-      f: L('الموسيقى والعناصر الخارجية يضيفها الفريلانسر من مصادر مرخصة أو مجانية للاستخدام.', 'Music and outside elements are added by the freelancer from licensed or free sources.'),
-      n: L('لا يحتوي الفيديو على موسيقى، وأي عناصر خارجية يرسلها العميل تكون على مسؤوليته.', 'The video has no music; any outside elements the client sends are at the client’s responsibility.')
+      c: L('الموسيقى والعناصر الخارجية يرسلها العميل، وهو المسؤول عنها.', 'Music and outside elements come from the client, who is responsible for them.'),
+      f: L('الموسيقى والعناصر الخارجية يضيفها الفريلانسر من مصادر مرخصة أو مجانية الاستخدام.', 'Music and outside elements are added by the freelancer from licensed or free sources.'),
+      n: L('الفيديو بدون موسيقى، وأي عناصر خارجية يرسلها العميل يكون هو المسؤول عنها.', 'The video has no music; the client is responsible for any outside elements they send.')
     }[s.mu]);
-    s6.push(L('مواد العميل ملكه، ويحافظ الفريلانسر على سريتها، ولا ينشرها ولا يشاركها مع أحد.', 'The client’s materials are theirs; the freelancer keeps them private and doesn’t publish or share them.'));
+    s6.push(L('مواد العميل ملكه، ويحافظ الفريلانسر على خصوصيتها، فلا ينشرها ولا يشاركها مع أحد.', 'The client’s materials are theirs; the freelancer keeps them private and doesn’t publish or share them.'));
     s6.push(s.pf
       ? L('يحق للفريلانسر عرض الفيديو في معرض أعماله بعد أن ينشره العميل.', 'The freelancer may show the video in their portfolio after the client publishes it.')
       : L('لا يعرض الفريلانسر الفيديو في معرض أعماله إلا بإذن مكتوب من العميل.', 'The freelancer won’t show the video in their portfolio without the client’s written permission.'));
-    s6.push(L('يحتفظ الفريلانسر بملفات المشروع 30 يومًا من تسليم النسخة النهائية، ولا يُطالَب بها بعد ذلك.', 'The freelancer keeps the project files for 30 days after the final delivery and isn’t responsible for them after that.'));
-    out.push({ t: L('الحقوق والسرية', 'Rights & privacy'), items: s6 });
+    s6.push(L('يحتفظ الفريلانسر بملفات المشروع 30 يومًا بعد تسليم النسخة النهائية، وبعدها لا يُطالَب بها.', 'The freelancer keeps the project files for 30 days after the final delivery and isn’t responsible for them after that.'));
+    out.push({ t: L('الحقوق والخصوصية', 'Rights & privacy'), items: s6 });
 
     // 7 Cancelling
     var s7 = [];
-    s7.push(L('الانقطاع: إذا توقف أحد الطرفين عن الرد بما يعطّل العمل، ينبّهه الآخر كتابيًا ويمهله ' + V(days(s.nt)) + '. فإذا لم يرد خلالها، يُعدّ ذلك إلغاءً منه.',
-              'No reply: if one side stops replying and blocks the work, the other warns them in writing and gives them ' + V(days(s.nt)) + '. With no reply by then, it counts as a cancellation by them.'));
-    s7.push(L('إلغاء العميل قبل بدء العمل: ' + (s.dp > 0 ? 'تُرد له الدفعة المقدمة كاملة.' : 'لا يُستحق شيء.'),
+    s7.push(L('عدم الرد: إذا توقف أحد الطرفين عن الرد وتعطّل العمل بسببه، يرسل له الآخر رسالة تنبيه ويعطيه مهلة ' + V(days(s.nt)) + '. فإذا لم يرد خلالها، يُعتبر أنه ألغى الاتفاق.',
+              'No reply: if one side stops replying and the work is blocked, the other sends a warning message and gives them ' + V(days(s.nt)) + '. With no reply by then, it counts as a cancellation by them.'));
+    s7.push(L('إذا ألغى العميل قبل بدء العمل: ' + (s.dp > 0 ? 'يُرجَع له العربون كاملًا.' : 'لا يدفع شيئًا.'),
               'If the client cancels before work starts: ' + (s.dp > 0 ? 'the upfront payment is refunded in full.' : 'nothing is owed.')));
-    s7.push(L('إلغاء العميل بعد بدء العمل: يستحق الفريلانسر عن كل فيديو سعره كاملًا إذا أُرسلت معاينته، ونصف سعره إذا بدأ العمل عليه بلا معاينة، ولا شيء إذا لم يبدأ.' + (pack ? ' وفي الباقة، سعر الفيديو الواحد = سعر الباقة ÷ عدد الفيديوهات (' + V(amount(perVideo(s), s)) + ').' : ''),
-              'If the client cancels after work starts, the freelancer is owed, per video: the full price if its preview was sent, half if work started without a preview, nothing if it hadn’t started.' + (pack ? ' In a package, one video’s price = the package price ÷ the number of videos (' + V(amount(perVideo(s), s)) + ').' : '')));
-    s7.push(L('إلغاء الفريلانسر: يرد للعميل كل ما دفعه عن أي فيديو لم تُسلَّم نسخته النهائية.', 'If the freelancer cancels, they refund everything paid for any video whose final version wasn’t delivered.'));
-    s7.push(L('التسوية: يُقارَن ما دفعه العميل بما يستحقه الفريلانسر، ويُرد الفرق أو يُكمَّل خلال 7 أيام من الإلغاء بطريقة الدفع نفسها. وكل فيديو يُدفع سعره كاملًا تُسلَّم نسخته النهائية.',
-              'Settlement: what the client paid is compared with what the freelancer is owed, and the difference is refunded or completed within 7 days, by the same payment method. Every video paid in full gets its final version.'));
-    s7.push(L('يكون الإلغاء برسالة مكتوبة في قناة التواصل المعتمدة.', 'Cancelling is done by a written message on the agreed channel.'));
-    out.push({ t: L('الإلغاء والتوقف', 'Cancelling'), items: s7 });
+    s7.push(L('إذا ألغى العميل بعد بدء العمل، يأخذ الفريلانسر عن كل فيديو: سعره كاملًا إذا أرسل نسخته الأولى، ونصف سعره إذا بدأ العمل عليه ولم يرسل نسخة، ولا شيء إذا لم يبدأ فيه.' + (pack ? ' وفي الباقة، سعر الفيديو الواحد = سعر الباقة ÷ عدد الفيديوهات (' + V(amount(perVideo(s), s)) + ').' : ''),
+              'If the client cancels after work starts, the freelancer gets, per video: the full price if its first version was sent, half if work started but no version was sent, nothing if it hadn’t started.' + (pack ? ' In a package, one video’s price = the package price ÷ the number of videos (' + V(amount(perVideo(s), s)) + ').' : '')));
+    s7.push(L('إذا ألغى الفريلانسر: يُرجِع للعميل كل ما دفعه عن أي فيديو لم يسلّم نسخته النهائية.', 'If the freelancer cancels, they refund everything paid for any video whose final version wasn’t delivered.'));
+    s7.push(L('بعد أي إلغاء: يُقارَن ما دفعه العميل بما يأخذه الفريلانسر حسب هذا البند، فيُرجَع الزائد أو يُدفع الناقص خلال 7 أيام، بنفس طريقة الدفع. وكل فيديو يُدفع سعره كاملًا يستلم العميل نسخته النهائية.',
+              'After any cancellation, what the client paid is compared with what the freelancer gets under this section; the extra is refunded or the shortfall paid within 7 days, by the same payment method. Every video paid in full gets its final version.'));
+    s7.push(L('الإلغاء يكون برسالة مكتوبة في ' + V(ch) + '.', 'Cancelling is done by a written message on ' + V(ch) + '.'));
+    out.push({ t: L('الإلغاء', 'Cancelling'), items: s7 });
 
-    // 8 Electronic agreement
+    // 8 How this agreement works
     var s8 = [];
-    s8.push(L('طبيعة العقد: اتفاق ودي إلكتروني، وليس عقدًا رسميًا أو حكوميًا. هدفه توضيح ما اتفق عليه الطرفان والرجوع إليه عند أي اختلاف، ولا يحتاج طباعة ولا توقيعًا.',
+    s8.push(L('هذا اتفاق ودي إلكتروني، وليس عقدًا رسميًا أو حكوميًا. هدفه توضيح ما اتفق عليه الطرفان والرجوع إليه عند أي خلاف، ولا يحتاج طباعة أو توقيعًا.',
               'This is a friendly electronic agreement, not an official or government contract. It records what both sides agreed so they can refer to it if they disagree. No printing or signature is needed.'));
-    s8.push(L('الموافقة: يرسل كل طرف في ' + V(ch) + ': ' + V(approvalText(s, code)) + '. وهذه الرسالة تعني موافقته على كل ما فيه.',
+    s8.push(L('الموافقة: يرسل كل طرف في ' + V(ch) + ': ' + V(approvalText(s, code)) + '. وهذه الرسالة تعني أنه موافق على كل ما في العقد.',
               'Approval: each side sends on ' + V(ch) + ': ' + V(approvalText(s, code)) + '. That message means they accept everything in it.'));
-    s8.push(L('رمز العقد يتغيّر إذا تغيّر أي شيء فيه، والكود المربع في آخره يفتح النسخة الأصلية للتأكد منها.',
-              'The contract code changes if anything in it changes, and the square code at the end opens the original version to check it.'));
-    s8.push(L('أي تعديل يكون بنسخة جديدة برقم جديد يوافق عليها الطرفان بالطريقة نفسها، ولا يغيّر أي طرف الاتفاق وحده.',
-              'Any change is made as a new version with a new number, approved the same way; neither side changes the agreement alone.'));
-    if (s.tr) s8.push(L('شروط إضافية (تُقدَّم على البنود إذا تعارضت معها): ' + V(s.tr), 'Extra terms (these override the clauses above if they conflict): ' + V(s.tr)));
-    s8.push(L('عند الخلاف: يرجع الطرفان أولًا إلى هذا العقد، ثم إلى الرسائل المكتوبة في قناة التواصل، ويحاولان الحل بالتراضي.',
-              'If you disagree: first refer to this contract, then to the written messages on the agreed channel, and settle it amicably.'));
-    out.push({ t: L('الاتفاق الإلكتروني', 'Electronic agreement'), items: s8 });
+    s8.push(L('رمز العقد يتغير إذا تغير أي شيء فيه، والباركود في آخر العقد يفتح النسخة الأصلية للتأكد منها.',
+              'The contract code changes if anything in it changes, and the QR code at the end opens the original version to check it.'));
+    s8.push(L('لتغيير أي شيء في العقد: تُجهَّز نسخة جديدة برقم جديد ويوافق عليها الطرفان بنفس الطريقة، ولا يحق لأي طرف تغيير الاتفاق وحده.',
+              'To change anything, a new version with a new number is made and both sides approve it the same way; neither side changes the agreement alone.'));
+    if (s.tr) s8.push(L('شروط إضافية (لها الأولوية إذا اختلفت مع البنود السابقة): ' + V(s.tr), 'Extra terms (these come first if they conflict with the clauses above): ' + V(s.tr)));
+    s8.push(L('عند أي خلاف: يرجع الطرفان أولًا إلى هذا العقد، ثم إلى رسائلهما في ' + V(ch) + '، ويحاولان الحل بالتفاهم.',
+              'If you disagree: first refer to this contract, then to your messages on ' + V(ch) + ', and settle it amicably.'));
+    out.push({ t: L('الموافقة على العقد', 'Approving the agreement'), items: s8 });
+    return out;
+  }
+
+  // The deal at a glance (four tiles above the clauses)
+  function glance(s) {
+    var sum = total(s), N = videoCount(s), out = [];
+    out.push([s.md === 'p' ? t('sumPack') : t('sumTotal'), sum == null ? '—' : amount(sum, s)]);
+    out.push([t('sumPay'), s.dp === 0 ? L('بعد الموافقة على الفيديو', 'After the video is approved')
+      : s.dp === 100 ? L('كاملًا قبل بدء العمل', 'In full, before work starts')
+      : L(s.dp + '% قبل البدء، والباقي ' + (100 - s.dp) + '% بعد الموافقة', s.dp + '% before work, ' + (100 - s.dp) + '% after approval')]);
+    out.push([t('sumRev'), s.rd === 0 ? L('غير مشمولة', 'Not included') : rounds(s.rd) + (N > 1 ? L(' لكل فيديو', ' per video') : '')]);
+    var dates = s.md === 'p' ? (s.kt ? [s.kt] : []) : s.vd.map(function (v) { return v.t; }).filter(Boolean).sort();
+    var many = s.md === 'p' || s.vd.length > 1;
+    out.push([many && dates.length ? t('sumLast') : t('sumDate'),
+      dates.length ? fmtDate(dates[dates.length - 1]) : (s.md === 'p' && s.ks ? L('حسب جدول التسليم', 'Per the schedule') : L('يُتفق عليه برسالة', 'Agreed by message'))]);
     return out;
   }
 
@@ -549,7 +605,7 @@
   }
 
   // The contract sheet. blocks: data-block marks the pieces the PDF can put on pages
-  function paperHTML(s, code, url, qrImg) {
+  function paperHTML(s, code, url, qrImg, forFile) {
     var sum = total(s);
     var h = '';
     h += '<header class="cm-p-head" data-block="head">' +
@@ -567,6 +623,11 @@
         '<div><span>' + L('التواصل', 'Contact') + ':</span> ' + V(p[3] || '—') + '</div></div>';
     });
     h += '</div></div>';
+
+    // The deal at a glance, before any clause
+    h += '<div class="cm-p-block" data-block="sum"><div class="cm-p-sum">' + glance(s).map(function (g) {
+      return '<div><span>' + esc(g[0]) + '</span><b>' + V(g[1]) + '</b></div>';
+    }).join('') + '</div></div>';
 
     if (s.md === 'p') {
       // Package: one small table instead of a row per video
@@ -595,7 +656,9 @@
 
     // Square code
     h += '<div class="cm-p-block" data-block="qr"><div class="cm-p-qr">' + (qrImg ? '<img src="' + qrImg + '" alt="QR">' : '') +
-      '<p>' + L('امسح الكود بكاميرا الجوال لفتح النسخة الأصلية من هذا العقد والتأكد منها.', 'Scan with a phone camera to open and verify the original version of this contract.') +
+      '<p>' + (forFile
+        ? L('امسح الباركود أو اضغط عليه لفتح النسخة الأصلية من هذا العقد والتأكد منها.', 'Scan or tap the QR code to open and verify the original version of this contract.')
+        : L('امسح الباركود بكاميرا الجوال لفتح النسخة الأصلية من هذا العقد والتأكد منها.', 'Scan the QR code with a phone camera to open and verify the original version of this contract.')) +
       '<br>' + t('code') + ': <b class="cm-code">' + esc(code) + '</b></p></div>' +
       '<p class="cm-p-foot">' + L('اتفاق ودي للتوضيح والرجوع إليه عند الاختلاف، وليس عقدًا رسميًا أو حكوميًا.', 'A friendly agreement for clarity and reference — not an official or government contract.') + '</p></div>';
     h += '</div>';
@@ -821,6 +884,7 @@
       '<div class="cm-result cm-fade">' +
       '<div class="cm-ready"><span class="cm-ok">' + icon('ok') + '</span><h2>' + (received ? t('received') : t('ready')) + '</h2><p>' + (received ? t('receivedSub') : t('readySub')) + '</p></div>' +
       '<div class="cm-actions">' + actions + '</div>' +
+      '<p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>' +
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
       '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></div>' +
       '<article class="cm-paper' + (paperDark() ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
@@ -882,7 +946,7 @@
       // Lay the whole sheet out once at A4 width to measure it. Clauses are the
       // smallest pieces: a section can continue on the next page, but a clause
       // is never cut in half and a section title never sits alone at the bottom.
-      holder.innerHTML = '<div class="cm-paper">' + paperHTML(S, current.code, current.url, current.qr) + '</div>';
+      holder.innerHTML = '<div class="cm-paper">' + paperHTML(S, current.code, current.url, current.qr, true) + '</div>';
       var paper = holder.firstChild;
       var head = paper.querySelector('[data-block="head"]');
       var units = [];
@@ -940,12 +1004,19 @@
           page.appendChild(sheet);
           var num = document.createElement('div');
           num.className = 'cm-page-num';
-          num.textContent = (i + 1) + ' / ' + pages.length + '   ·   ' + t('code') + ' ' + current.code;
+          // the code and the page count are isolated, so an Arabic line can't pull their digits apart
+          num.innerHTML = esc(t('code')) + ' <bdi dir="ltr">' + esc(current.code) + '</bdi> &nbsp;·&nbsp; <bdi dir="ltr">' + (i + 1) + ' / ' + pages.length + '</bdi>';
           page.appendChild(num);
           holder.appendChild(page);
           return window.html2canvas(page, { scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false }).then(function (canvas) {
             if (i > 0) pdf.addPage();
             pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 297);
+            // In the file, the square code is also a button that opens the contract online
+            var qr = page.querySelector('.cm-p-qr');
+            if (qr && current.url) {
+              var pr = page.getBoundingClientRect(), r = qr.getBoundingClientRect(), k = 210 / pr.width;
+              pdf.link((r.left - pr.left) * k, (r.top - pr.top) * k, r.width * k, r.height * k, { url: current.url });
+            }
             page.remove();
           });
         });
@@ -967,14 +1038,48 @@
     else { btn.innerHTML = btn._html || btn.innerHTML; btn.disabled = false; }
   }
 
+  // The file is made once per contract and language, then reused (download, send again…)
+  var fileCache = null, fileJob = null;
+  function fileKey() { return current.code + '|' + document.documentElement.lang; }
+  function cachedFile() { return fileCache && fileCache.key === fileKey() ? fileCache.file : null; }
+  function getFile() {
+    var key = fileKey();
+    if (cachedFile()) return Promise.resolve(fileCache.file);
+    if (fileJob && fileJob.key === key) return fileJob.p;
+    var p = makePdf().then(function (pdf) {
+      var file = new File([pdf.output('blob')], fileName(), { type: 'application/pdf' });
+      fileCache = { key: key, file: file };
+      return file;
+    });
+    function done() { if (fileJob && fileJob.p === p) fileJob = null; }
+    p.then(done, done);
+    fileJob = { key: key, p: p };
+    return p;
+  }
+  function saveFile(file) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(file);
+    a.download = file.name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 60000);
+  }
+
   function doPdf(btn) {
+    if (cachedFile()) { saveFile(cachedFile()); return; }
     busy(btn, true);
-    return makePdf().then(function (pdf) { pdf.save(fileName()); })
+    return getFile().then(saveFile)
       .catch(function (e) { console.error(e); toast(t('fileFail')); })
       .then(function () { busy(btn, false); });
   }
 
-  function shareMessage() {
+  // What goes with the file: two short lines, no long link
+  function fileMessage() {
+    return L('مرحبًا، هذا عقد المونتاج بيننا في الملف المرفق.\nإن كنت موافقًا عليه، فأرسل: «', 'Hi, here is our editing contract (attached file).\nIf you agree, reply with: “') +
+      approvalText(S, current.code) + L('»', '”');
+  }
+  // Instagram messages can't carry a file, so there the contract goes as a link
+  function linkMessage() {
     return L('هذا عقد المونتاج بيننا (النسخة ' + S.ver + '، الرمز ' + current.code + '). افتح الرابط لقراءته، وإن كنت موافقًا فأرسل الرسالة المذكورة في آخره:\n',
              'Here is our editing contract (version ' + S.ver + ', code ' + current.code + '). Open it from the link, and if you agree, reply with the message at its end:\n') + current.url;
   }
@@ -985,40 +1090,71 @@
     var d = digits(raw).replace(/[^\d]/g, '');
     return S.ch === 'wa' && d.length >= 8 ? d : '';
   }
-  function openChat(text, who) {
-    if (S.ch === 'wa') {
-      var ph = phoneOf(who);
-      window.open('https://wa.me/' + ph + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
-      return;
-    }
-    if (S.ch === 'tg') { window.open('https://t.me/share/url?url=' + encodeURIComponent(current.url) + '&text=' + encodeURIComponent(text.replace(current.url, '')), '_blank', 'noopener'); return; }
+  // A ready chat for WhatsApp and email; other apps get the text copied instead
+  function chatUrl(text, who) {
+    if (S.ch === 'wa') return 'https://wa.me/' + phoneOf(who) + '?text=' + encodeURIComponent(text);
     if (S.ch === 'em') {
       var mail = who === 'f' ? S.fx : S.cx;
-      location.href = 'mailto:' + (/@/.test(mail) ? encodeURIComponent(mail.trim()) : '') + '?subject=' + encodeURIComponent(L('عقد المونتاج', 'Editing contract')) + '&body=' + encodeURIComponent(text);
-      return;
+      return 'mailto:' + (/@/.test(mail) ? encodeURIComponent(mail.trim()) : '') + '?subject=' + encodeURIComponent(L('عقد المونتاج', 'Editing contract')) + '&body=' + encodeURIComponent(text);
     }
-    copyText(text).then(function () { toast(t('msgCopied', { ch: chName(S) })); });
+    return '';
+  }
+  function openChat(text, who) {
+    var url = chatUrl(text, who);
+    if (!url) { copyText(text).then(function () { toast(t('msgCopied', { ch: chName(S) })); }); return; }
+    if (S.ch === 'em') { location.href = url; return; }
+    var w = window.open(url, '_blank');
+    if (w) { try { w.opener = null; } catch (e) {} }
   }
 
   function isPhone() {
     return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform));
   }
 
-  // On a phone the file itself goes through the share sheet (WhatsApp, Telegram…);
-  // on a computer the chat opens with the link, which shows the same contract
+  // The note under the buttons: what just happened and what's left to do
+  function sendNote(html) {
+    var el = document.getElementById('cmSendNote');
+    if (!el) return;
+    el.innerHTML = icon('ok') + '<span>' + html + '</span>';
+    el.hidden = false;
+  }
+  function readyBtn(btn, on) {
+    if (!btn) return;
+    btn.innerHTML = icon('send') + (on ? t('tapSend') : t('send'));
+    btn.classList.toggle('cm-pulse', on);
+  }
+
+  // Sending = the file + two short lines (no long link in the chat).
+  // On a phone the share sheet takes both at once; on a computer the file
+  // downloads and the chat opens with the lines ready.
   function doSend(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
-    var canFiles = isPhone() && navigator.canShare && window.File;
-    if (!canFiles) { openChat(shareMessage(), other); return; }
+    if (S.ch === 'ig') { openChat(linkMessage(), other); return; }
+    var msg = fileMessage();
+    var phone = isPhone() && navigator.canShare && window.File;
+    if (phone && cachedFile()) { shareFile(cachedFile(), msg, other, btn); return; }
     busy(btn, true);
-    makePdf().then(function (pdf) {
-      var file = new File([pdf.output('blob')], fileName(), { type: 'application/pdf' });
-      if (navigator.canShare({ files: [file] })) {
-        return navigator.share({ files: [file], text: shareMessage() }).catch(function (e) { if (e && e.name !== 'AbortError') throw e; });
-      }
-      openChat(shareMessage(), other);
-    }).catch(function (e) { console.error(e); openChat(shareMessage(), other); })
-      .then(function () { busy(btn, false); });
+    getFile().then(function (file) {
+      busy(btn, false);
+      if (phone) shareFile(file, msg, other, btn);
+      else { saveFile(file); afterSave(msg, other); }
+    }).catch(function (e) { console.error(e); busy(btn, false); toast(t('fileFail')); });
+  }
+  function shareFile(file, msg, other, btn) {
+    if (!navigator.canShare({ files: [file] })) { saveFile(file); afterSave(msg, other); return; }
+    navigator.share({ files: [file], text: msg }).then(function () { readyBtn(btn, false); }, function (e) {
+      if (e && e.name === 'AbortError') return;
+      // Making the file took longer than one tap allows: the next tap sends it at once
+      if (e && e.name === 'NotAllowedError') { readyBtn(btn, true); return; }
+      saveFile(file); afterSave(msg, other);
+    });
+  }
+  function afterSave(msg, other) {
+    var ch = esc(chName(S)), url = chatUrl(msg, other);
+    if (!url) { copyText(msg).then(function () { sendNote(t('attachCopy', { ch: ch })); }); return; }
+    openChat(msg, other);
+    if (S.ch === 'em') { sendNote(t('attachMail')); return; }
+    sendNote(t('attachHint', { ch: ch }) + ' <a class="cm-link" href="' + esc(url) + '" target="_blank" rel="noopener">' + t('openChat', { ch: ch }) + '</a>');
   }
 
   function doApprove() {
@@ -1098,6 +1234,12 @@
       else if (act === 'approve') doApprove();
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
     }
+  });
+
+  // On a computer, start making the file as soon as the mouse reaches the send / download buttons
+  app.addEventListener('pointerover', function (e) {
+    if (e.pointerType !== 'mouse' || (mode !== 'result' && mode !== 'received') || !current.code || cachedFile()) return;
+    if (e.target.closest && e.target.closest('[data-act="send"], [data-act="pdf"]')) getFile().catch(function () {});
   });
 
   function keepScroll(fn) {
