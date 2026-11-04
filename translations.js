@@ -11,6 +11,7 @@ window.TRANSLATIONS_EN = {
   'common.menu': 'Navigation menu',
   'common.close': 'Close',
   'common.video': 'Video',
+  'common.theme': 'Dark / light mode',
 
   'nav.home': 'Home',
   'nav.about': 'About',

@@ -69,8 +69,9 @@
     currency: ['العملة', 'Currency'],
     videos: ['الفيديوهات', 'Videos'],
     video: ['فيديو', 'Video'],
-    vDesc: ['وصف الفيديو', 'Description'],
-    vDescPh: ['مثلاً: ريل عن العروض', 'e.g. reel about the offers'],
+    vDesc: ['وش الفيديو؟', 'What’s the video?'],
+    vDescSmall: ['وصف قصير، اختياري', 'short description, optional'],
+    vDescPh: ['مثلاً: إعلان عروض نهاية الأسبوع', 'e.g. weekend sale ad'],
     vLen: ['المدة', 'Length'],
     vLenPh: ['مثلاً: 60 ثانية', 'e.g. 60 sec'],
     vPrice: ['السعر', 'Price'],
@@ -573,7 +574,8 @@
   var S = null;          // the contract being made or read
   var step = 1;
   var mode = 'wizard';   // wizard | result | received | bad
-  var dark = false;
+  var dark = null;       // the sheet's own light / dark reading; null = follow the site's theme
+  function paperDark() { return dark === null ? document.documentElement.getAttribute('data-theme') === 'dark' : dark; }
   var current = { code: '', url: '', qr: '' };
   var fromLink = false;
 
@@ -635,8 +637,8 @@
       h += '<p class="cm-label">' + t('videos') + '</p>';
       S.vd.forEach(function (v, i) {
         h += '<div class="cm-video"><div class="cm-video-head"><span class="cm-video-num">' + t('video') + ' ' + (i + 1) + '</span>' +
-          (S.vd.length > 1 ? '<button type="button" class="cm-remove" data-vrm="' + i + '">' + t('remove') + '</button>' : '') + '</div>' +
-          '<div class="cm-field"><input class="cm-input" dir="auto" data-vid="' + i + '" data-vf="d" value="' + esc(v.d) + '" placeholder="' + esc(t('vDescPh')) + '" maxlength="80" aria-label="' + esc(t('vDesc')) + '"></div>' +
+          (S.vd.length > 1 ? '<button type="button" class="cm-remove" data-vrm="' + i + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 11v6M14 11v6"/></svg>' + t('remove') + '</button>' : '') + '</div>' +
+          '<label class="cm-mini cm-mini-wide"><span>' + t('vDesc') + ' <small>(' + t('vDescSmall') + ')</small></span><input class="cm-input" dir="auto" data-vid="' + i + '" data-vf="d" value="' + esc(v.d) + '" placeholder="' + esc(t('vDescPh')) + '" maxlength="80"></label>' +
           '<div class="cm-grid3">' +
           '<label class="cm-mini"><span>' + t('vLen') + '</span><input class="cm-input" dir="auto" data-vid="' + i + '" data-vf="l" value="' + esc(v.l) + '" placeholder="' + esc(t('vLenPh')) + '" maxlength="30"></label>' +
           '<label class="cm-mini"><span>' + t('vPrice') + '</span><input class="cm-input" dir="ltr" inputmode="decimal" data-vid="' + i + '" data-vf="p" value="' + esc(v.p) + '" placeholder="0" maxlength="14"></label>' +
@@ -729,8 +731,8 @@
       '<div class="cm-ready"><span class="cm-ok">' + icon('ok') + '</span><h2>' + (received ? t('received') : t('ready')) + '</h2><p>' + (received ? t('receivedSub') : t('readySub')) + '</p></div>' +
       '<div class="cm-actions">' + actions + '</div>' +
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
-      '<button type="button" class="cm-link" data-act="dark">' + (dark ? t('darkOff') : t('darkOn')) + '</button></div>' +
-      '<article class="cm-paper' + (dark ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
+      '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></div>' +
+      '<article class="cm-paper' + (paperDark() ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
       '<div class="cm-approve"><h3>' + t('approveTitle') + '</h3><p>' + t('approveText', { ch: esc(chName(S)) }) + '</p><q dir="auto">' + esc(approvalText(S, current.code)) + '</q>' +
       (received ? '' : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
       (received ? '<a class="cm-link" href="' + esc(shareBase().replace(/#.*$/, '')) + '" data-go="restart">' + t('makeOwn') + '</a>' : '') +
@@ -992,7 +994,7 @@
       else if (act === 'send') doSend(el);
       else if (act === 'copy') copyText(current.url).then(function () { toast(t('copied')); });
       else if (act === 'approve') doApprove();
-      else if (act === 'dark') { dark = !dark; keepScroll(render); }
+      else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
     }
   });
 
@@ -1030,9 +1032,18 @@
     }
   }
 
-  // Follow the site's AR / EN switch: everything re-renders in the new language
-  new MutationObserver(function () { keepScroll(render); })
-    .observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  // Follow the site's AR / EN switch: everything re-renders in the new language.
+  // The moon / sun button only matters for the sheet (it follows the site unless set by hand).
+  new MutationObserver(function (list) {
+    var langChanged = list.some(function (m) { return m.attributeName === 'lang'; });
+    if (langChanged) { keepScroll(render); return; }
+    var paper = document.getElementById('cmPaper');
+    if (paper && dark === null) {
+      paper.classList.toggle('dark', paperDark());
+      var btn = app.querySelector('[data-act="dark"]');
+      if (btn) btn.textContent = paperDark() ? t('darkOff') : t('darkOn');
+    }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang', 'data-theme'] });
 
   /* ---------- start ---------- */
   function start() {

@@ -1,0 +1,84 @@
+/* ========================================
+   Dark theme (html[data-theme="dark"], set by theme.js)
+   Same brand blues, on deep navy instead of white. Loaded after style.css.
+   ======================================== */
+:root { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --d-bg: #0A1830;
+  --d-bg2: #0E2142;
+  --d-bg3: #12305E;
+  --d-ink: #E6EEF9;
+  --d-soft: #A9BBD6;
+  --d-line: rgba(255,255,255,0.14);
+  --d-glass: rgba(255,255,255,0.07);
+  --d-accent: #80C2FF;
+}
+
+/* Smooth cross-fade when the visitor presses the moon / sun */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(0.33, 0, 0, 1); }
+
+/* ---------- Moon / sun button (next to AR / EN) ---------- */
+.theme-switch {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s, transform 0.5s cubic-bezier(0.05, 0, 0, 1), box-shadow 0.5s cubic-bezier(0.05, 0, 0, 1);
+}
+.theme-switch:hover { background: rgba(255,255,255,0.28); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(255,255,255,0.22); }
+.theme-switch:active { transform: scale(0.94); }
+.theme-switch svg { width: 20px; height: 20px; }
+.theme-switch .ts-sun { display: none; }
+[data-theme="dark"] .theme-switch .ts-sun { display: block; }
+[data-theme="dark"] .theme-switch .ts-moon { display: none; }
+@media (min-width: 768px) { .home-page .theme-switch { width: 45px; height: 45px; } .home-page .theme-switch svg { width: 21px; height: 21px; } }
+
+/* ---------- Page & sections ---------- */
+[data-theme="dark"] body { background: var(--d-bg); color: var(--d-ink); }
+[data-theme="dark"] .gradient-hero { background-image: linear-gradient(0deg, #0A1830 0%, #1B4B95 100%); }
+[data-theme="dark"] .gradient-portfolio { background-image: linear-gradient(180deg, #0A1830 0%, #12305E 100%); }
+[data-theme="dark"] .gradient-about { background: #12305E; }
+[data-theme="dark"] .gradient-channels { background-color: #12305E; background-image: linear-gradient(180deg, #12305E 0%, #0E2142 100%); }
+[data-theme="dark"] .gradient-ads { background-color: #0A1830; background-image: linear-gradient(180deg, #0E2142 0%, #0A1830 100%); }
+[data-theme="dark"] .gradient-cta { background-color: #0A1830; background-image: linear-gradient(180deg, #0A1830 0%, #12305E 100%); }
+[data-theme="dark"] .site-footer { background: #0B1C38; border-top: 1px solid var(--d-line); }
+[data-theme="dark"] .mobile-menu { background: #12305E; }
+/* Contact page (its body has no class) */
+[data-theme="dark"] body:not(.home-page):not(.contract-page) { background: linear-gradient(0deg, #0A1830 0%, #1B4B95 100%); }
+[data-theme="dark"] .glass-card,
+[data-theme="dark"] .contact-outer-card { background-color: rgba(110,170,255,0.08); border-color: rgba(128,194,255,0.22); }
+
+/* ---------- Text that was navy / grey on white ---------- */
+[data-theme="dark"] .blue-text,
+[data-theme="dark"] .section-title { color: #8EC5FF; }
+[data-theme="dark"] .blue-text-light,
+[data-theme="dark"] .section-subtitle { color: var(--d-soft); }
+[data-theme="dark"] .highlight { color: var(--d-accent); }
+[data-theme="dark"] .channel-name,
+[data-theme="dark"] .service-title { color: var(--d-ink); }
+[data-theme="dark"] .service-desc { color: var(--d-soft); }
+
+/* ---------- White glass buttons → dark glass ---------- */
+[data-theme="dark"] .btn-secondary,
+[data-theme="dark"] .hero-buttons .btn-tertiary,
+[data-theme="dark"] .channel-yt-link {
+  color: #fff;
+  background: rgba(255,255,255,0.08);
+  background-image: none;
+  border: 1px solid rgba(255,255,255,0.24);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.14);
+}
+[data-theme="dark"] .btn-secondary:hover,
+[data-theme="dark"] .hero-buttons .btn-tertiary:hover,
+[data-theme="dark"] .channel-yt-link:hover { color: #fff; background: rgba(128,194,255,0.18); border-color: rgba(128,194,255,0.55); }
