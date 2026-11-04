@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    // Switch direction before the page paints, so English never flashes in Arabic layout
+    (function() {
+      try {
+        var l = new URLSearchParams(location.search).get('lang') || localStorage.getItem('modayver-lang');
+        if (l === 'en') {
+          document.documentElement.lang = 'en';
+          document.documentElement.dir = 'ltr';
+          document.documentElement.classList.add('i18n-pending');
+          setTimeout(function() { document.documentElement.classList.remove('i18n-pending'); }, 2000);
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <title data-i18n="cm.meta_title">MODAYVER</title>
+  <meta name="description" content="صانع عقد المونتاج: اتفاق ودي واضح بين الفريلانسر والعميل، جاهز في دقيقتين" data-i18n-attr="content:cm.meta_desc">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=26">
+  <link rel="stylesheet" href="contract.css?v=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
+</head>
+<body class="contract-page">
+
+  <!-- Header (same as the contact page) -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <a href="index.html">
+            <img src="./assets/images/modayver 001.png" alt="خالد مودايفر" data-i18n-attr="alt:common.logo_alt">
+          </a>
+        </div>
+        <nav class="desktop-nav">
+          <a href="index.html" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;" data-i18n="nav.home">الرئيسية</a>
+          <a href="index.html#about" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;" data-i18n="nav.about">من أنا</a>
+          <a href="index.html#portfolio" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;" data-i18n="nav.portfolio">أعمالي</a>
+          <a href="contract.html" class="cm-nav-current" style="color:#fff;font-weight:700;font-size:16px;" aria-current="page" data-i18n="nav.contract">صانع العقد</a>
+        </nav>
+        <div class="header-actions">
+          <div class="header-cta">
+            <a href="contact.html" class="btn-tertiary btn-sm" data-i18n="contact.cta">تواصل بنا</a>
+          </div>
+          <button type="button" class="lang-switch" onclick="toggleLang()" aria-label="تغيير اللغة / Switch language">
+            <span class="lang-opt active" data-lang-opt="ar">AR</span>
+            <span class="lang-opt" data-lang-opt="en">EN</span>
+          </button>
+          <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="قائمة التنقل" data-i18n-attr="aria-label:common.menu">
+            <svg class="menu-icon" width="26" height="19" viewBox="0 0 26 19" fill="none">
+              <path d="M0 0.8 L24 0.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M0 8.8 L24 8.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9.6 16.8 L24 16.8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display:none">
+              <path d="M18 6L6 18M6 6L18 18" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <div class="mobile-menu-inner">
+        <a href="index.html" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2);" data-i18n="nav.home">الرئيسية</a>
+        <a href="index.html#about" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2);" data-i18n="nav.about">من أنا</a>
+        <a href="index.html#portfolio" style="color:rgba(255,255,255,0.85);font-weight:700;font-size:16px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.2);" data-i18n="nav.portfolio">أعمالي</a>
+        <a href="contract.html" style="color:#fff;font-weight:700;font-size:16px;padding:8px 0;" aria-current="page" data-i18n="nav.contract">صانع العقد</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Intro -->
+  <section class="cm-hero">
+    <div class="cm-hero-inner">
+      <h1 class="cm-title" data-i18n="cm.title">صانع العقد</h1>
+      <p class="cm-sub" data-i18n="cm.sub">اتفاق ودي واضح بين الفريلانسر والعميل: جاوب على أسئلة قصيرة، ونزّل العقد أو أرسله مباشرة.</p>
+      <ul class="cm-badges">
+        <li data-i18n="cm.b1">مجاني</li>
+        <li data-i18n="cm.b2">بدون تسجيل</li>
+        <li data-i18n="cm.b3">ما نحفظ بياناتك</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- The maker (built by contract.js) -->
+  <section class="cm-app-wrap">
+    <div class="cm-app" id="cmApp" aria-live="polite"></div>
+  </section>
+
+  <script>
+    // Mobile menu (same as the contact page)
+    function toggleMobileMenu() {
+      var menu = document.getElementById('mobileMenu');
+      var menuIcon = document.querySelector('.menu-icon');
+      var closeIcon = document.querySelector('.close-icon');
+      menu.classList.toggle('open');
+      var open = menu.classList.contains('open');
+      menuIcon.style.display = open ? 'none' : 'block';
+      closeIcon.style.display = open ? 'block' : 'none';
+    }
+  </script>
+  <script src="translations.js?v=27"></script>
+  <script src="i18n.js?v=26"></script>
+  <script src="contract.js?v=1"></script>
+</body>
+</html>

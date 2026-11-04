@@ -16,6 +16,7 @@ window.TRANSLATIONS_EN = {
   'nav.about': 'About',
   'nav.portfolio': 'Portfolio',
   'nav.contact': 'Contact me',
+  'nav.contract': 'Contract Maker',
 
   'footer.home': 'Home',
   'footer.contact': 'Contact',
@@ -113,5 +114,14 @@ window.TRANSLATIONS_EN = {
   'contact.email': 'Email',
   'contact.message': 'Message',
   'contact.message_ph': 'Write your message here',
-  'contact.send': 'Send message'
+  'contact.send': 'Send message',
+
+  /* ---------- Contract maker (contract.html) ---------- */
+  'cm.meta_title': 'MODAYVER',
+  'cm.meta_desc': 'Contract Maker: a clear, friendly agreement between a freelance video editor and a client, ready in two minutes',
+  'cm.title': 'Contract Maker',
+  'cm.sub': 'A clear, friendly agreement between the freelancer and the client: answer a few short questions, then download the contract or send it right away.',
+  'cm.b1': 'Free',
+  'cm.b2': 'No sign-up',
+  'cm.b3': 'We don’t store your data'
 };
