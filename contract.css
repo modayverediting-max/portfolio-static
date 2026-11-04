@@ -222,6 +222,30 @@
 }
 .cm-add:hover { background: #F2F7FF; }
 .cm-total { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 16px; background: #EEF4FD; font-weight: 800; color: #00376C; margin-top: 12px; }
+
+/* Package: number of videos + one price */
+.cm-package { padding: 16px 16px 4px; }
+.cm-hint-top { margin: 0 0 14px; }
+.cm-count { display: flex; align-items: center; gap: 8px; }
+.cm-count .cm-input { text-align: center; font-weight: 800; font-size: 18px; color: #00376C; }
+.cm-count button {
+  width: 46px; height: 46px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  border: none;
+  background: #EEF4FD;
+  color: #00376C;
+  font-size: 21px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.cm-count button:hover { background: #DDEAFB; }
+.cm-count button:active { transform: scale(.92); }
+.cm-each { margin: -6px 0 16px; font-weight: 700; color: #3D7EE0; font-size: 14px; }
+.cm-each:empty { display: none; }
+.cm-p-kv td:first-child, .cm-p-kv th:first-child { width: 42%; text-align: start; }
+.cm-p-kv td:first-child { color: var(--p-soft); font-weight: 600; }
 .cm-total b { direction: ltr; unicode-bidi: isolate; }
 
 /* ---------- Buttons ---------- */
@@ -414,6 +438,10 @@
 [data-theme="dark"] .cm-add { border-color: rgba(128,194,255,0.45); color: #80C2FF; }
 [data-theme="dark"] .cm-add:hover { background: rgba(128,194,255,0.08); }
 [data-theme="dark"] .cm-total { background: rgba(128,194,255,0.12); color: #E6EEF9; }
+[data-theme="dark"] .cm-count .cm-input { color: #fff; }
+[data-theme="dark"] .cm-count button { background: rgba(255,255,255,0.10); color: #fff; }
+[data-theme="dark"] .cm-count button:hover { background: rgba(255,255,255,0.18); }
+[data-theme="dark"] .cm-each { color: #80C2FF; }
 [data-theme="dark"] .cm-remove { color: #FF8F8F; background: rgba(239,68,68,0.14); border-color: rgba(239,68,68,0.42); }
 [data-theme="dark"] .cm-remove:hover { color: #fff; background: #D93636; border-color: #D93636; }
 [data-theme="dark"] .cm-btn-ghost { color: #E6EEF9; background: rgba(255,255,255,0.08); }

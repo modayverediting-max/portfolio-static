@@ -52,7 +52,8 @@
 [data-theme="dark"] .gradient-channels { background-color: #12305E; background-image: linear-gradient(180deg, #12305E 0%, #0E2142 100%); }
 [data-theme="dark"] .gradient-ads { background-color: #0A1830; background-image: linear-gradient(180deg, #0E2142 0%, #0A1830 100%); }
 [data-theme="dark"] .gradient-cta { background-color: #0A1830; background-image: linear-gradient(180deg, #0A1830 0%, #12305E 100%); }
-[data-theme="dark"] .site-footer { background: #0B1C38; border-top: 1px solid var(--d-line); }
+/* The footer carries on the gradient of the section above it: no band, no line */
+[data-theme="dark"] .site-footer { background: linear-gradient(180deg, #12305E 0%, #18417C 100%); border-top: none; }
 [data-theme="dark"] .mobile-menu { background: #12305E; }
 /* Contact page (its body has no class) */
 [data-theme="dark"] body:not(.home-page):not(.contract-page) { background: linear-gradient(0deg, #0A1830 0%, #1B4B95 100%); }

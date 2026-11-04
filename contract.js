@@ -80,6 +80,19 @@
     add: ['+ أضف فيديو', '+ Add a video'],
     remove: ['حذف', 'Remove'],
     total: ['المجموع', 'Total'],
+    pricing: ['كيف السعر؟', 'How is it priced?'],
+    kCount: ['عدد الفيديوهات', 'Number of videos'],
+    kPrice: ['سعر الباقة كاملة', 'Price of the whole package'],
+    kEach: ['يعني حوالي {x} للفيديو الواحد', 'That’s about {x} per video'],
+    kDesc: ['وش الفيديوهات؟', 'What are the videos?'],
+    kDescPh: ['مثلاً: ريلز إعلانية للمتجر', 'e.g. promo reels for the store'],
+    kLen: ['مدة الفيديو تقريباً', 'Approximate length'],
+    kLenPh: ['مثلاً: من 30 إلى 60 ثانية', 'e.g. 30–60 seconds'],
+    kSched: ['جدول التسليم', 'Delivery schedule'],
+    kSchedPh: ['مثلاً: 5 فيديوهات كل أسبوع', 'e.g. 5 videos a week'],
+    kLast: ['آخر موعد لمعاينات كل الفيديوهات', 'Deadline for all previews'],
+    kHint: ['ما تحتاج تكتب كل فيديو لحاله: العدد والسعر يكفون.', 'No need to list every video: the count and the price are enough.'],
+    needPackage: ['اكتب عدد الفيديوهات وسعر الباقة (أرقام بس).', 'Enter the number of videos and the package price (numbers only).'],
     // step 4
     incl: ['اختر كل شي داخل في السعر', 'Pick everything the price covers'],
     inclOther: ['شي ثاني داخل في السعر', 'Something else included'],
@@ -154,7 +167,8 @@
     pm: [['pp', 'PayPal', 'PayPal'], ['bank', 'تحويل بنكي', 'Bank transfer'], ['bm', 'بريدي موب', 'BaridiMob'], ['usdt', 'USDT', 'USDT'], ['ot', 'أخرى', 'Other']],
     dp: [[0, 'بدون', 'None'], [30, '30%', '30%'], [50, '50%', '50%'], [70, '70%', '70%'], [100, '100%', '100%']],
     sc: [['v', 'لكل فيديو لحاله', 'Per video'], ['p', 'للمشروع كامل', 'For the whole project']],
-    fe: [['c', 'العميل', 'The client'], ['f', 'الفريلانسر', 'The freelancer'], ['h', 'مناصفة', 'Split equally']]
+    fe: [['c', 'العميل', 'The client'], ['f', 'الفريلانسر', 'The freelancer'], ['h', 'مناصفة', 'Split equally']],
+    md: [['v', 'كل فيديو بسعره', 'Each video has its price'], ['p', 'باقة: عدد فيديوهات بسعر واحد', 'Package: several videos, one price']]
   };
   function optLabel(group, val) {
     var o = OPT[group].filter(function (x) { return String(x[0]) === String(val); })[0];
@@ -170,10 +184,13 @@
     vd: [{ d: '', l: '', p: '', t: '' }], cu: 'USD', cuo: '',
     in: ['cut', 'cap', 'snd'], io: '', mu: 'f',
     pm: ['pp'], pmo: '', ac: '', dp: 50, sc: 'v', fe: 'c',
-    rd: 2, ex: '', rv: 3, tn: 2, nt: 5, wd: '', pf: 0, tr: ''
+    rd: 2, ex: '', rv: 3, tn: 2, nt: 5, wd: '', pf: 0, tr: '',
+    // package mode (md = 'p'): a number of videos for one price. New keys keep
+    // defaults that change nothing, so contracts already sent read the same.
+    md: 'v', kn: 10, kp: '', kd: '', kl: '', ks: '', kt: ''
   };
-  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 80, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400 };
-  var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30] };
+  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 80, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80 };
+  var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200] };
 
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
   function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -205,6 +222,8 @@
     var dp = parseInt(src.dp, 10);
     s.dp = OPT.dp.some(function (o) { return o[0] === dp; }) ? dp : 50;
     s.pf = src.pf ? 1 : 0;
+    s.md = src.md === 'p' ? 'p' : 'v';
+    s.kt = /^\d{4}-\d{2}-\d{2}$/.test(src.kt || '') ? src.kt : '';
     if (Array.isArray(src.in)) s.in = OPT.in.map(function (o) { return o[0]; }).filter(function (k) { return src.in.indexOf(k) !== -1; });
     if (Array.isArray(src.pm)) s.pm = OPT.pm.map(function (o) { return o[0]; }).filter(function (k) { return src.pm.indexOf(k) !== -1; });
     if (Array.isArray(src.vd) && src.vd.length) {
@@ -306,10 +325,13 @@
   function price(x) { var n = parseFloat(digits(x)); return isNaN(n) || n < 0 || !/^\d+(\.\d+)?$/.test(digits(x)) ? null : n; }
   function money(n) { return n == null ? '—' : (Math.round(n * 100) / 100).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
   function total(s) {
+    if (s.md === 'p') return price(s.kp);
     var sum = 0;
     for (var i = 0; i < s.vd.length; i++) { var p = price(s.vd[i].p); if (p == null) return null; sum += p; }
     return sum;
   }
+  function videoCount(s) { return s.md === 'p' ? s.kn : s.vd.length; }
+  function perVideo(s) { var t = total(s); return t == null ? null : t / Math.max(1, s.kn); }
   function curName(s) { return s.cu === 'ot' ? (s.cuo || '') : optLabel('cu', s.cu); }
   function amount(n, s) { return money(n) + ' ' + curName(s); }
   function fmtDate(d) { if (!d) return '—'; var p = d.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
@@ -339,7 +361,7 @@
 
   /* ---------- the contract text (Arabic + English) ---------- */
   function sections(s, code) {
-    var N = s.vd.length, sum = total(s), en = isEn();
+    var N = videoCount(s), sum = total(s), en = isEn(), pack = s.md === 'p';
     var type = s.ty === 'ot' ? (s.to || optLabel('ty', 'ot')) : optLabel('ty', s.ty);
     var size = s.sz === 'ot' ? (s.so || optLabel('sz', 'ot')) : optLabel('sz', s.sz);
     var qual = s.q === 'ot' ? (s.qo || optLabel('q', 'ot')) : optLabel('q', s.q);
@@ -353,8 +375,11 @@
 
     // 1 Project
     var s1 = [];
-    s1.push(L('يقوم الفريلانسر ' + V(s.fn) + ' بمونتاج ' + V(videosCount(N)) + ' للعميل ' + V(s.cn) + '، كما في جدول الفيديوهات.',
-              'The freelancer ' + V(s.fn) + ' will edit ' + V(videosCount(N)) + ' for the client ' + V(s.cn) + ', as listed in the videos table.'));
+    s1.push(pack
+      ? L('يقوم الفريلانسر ' + V(s.fn) + ' بمونتاج ' + V(videosCount(N)) + ' للعميل ' + V(s.cn) + ' ضمن باقة واحدة' + (s.kd ? ': ' + V(s.kd) : '') + '، كما في جدول الباقة.',
+          'The freelancer ' + V(s.fn) + ' will edit ' + V(videosCount(N)) + ' for the client ' + V(s.cn) + ' as one package' + (s.kd ? ': ' + V(s.kd) : '') + ', as in the package table.')
+      : L('يقوم الفريلانسر ' + V(s.fn) + ' بمونتاج ' + V(videosCount(N)) + ' للعميل ' + V(s.cn) + '، كما في جدول الفيديوهات.',
+          'The freelancer ' + V(s.fn) + ' will edit ' + V(videosCount(N)) + ' for the client ' + V(s.cn) + ', as listed in the videos table.'));
     s1.push(L('نوع الفيديو: ' + V(type) + (s.st ? '، والستايل المطلوب: ' + V(s.st) : '') + '.',
               'Video type: ' + V(type) + (s.st ? '; requested style: ' + V(s.st) : '') + '.'));
     s1.push(s.rf
@@ -366,13 +391,24 @@
       : L('لم تُحدَّد أعمال داخلة في السعر، فأي عمل يُتفق عليه كتابيًا قبل البدء.', 'No included work was chosen, so any work is agreed in writing before starting.'));
     s1.push(L('يرسل العميل كل المواد اللازمة بجودة صالحة، ويضمن أن له حق استخدامها. ولا يتحمل الفريلانسر ضعف جودة المواد الأصلية.',
               'The client sends all needed materials in usable quality and confirms they have the right to use them. The freelancer isn’t responsible for poor quality in the original footage.'));
-    s1.push(L('موعد التسليم هو موعد إرسال أول نسخة معاينة كاملة لكل فيديو، كما في الجدول.',
-              'The delivery date is when the first full preview of each video is sent, as in the table.'));
+    if (!pack) {
+      s1.push(L('موعد التسليم هو موعد إرسال أول نسخة معاينة كاملة لكل فيديو، كما في الجدول.',
+                'The delivery date is when the first full preview of each video is sent, as in the table.'));
+    } else if (s.ks || s.kt) {
+      s1.push(L('موعد التسليم هو موعد إرسال أول نسخة معاينة كاملة لكل فيديو' + (s.ks ? '، حسب جدول التسليم: ' + V(s.ks) : '') + (s.kt ? '، وآخر موعد لمعاينات كل الفيديوهات ' + V(fmtDate(s.kt)) : '') + '.',
+                'The delivery date is when the first full preview of each video is sent' + (s.ks ? ', following the schedule: ' + V(s.ks) : '') + (s.kt ? '; the deadline for all previews is ' + V(fmtDate(s.kt)) : '') + '.'));
+    } else {
+      s1.push(L('موعد التسليم هو موعد إرسال أول نسخة معاينة كاملة لكل فيديو، ويُتفق عليه كتابيًا قبل بدء العمل على الفيديو.',
+                'The delivery date is when the first full preview of each video is sent; it is agreed in writing before work on that video starts.'));
+    }
     out.push({ t: L('تفاصيل المشروع', 'Project details'), items: s1 });
 
     // 2 Price & payment
     var s2 = [];
-    s2.push(L('السعر الإجمالي: ' + V(amount(sum, s)) + '.', 'Total price: ' + V(amount(sum, s)) + '.'));
+    s2.push(pack
+      ? L('سعر الباقة: ' + V(amount(sum, s)) + ' مقابل ' + V(videosCount(N)) + '، أي ' + V(amount(perVideo(s), s)) + ' للفيديو الواحد.',
+          'Package price: ' + V(amount(sum, s)) + ' for ' + V(videosCount(N)) + ', i.e. ' + V(amount(perVideo(s), s)) + ' per video.')
+      : L('السعر الإجمالي: ' + V(amount(sum, s)) + '.', 'Total price: ' + V(amount(sum, s)) + '.'));
     if (s.dp === 0) {
       s2.push(L('لا توجد دفعة مقدمة، ويبدأ العمل ويُحسب موعد التسليم من يوم استلام كل المواد.',
                 'There is no upfront payment; work starts, and the delivery date counts, from the day all materials are received.'));
@@ -471,8 +507,8 @@
               'No reply: if one side stops replying and blocks the work, the other warns them in writing and gives them ' + V(days(s.nt)) + '. With no reply by then, it counts as a cancellation by them.'));
     s7.push(L('إلغاء العميل قبل بدء العمل: ' + (s.dp > 0 ? 'تُرد له الدفعة المقدمة كاملة.' : 'لا يُستحق شيء.'),
               'If the client cancels before work starts: ' + (s.dp > 0 ? 'the upfront payment is refunded in full.' : 'nothing is owed.')));
-    s7.push(L('إلغاء العميل بعد بدء العمل: يستحق الفريلانسر عن كل فيديو سعره كاملًا إذا أُرسلت معاينته، ونصف سعره إذا بدأ العمل عليه بلا معاينة، ولا شيء إذا لم يبدأ.',
-              'If the client cancels after work starts, the freelancer is owed, per video: the full price if its preview was sent, half if work started without a preview, nothing if it hadn’t started.'));
+    s7.push(L('إلغاء العميل بعد بدء العمل: يستحق الفريلانسر عن كل فيديو سعره كاملًا إذا أُرسلت معاينته، ونصف سعره إذا بدأ العمل عليه بلا معاينة، ولا شيء إذا لم يبدأ.' + (pack ? ' وفي الباقة، سعر الفيديو الواحد = سعر الباقة ÷ عدد الفيديوهات (' + V(amount(perVideo(s), s)) + ').' : ''),
+              'If the client cancels after work starts, the freelancer is owed, per video: the full price if its preview was sent, half if work started without a preview, nothing if it hadn’t started.' + (pack ? ' In a package, one video’s price = the package price ÷ the number of videos (' + V(amount(perVideo(s), s)) + ').' : '')));
     s7.push(L('إلغاء الفريلانسر: يرد للعميل كل ما دفعه عن أي فيديو لم تُسلَّم نسخته النهائية.', 'If the freelancer cancels, they refund everything paid for any video whose final version wasn’t delivered.'));
     s7.push(L('التسوية: يُقارَن ما دفعه العميل بما يستحقه الفريلانسر، ويُرد الفرق أو يُكمَّل خلال 7 أيام من الإلغاء بطريقة الدفع نفسها. وكل فيديو يُدفع سعره كاملًا تُسلَّم نسخته النهائية.',
               'Settlement: what the client paid is compared with what the freelancer is owed, and the difference is refunded or completed within 7 days, by the same payment method. Every video paid in full gets its final version.'));
@@ -520,12 +556,23 @@
     });
     h += '</div></div>';
 
-    // Videos table
-    h += '<div class="cm-p-block" data-block="videos"><table class="cm-p-table"><thead><tr><th>' + L('م', '#') + '</th><th>' + t('video') + '</th><th>' + t('vLen') + '</th><th>' + t('vPrice') + '</th><th>' + t('vDate') + '</th></tr></thead><tbody>';
-    s.vd.forEach(function (v, i) {
-      h += '<tr><td>' + (i + 1) + '</td><td>' + V(v.d || (t('video') + ' ' + (i + 1))) + '</td><td>' + V(v.l || '—') + '</td><td>' + V(price(v.p) == null ? '—' : amount(price(v.p), s)) + '</td><td>' + esc(fmtDate(v.t)) + '</td></tr>';
-    });
-    h += '</tbody><tfoot><tr><td colspan="3">' + t('total') + '</td><td colspan="2">' + V(amount(sum, s)) + '</td></tr></tfoot></table></div>';
+    if (s.md === 'p') {
+      // Package: one small table instead of a row per video
+      var rows = [[t('kCount'), videosCount(s.kn)], [L('سعر الباقة', 'Package price'), amount(sum, s)], [L('سعر الفيديو الواحد', 'Price per video'), amount(perVideo(s), s)]];
+      if (s.kd) rows.push([t('kDesc'), s.kd]);
+      if (s.kl) rows.push([t('kLen'), s.kl]);
+      if (s.ks) rows.push([t('kSched'), s.ks]);
+      if (s.kt) rows.push([t('kLast'), fmtDate(s.kt)]);
+      h += '<div class="cm-p-block" data-block="videos"><table class="cm-p-table cm-p-kv"><thead><tr><th colspan="2">' + L('الباقة', 'The package') + '</th></tr></thead><tbody>';
+      rows.forEach(function (r) { h += '<tr><td>' + esc(r[0]) + '</td><td>' + V(r[1]) + '</td></tr>'; });
+      h += '</tbody></table></div>';
+    } else {
+      h += '<div class="cm-p-block" data-block="videos"><table class="cm-p-table"><thead><tr><th>' + L('م', '#') + '</th><th>' + t('video') + '</th><th>' + t('vLen') + '</th><th>' + t('vPrice') + '</th><th>' + t('vDate') + '</th></tr></thead><tbody>';
+      s.vd.forEach(function (v, i) {
+        h += '<tr><td>' + (i + 1) + '</td><td>' + V(v.d || (t('video') + ' ' + (i + 1))) + '</td><td>' + V(v.l || '—') + '</td><td>' + V(price(v.p) == null ? '—' : amount(price(v.p), s)) + '</td><td>' + esc(fmtDate(v.t)) + '</td></tr>';
+      });
+      h += '</tbody><tfoot><tr><td colspan="3">' + t('total') + '</td><td colspan="2">' + V(amount(sum, s)) + '</td></tr></tfoot></table></div>';
+    }
 
     // Clauses
     sections(s, code).forEach(function (sec, i) {
@@ -632,7 +679,23 @@
       h += field(t('ref'), input('rf', 'https://', ' inputmode="url"'), t('refHint'), true);
       h += field(t('size'), chips('sz', 'sz') + (S.sz === 'ot' ? '<div class="cm-gap">' + input('so', t('other')) + '</div>' : ''));
       h += field(t('quality'), chips('q', 'q') + (S.q === 'ot' ? '<div class="cm-gap">' + input('qo', t('other')) + '</div>' : ''));
+    } else if (step === 3 && S.md === 'p') {
+      h += field(t('pricing'), chips('md', 'md'));
+      h += field(t('currency'), chips('cu', 'cu') + (S.cu === 'ot' ? '<div class="cm-gap">' + input('cuo', t('other')) + '</div>' : ''));
+      h += '<div class="cm-video cm-package"><p class="cm-hint cm-hint-top">' + t('kHint') + '</p>' +
+        '<div class="cm-grid2">' +
+        field(t('kCount'), '<div class="cm-count"><button type="button" data-step-key="kn" data-delta="-1" aria-label="−">−</button>' +
+          '<input class="cm-input" dir="ltr" inputmode="numeric" data-num="kn" value="' + S.kn + '" maxlength="3" aria-label="' + esc(t('kCount')) + '">' +
+          '<button type="button" data-step-key="kn" data-delta="1" aria-label="+">+</button></div>') +
+        field(t('kPrice'), '<input class="cm-input" dir="ltr" inputmode="decimal" data-set="kp" value="' + esc(S.kp) + '" placeholder="0" maxlength="14">') +
+        '</div><p class="cm-each" id="cmEach">' + eachText() + '</p>' +
+        field(t('kDesc'), input('kd', t('kDescPh')), '', true) +
+        '<div class="cm-grid2">' + field(t('kLen'), input('kl', t('kLenPh')), '', true) + field(t('kSched'), input('ks', t('kSchedPh')), '', true) + '</div>' +
+        field(t('kLast'), '<input class="cm-input" type="date" dir="ltr" data-set="kt" value="' + esc(S.kt) + '">', '', true) +
+        '</div>';
+      h += '<div class="cm-total"><span>' + L('سعر الباقة', 'Package price') + '</span><b id="cmTotal">' + esc(amount(total(S), S)) + '</b></div>';
     } else if (step === 3) {
+      h += field(t('pricing'), chips('md', 'md'));
       h += field(t('currency'), chips('cu', 'cu') + (S.cu === 'ot' ? '<div class="cm-gap">' + input('cuo', t('other')) + '</div>' : ''));
       h += '<p class="cm-label">' + t('videos') + '</p>';
       S.vd.forEach(function (v, i) {
@@ -642,7 +705,7 @@
           '<div class="cm-grid3">' +
           '<label class="cm-mini"><span>' + t('vLen') + '</span><input class="cm-input" dir="auto" data-vid="' + i + '" data-vf="l" value="' + esc(v.l) + '" placeholder="' + esc(t('vLenPh')) + '" maxlength="30"></label>' +
           '<label class="cm-mini"><span>' + t('vPrice') + '</span><input class="cm-input" dir="ltr" inputmode="decimal" data-vid="' + i + '" data-vf="p" value="' + esc(v.p) + '" placeholder="0" maxlength="14"></label>' +
-          '<label class="cm-mini"><span>' + t('vDate') + '</span><input class="cm-input" type="date" data-vid="' + i + '" data-vf="t" value="' + esc(v.t) + '"></label>' +
+          '<label class="cm-mini"><span>' + t('vDate') + '</span><input class="cm-input" type="date" dir="ltr" data-vid="' + i + '" data-vf="t" value="' + esc(v.t) + '"></label>' +
           '</div></div>';
       });
       if (S.vd.length < MAX_VIDEOS) h += '<button type="button" class="cm-add" data-vadd="1">' + t('add') + '</button>';
@@ -656,7 +719,7 @@
       h += field(t('payBy'), chips('pm', 'pm', true) + (S.pm.indexOf('ot') !== -1 ? '<div class="cm-gap">' + input('pmo', t('other')) + '</div>' : ''));
       h += field(t('account'), input('ac', t('accountPh')), '', true);
       h += field(t('deposit'), chips('dp', 'dp'), t('depositHint'));
-      if (S.vd.length > 1) h += field(t('scope'), chips('sc', 'sc'));
+      if (videoCount(S) > 1) h += field(t('scope'), chips('sc', 'sc'));
       h += field(t('fees'), chips('fe', 'fe'));
     } else if (step === 6) {
       h += field(t('rounds'), stepper('rd'));
@@ -691,8 +754,12 @@
 
   function validate() {
     if (step === 1 && (!S.fn.trim() || !S.cn.trim())) return t('needNames');
-    if (step === 3 && total(S) == null) return t('needPrice');
+    if (step === 3 && total(S) == null) return S.md === 'p' ? t('needPackage') : t('needPrice');
     return '';
+  }
+  function eachText() {
+    var p = perVideo(S);
+    return p == null ? '' : t('kEach', { x: amount(p, S) });
   }
   function showError(msg) {
     var el = document.getElementById('cmError');
@@ -941,8 +1008,11 @@
     var el = e.target;
     if (el.hasAttribute('data-set')) {
       S[el.getAttribute('data-set')] = el.value;
-      if (el.getAttribute('data-set') === 'cuo') updateTotal();
+      if (/^(cuo|kp)$/.test(el.getAttribute('data-set'))) updateTotal();
       saveDraft();
+    } else if (el.hasAttribute('data-num')) {
+      var nk = el.getAttribute('data-num'), n = parseInt(digits(el.value), 10);
+      if (!isNaN(n)) { S[nk] = Math.min(NUMS[nk][1], Math.max(NUMS[nk][0], n)); updateTotal(); saveDraft(); }
     } else if (el.hasAttribute('data-vid')) {
       S.vd[+el.getAttribute('data-vid')][el.getAttribute('data-vf')] = el.value;
       if (el.getAttribute('data-vf') === 'p') updateTotal();
@@ -956,6 +1026,8 @@
   function updateTotal() {
     var el = document.getElementById('cmTotal');
     if (el) el.textContent = amount(total(S), S);
+    var each = document.getElementById('cmEach');
+    if (each) each.textContent = eachText();
   }
 
   app.addEventListener('click', function (e) {

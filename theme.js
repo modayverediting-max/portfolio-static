@@ -1,8 +1,9 @@
 /* ========================================
    Light / dark theme
-   Follows the visitor's phone or computer until they press the moon / sun
-   button; that choice is remembered. Loaded in <head> (not deferred) so the
-   page paints in the right colours from the first frame.
+   Every first visit opens in the light (white) design, whatever the device
+   uses. Dark only comes when the visitor presses the moon / sun button; that
+   choice is remembered. Loaded in <head> (not deferred) so the page paints in
+   the right colours from the first frame.
    ======================================== */
 (function () {
   var KEY = 'modayver-theme';
@@ -14,25 +15,13 @@
       return v === 'dark' || v === 'light' ? v : null;
     } catch (e) { return null; }
   }
-  function system() {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }
   function apply(theme) {
     root.setAttribute('data-theme', theme);
     var meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0A1830' : '#3D7EE0');
   }
 
-  apply(saved() || system());
-
-  // The device switches between light and dark (e.g. at night): follow it,
-  // unless the visitor picked a theme on the site
-  if (window.matchMedia) {
-    var mq = window.matchMedia('(prefers-color-scheme: dark)');
-    var follow = function () { if (!saved()) apply(system()); };
-    if (mq.addEventListener) mq.addEventListener('change', follow);
-    else if (mq.addListener) mq.addListener(follow);
-  }
+  apply(saved() || 'light');
 
   // The moon / sun button: a soft cross-fade between the two looks
   window.toggleTheme = function () {
