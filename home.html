@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Loading backdrop: from the very first frame the top of the screen already
-       shows the hero's blue (the same colors the hero has over the white page,
-       about as tall), so opening the site never shows a white page. Once the
-       page has faded in, it covers this completely. -->
+  <!-- Loading backdrop: from the very first frame the screen already shows the
+       pale blue page of the liquid background (liquid.css), so opening the site
+       never flashes another colour. Before the liquid trial (2026-11-04) it was:
+       html { background: linear-gradient(0deg, #fff 0%, #3D7EE0 100%) top / 100% 490px no-repeat #fff; }
+       with background-size 100% 435px from 768px and 100% 520px from 1024px. -->
   <style>
-    html { background: linear-gradient(0deg, #fff 0%, #3D7EE0 100%) top / 100% 490px no-repeat #fff; }
-    @media (min-width: 768px) { html { background-size: 100% 435px; } }
-    @media (min-width: 1024px) { html { background-size: 100% 520px; } }
+    html { background: linear-gradient(170deg, #E9F3FF 0%, #D3E6FF 100%) #E9F3FF; }
   </style>
   <script>
     // Switch direction before the page paints, so English never flashes in Arabic layout
@@ -34,6 +33,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=26">
+  <link rel="stylesheet" href="liquid.css?v=28">
   <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
 </head>
 <body class="fade-in-element home-page">
@@ -501,5 +501,6 @@
   <script src="script.js?v=26"></script>
   <script src="discord.js?v=26"></script>
   <script src="fold.js?v=27"></script>
+  <script src="liquid.js?v=28"></script>
 </body>
 </html>

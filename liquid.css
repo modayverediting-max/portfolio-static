@@ -1,0 +1,177 @@
+/* ========================================
+   Liquid background (trial, 2026-11-04)
+   Like akrammahdid.github.io: one pale blue page behind every section,
+   with four large soft glows drifting slowly behind the content, in the
+   brand blues and white. The sections lose their own blue fills, so the
+   white text and white glass edges made for the blue turn navy here.
+   Home page only. To take it out: delete the liquid.css and liquid.js
+   lines in home.html (and put the old loading backdrop back in
+   home.html, index.html and en.html), or restore the folder
+   «05 قبل خلفية أكرم».
+   ======================================== */
+:root {
+  --lq-bg: #E9F3FF;
+  --lq-bg-2: #D3E6FF;
+  --lq-ink: #00376C;
+  --lq-ink-soft: rgba(0, 55, 108, 0.78);
+  --lq-ink-faint: rgba(0, 55, 108, 0.55);
+  --lq-edge: rgba(0, 55, 108, 0.16);
+}
+
+html {
+  background: linear-gradient(170deg, var(--lq-bg) 0%, var(--lq-bg-2) 100%) var(--lq-bg);
+}
+body.home-page {
+  background: transparent;
+}
+
+/* The drifting glows, behind everything */
+.liquid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.liquid span {
+  position: absolute;
+  width: 55vmax;
+  height: 55vmax;
+  border-radius: 50%;
+  animation: liquidDrift 28s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.liquid span:nth-child(1) {
+  background: radial-gradient(circle, rgba(61, 126, 224, 0.42), transparent 62%);
+  top: -22vmax;
+  left: -16vmax;
+}
+.liquid span:nth-child(2) {
+  background: radial-gradient(circle, rgba(128, 194, 255, 0.5), transparent 62%);
+  top: 18vh;
+  right: -22vmax;
+  animation-duration: 34s;
+  animation-delay: -9s;
+}
+.liquid span:nth-child(3) {
+  background: radial-gradient(circle, rgba(0, 55, 108, 0.16), transparent 62%);
+  bottom: -28vmax;
+  left: 18vw;
+  animation-duration: 40s;
+  animation-delay: -4s;
+}
+.liquid span:nth-child(4) {
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95), transparent 60%);
+  top: 30vh;
+  left: 28vw;
+  width: 42vmax;
+  height: 42vmax;
+  animation-duration: 24s;
+}
+@keyframes liquidDrift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(8vw, 6vh, 0) scale(1.12); }
+  100% { transform: translate3d(-6vw, 10vh, 0) scale(0.94); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .liquid span { animation: none; }
+}
+
+/* Sections: no fills of their own, the liquid page shows through */
+.home-page .gradient-hero,
+.home-page .gradient-portfolio,
+.home-page .gradient-about,
+.home-page .gradient-channels,
+.home-page .gradient-ads,
+.home-page .gradient-cta {
+  background: transparent;
+}
+
+/* Text made for the blue fills: navy on the pale page */
+.home-page .hero-title,
+.home-page .section-title,
+.home-page .cta-heading,
+.home-page .stat-value,
+.home-page .stat-number,
+.home-page .vfx-card-title {
+  color: var(--lq-ink);
+}
+.home-page .hero-desc,
+.home-page .hero-desc *,
+.home-page .section-subtitle,
+.home-page .cta-subtext,
+.home-page .about-text,
+.home-page .about-text *,
+.home-page .stat-label,
+.home-page .vfx-card-desc,
+.home-page .gradient-ads p {
+  color: var(--lq-ink-soft);
+}
+.home-page .stat-plus {
+  color: #3D7EE0;
+}
+.home-page .stat-icon {
+  color: #3D7EE0;
+}
+
+/* Header: menu links, AR / EN switch, menu button */
+.home-page .desktop-nav button {
+  color: var(--lq-ink-soft);
+}
+.home-page .desktop-nav button:hover {
+  color: var(--lq-ink);
+}
+.home-page .desktop-nav button::after {
+  background: var(--lq-ink);
+}
+.home-page .lang-switch {
+  background: rgba(61, 126, 224, 0.14);
+  border-color: var(--lq-edge);
+}
+.home-page .lang-switch:hover {
+  background: rgba(61, 126, 224, 0.22);
+  box-shadow: 0 8px 22px rgba(0, 55, 108, 0.16);
+}
+.home-page .lang-opt {
+  color: var(--lq-ink-faint);
+}
+.home-page .lang-opt.active,
+.home-page .lang-switch:hover .lang-opt:not(.active) {
+  color: var(--lq-ink);
+}
+.home-page .mobile-menu-btn svg path {
+  stroke: var(--lq-ink);
+}
+
+/* Effects badge and the "watch" links on the effects cards */
+.home-page .vfx-badge {
+  color: var(--lq-ink);
+}
+.home-page .vfx-watch-link {
+  color: var(--lq-ink-faint);
+}
+.home-page .vfx-card:hover .vfx-watch-link {
+  color: var(--lq-ink);
+}
+
+/* About: social circles and the name badge */
+.home-page .social-links-about a {
+  color: var(--lq-ink);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px var(--lq-edge);
+}
+.home-page .social-links-about a:hover {
+  box-shadow: 0 10px 24px rgba(0, 55, 108, 0.28);
+}
+.home-page .social-links-about a::after {
+  border-color: rgba(0, 55, 108, 0.35);
+}
+.home-page .name-container {
+  border-color: var(--lq-edge);
+  background-color: rgba(255, 255, 255, 0.4);
+  /* the name itself is coloured inline with var(--text-light) */
+  --text-light: var(--lq-ink-soft);
+}
+.home-page .name-container p {
+  color: var(--lq-ink-soft);
+}
