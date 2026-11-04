@@ -67,6 +67,10 @@
     quality: ['الجودة', 'Quality'],
     // step 3
     currency: ['العملة', 'Currency'],
+    currencySmall: ['يمكن اختيار أكثر من عملة', 'you can pick more than one'],
+    curMain: ['أساسية', 'main'],
+    curHint: ['العملة الأساسية للأسعار: {main}. ويمكن الدفع أيضًا بـ: {others}، بسعر الصرف يوم الدفع. ولتغيير العملة الأساسية، ألغِ اختيارها.',
+              'Prices are in {main}. Payment is also accepted in: {others}, at the exchange rate on the payment day. To change the main currency, unselect it.'],
     videos: ['الفيديوهات', 'Videos'],
     video: ['فيديو', 'Video'],
     vDesc: ['وصف الفيديو', 'What’s the video?'],
@@ -187,7 +191,9 @@
     rd: 2, ex: '', rv: 3, tn: 2, nt: 5, wd: '', pf: 0, tr: '',
     // package mode (md = 'p'): a number of videos for one price. New keys keep
     // defaults that change nothing, so contracts already sent read the same.
-    md: 'v', kn: 10, kp: '', kd: '', kl: '', ks: '', kt: ''
+    md: 'v', kn: 10, kp: '', kd: '', kl: '', ks: '', kt: '',
+    // more currencies accepted besides the main one (cu); prices are always in cu
+    ca: []
   };
   var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 80, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80 };
   var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200] };
@@ -223,6 +229,9 @@
     s.dp = OPT.dp.some(function (o) { return o[0] === dp; }) ? dp : 50;
     s.pf = src.pf ? 1 : 0;
     s.md = src.md === 'p' ? 'p' : 'v';
+    s.ca = Array.isArray(src.ca) ? src.ca.filter(function (k, i, arr) {
+      return k !== s.cu && arr.indexOf(k) === i && OPT.cu.some(function (o) { return o[0] === k; });
+    }) : [];
     s.kt = /^\d{4}-\d{2}-\d{2}$/.test(src.kt || '') ? src.kt : '';
     if (Array.isArray(src.in)) s.in = OPT.in.map(function (o) { return o[0]; }).filter(function (k) { return src.in.indexOf(k) !== -1; });
     if (Array.isArray(src.pm)) s.pm = OPT.pm.map(function (o) { return o[0]; }).filter(function (k) { return src.pm.indexOf(k) !== -1; });
@@ -332,7 +341,8 @@
   }
   function videoCount(s) { return s.md === 'p' ? s.kn : s.vd.length; }
   function perVideo(s) { var t = total(s); return t == null ? null : t / Math.max(1, s.kn); }
-  function curName(s) { return s.cu === 'ot' ? (s.cuo || '') : optLabel('cu', s.cu); }
+  function curName(s, k) { k = k || s.cu; return k === 'ot' ? (s.cuo || optLabel('cu', 'ot')) : optLabel('cu', k); }
+  function otherCurrencies(s) { return s.ca.map(function (k) { return curName(s, k); }); }
   function amount(n, s) { return money(n) + ' ' + curName(s); }
   function fmtDate(d) { if (!d) return '—'; var p = d.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
   function chName(s) { return s.ch === 'ot' ? (s.co || optLabel('ch', 'ot')) : optLabel('ch', s.ch); }
@@ -422,6 +432,8 @@
                 'The remaining ' + V((100 - s.dp) + '% = ' + amount(rest, s)) + ' is paid after the client approves the preview and before the final version is delivered.'));
     }
     if (N > 1) s2.push(L('يُطبَّق الدفع ' + V(s.sc === 'p' ? 'على المشروع كاملًا' : 'على كل فيديو على حدة') + '.', 'Payment applies ' + V(s.sc === 'p' ? 'to the whole project' : 'to each video separately') + '.'));
+    if (s.ca.length) s2.push(L('يمكن الدفع أيضًا بالعملات التالية: ' + V(listJoin(otherCurrencies(s))) + '، ويُحسب المبلغ بسعر الصرف يوم الدفع، بحيث يصل للفريلانسر ما يعادل المبلغ المتفق عليه.',
+                               'Payment is also accepted in: ' + V(listJoin(otherCurrencies(s))) + ', converted at the exchange rate on the payment day, so the freelancer receives the equivalent of the agreed amount.'));
     if (pays.length) s2.push(L('طريقة الدفع: ' + V(listJoin(pays)) + (s.ac ? '. بيانات الحساب: ' + V(s.ac) : '') + '.', 'Payment method: ' + V(listJoin(pays)) + (s.ac ? '. Account details: ' + V(s.ac) : '') + '.'));
     var payer = { c: L('العميل', 'the client'), f: L('الفريلانسر', 'the freelancer'), h: L('الطرفين مناصفة', 'both sides, split equally') }[s.fe];
     s2.push(L('رسوم التحويل وفرق العملة على ' + V(payer) + (s.fe === 'c' ? '، بحيث يصل للفريلانسر المبلغ المتفق عليه كاملًا' : '') + '.',
@@ -681,7 +693,7 @@
       h += field(t('quality'), chips('q', 'q') + (S.q === 'ot' ? '<div class="cm-gap">' + input('qo', t('other')) + '</div>' : ''));
     } else if (step === 3 && S.md === 'p') {
       h += field(t('pricing'), chips('md', 'md'));
-      h += field(t('currency'), chips('cu', 'cu') + (S.cu === 'ot' ? '<div class="cm-gap">' + input('cuo', t('other')) + '</div>' : ''));
+      h += currencyField();
       h += '<div class="cm-video cm-package"><p class="cm-hint cm-hint-top">' + t('kHint') + '</p>' +
         '<div class="cm-grid2">' +
         field(t('kCount'), '<div class="cm-count"><button type="button" data-step-key="kn" data-delta="-1" aria-label="−">−</button>' +
@@ -696,7 +708,7 @@
       h += '<div class="cm-total"><span>' + L('سعر الباقة', 'Package price') + '</span><b id="cmTotal">' + esc(amount(total(S), S)) + '</b></div>';
     } else if (step === 3) {
       h += field(t('pricing'), chips('md', 'md'));
-      h += field(t('currency'), chips('cu', 'cu') + (S.cu === 'ot' ? '<div class="cm-gap">' + input('cuo', t('other')) + '</div>' : ''));
+      h += currencyField();
       h += '<p class="cm-label">' + t('videos') + '</p>';
       S.vd.forEach(function (v, i) {
         h += '<div class="cm-video"><div class="cm-video-head"><span class="cm-video-num">' + t('video') + ' ' + (i + 1) + '</span>' +
@@ -732,6 +744,18 @@
       h += field(t('terms'), '<textarea class="cm-textarea" dir="auto" data-set="tr" maxlength="400" placeholder="' + esc(t('termsPh')) + '">' + esc(S.tr) + '</textarea>', '', true);
     }
     return h;
+  }
+  // Currencies: several can be picked; the first one picked is the main one (prices are in it)
+  function currencyField() {
+    var sel = [S.cu].concat(S.ca);
+    var chipsHtml = '<div class="cm-chips" role="group">' + OPT.cu.map(function (o) {
+      var on = sel.indexOf(o[0]) !== -1, main = o[0] === S.cu && S.ca.length > 0;
+      return '<button type="button" class="cm-chip" data-cur="' + o[0] + '" aria-pressed="' + on + '">' + esc(isEn() ? o[2] : o[1]) +
+        (main ? ' <small class="cm-main">' + t('curMain') + '</small>' : '') + '</button>';
+    }).join('') + '</div>';
+    var other = sel.indexOf('ot') !== -1 ? '<div class="cm-gap">' + input('cuo', t('other')) + '</div>' : '';
+    var hint = S.ca.length ? '<p class="cm-hint">' + t('curHint', { main: esc(curName(S)), others: esc(listJoin(otherCurrencies(S))) }) + '</p>' : '';
+    return '<div class="cm-field"><label class="cm-label">' + t('currency') + ' <small>(' + t('currencySmall') + ')</small></label>' + chipsHtml + other + hint + '</div>';
   }
   function roleCard(val, title, sub, icon) {
     return '<button type="button" class="cm-role" data-chip="ro" data-val="' + val + '" aria-pressed="' + (S.ro === val) + '">' + icon + '<b>' + title + '</b><small>' + sub + '</small></button>';
@@ -1046,6 +1070,12 @@
       if (i === -1) S[mk].push(v); else S[mk].splice(i, 1);
       var order = OPT[mk === 'in' ? 'in' : 'pm'].map(function (o) { return o[0]; });
       S[mk].sort(function (a, b) { return order.indexOf(a) - order.indexOf(b); });
+      saveDraft(); keepScroll(render);
+    } else if (el.hasAttribute('data-cur')) {
+      v = el.getAttribute('data-cur');
+      if (v === S.cu) { if (S.ca.length) S.cu = S.ca.shift(); }   // the last currency can't be removed
+      else if (S.ca.indexOf(v) !== -1) S.ca.splice(S.ca.indexOf(v), 1);
+      else S.ca.push(v);
       saveDraft(); keepScroll(render);
     } else if (el.hasAttribute('data-step-key')) {
       var sk = el.getAttribute('data-step-key');
