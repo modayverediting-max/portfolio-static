@@ -17,6 +17,14 @@
     pdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
   };
   var DRAFT_KEY = 'modayver-contract-draft';
+  // E-mail confirmation service (a small Cloudflare Worker, folder «خادم التوثيق» next to the
+  // site folder). Empty = the option stays hidden. On this PC a test copy can be set with
+  // localStorage 'modayver-cm-api' (honoured on localhost only).
+  var API = '';
+  try {
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && localStorage.getItem('modayver-cm-api')) API = localStorage.getItem('modayver-cm-api');
+  } catch (e) {}
+  var MAIL_RE = /^[^\s@<>()[\]\\,;:"']{1,64}@[A-Za-z0-9.-]{1,180}\.[A-Za-z]{2,24}$/;   // same rule as the service
   var STEPS = 6;
   var MAX_VIDEOS = 20;
 
@@ -162,7 +170,39 @@
     sumPay: ['الدفع', 'Payment'],
     sumRev: ['التعديلات المجانية', 'Free revisions'],
     sumDate: ['موعد التسليم', 'Delivery date'],
-    sumLast: ['آخر موعد للتسليم', 'Last delivery date']
+    sumLast: ['آخر موعد للتسليم', 'Last delivery date'],
+    // e-mail confirmation (optional)
+    vmTitle: ['توثيق الموافقة بالبريد', 'Confirm by e-mail'],
+    vmOn: ['أريد أن يؤكد الطرفان موافقتهما بالبريد', 'Both sides confirm their approval by e-mail'],
+    vmHint: ['لمزيد من الثقة: يصل لكل طرف بريد من موقعنا ليؤكد موافقته بضغطة، ويظهر على العقد ختم «موثّق بالبريد». وبعدها لا يتغير العقد إلا بنسخة جديدة يؤكدها الطرفان من جديد.', 'For more trust: each side gets an e-mail from our site to confirm with one click, and the contract shows a “Confirmed by e-mail” stamp. After that it only changes through a new version both confirm again.'],
+    fMail: ['بريد الفريلانسر', 'Freelancer’s e-mail'],
+    cMail: ['بريد العميل', 'Client’s e-mail'],
+    needMails: ['اكتب بريد الفريلانسر وبريد العميل بشكل صحيح، أو ألغِ التوثيق بالبريد.', 'Enter both e-mail addresses correctly, or turn off e-mail confirmation.'],
+    sameMail: ['يجب أن يكون لكل طرف بريد مختلف.', 'Each side needs a different e-mail address.'],
+    vTitle: ['التوثيق بالبريد', 'E-mail confirmation'],
+    vIntro: ['عند الضغط على الزر تصل لكل طرف رسالة على بريده ليؤكد موافقته، ولا يُوثَّق العقد إلا بعد تأكيد الطرفين.', 'Press the button and each side gets an e-mail to confirm. The contract is confirmed only once both have.'],
+    vSend: ['أوافق — أرسل رسائل التأكيد', 'I agree — send the confirmation e-mails'],
+    vResend: ['أعد إرسال رسائل التأكيد', 'Send the e-mails again'],
+    vSending: ['جارٍ الإرسال…', 'Sending…'],
+    vSent: ['أُرسلت الرسائل، وتصل خلال دقيقة. وإن لم تجدها فابحث في الرسائل غير المرغوب فيها.', 'Sent — they arrive within a minute. If not, check the spam folder.'],
+    vWait: ['أُرسلت رسائل قبل قليل. انتظر بضع دقائق ثم حاول مرة أخرى.', 'E-mails were just sent. Wait a few minutes and try again.'],
+    vBadMail: ['تحقق من عنواني البريد في العقد.', 'Check the two e-mail addresses in the contract.'],
+    vError: ['تعذّر الاتصال بخدمة التوثيق الآن. حاول بعد قليل.', 'Couldn’t reach the confirmation service. Try again shortly.'],
+    vLoading: ['جارٍ التحقق…', 'Checking…'],
+    vDone: ['أكّد موافقته يوم {d}', 'confirmed on {d}'],
+    vPending: ['بانتظار تأكيده (أُرسل الرابط إلى {m})', 'waiting (link sent to {m})'],
+    vNotYet: ['لم تُرسل له رسالة بعد', 'not e-mailed yet'],
+    vLocked: ['العقد موثّق بالبريد', 'Confirmed by e-mail'],
+    vLockedSub: ['أكّد الطرفان موافقتهما يوم {d}، فلا يمكن تغيير هذا العقد. وأي تغيير يكون بنسخة جديدة يؤكدها الطرفان من جديد.', 'Both sides confirmed on {d}, so this contract can’t change. Any change is a new version both confirm again.'],
+    vMeTitle: ['أكّد موافقتك', 'Confirm your approval'],
+    vMeText: ['أنت تؤكد موافقتك على هذا العقد بصفتك {r}. اقرأ العقد أولًا، ثم اضغط الزر.', 'You are confirming this contract as {r}. Read it first, then press the button.'],
+    vMeBtn: ['أؤكد موافقتي', 'I confirm'],
+    vMeDone: ['أكّدتَ موافقتك على هذا العقد. شكرًا لك.', 'You confirmed this contract. Thank you.'],
+    vOther: ['رابط التأكيد هذا يخص نسخة أخرى من العقد، لذلك لا يمكن التأكيد هنا. افتح الرابط الأحدث من بريدك.', 'This confirmation link belongs to another version of the contract, so it can’t be used here. Open the newest link from your e-mail.'],
+    vBadLink: ['رابط التأكيد غير صالح. اطلب رسالة جديدة من صفحة العقد.', 'This confirmation link isn’t valid. Ask for a new e-mail from the contract page.'],
+    vStamp: ['موثّق بالبريد', 'Confirmed by e-mail'],
+    vMail: ['البريد', 'E-mail'],
+    vMsgMail: ['مرحبًا، هذا عقد المونتاج بيننا في الملف المرفق.\nوستصلك رسالة على بريدك لتؤكد موافقتك عليه.', 'Hi, here is our editing contract (attached file).\nYou’ll also get an e-mail to confirm your approval.']
   };
 
   function t(key, vars) {
@@ -206,9 +246,11 @@
     // defaults that change nothing, so contracts already sent read the same.
     md: 'v', kn: 10, kp: '', kd: '', kl: '', ks: '', kt: '',
     // more currencies accepted besides the main one (cu); prices are always in cu
-    ca: []
+    ca: [],
+    // optional e-mail confirmation (vm = on) with each side's address
+    vm: 0, fm: '', cm: ''
   };
-  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 80, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80 };
+  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 80, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80, fm: 120, cm: 120 };
   var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200] };
 
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
@@ -241,6 +283,9 @@
     var dp = parseInt(src.dp, 10);
     s.dp = OPT.dp.some(function (o) { return o[0] === dp; }) ? dp : 50;
     s.pf = src.pf ? 1 : 0;
+    s.vm = src.vm ? 1 : 0;
+    s.fm = s.vm ? s.fm.trim().toLowerCase() : '';
+    s.cm = s.vm ? s.cm.trim().toLowerCase() : '';
     s.md = src.md === 'p' ? 'p' : 'v';
     s.ca = Array.isArray(src.ca) ? src.ca.filter(function (k, i, arr) {
       return k !== s.cu && arr.indexOf(k) === i && OPT.cu.some(function (o) { return o[0] === k; });
@@ -307,21 +352,30 @@
     });
   }
 
-  // Contract code: changes if anything in the contract changes
+  // Contract code: changes if anything in the contract changes. Only what differs from the
+  // defaults counts (as in the link), so adding a new optional setting to the maker never
+  // changes the code of contracts made before it (it did until 2026-11-05).
   var B32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
-  function codeOf(s) {
-    var data = new TextEncoder().encode(sortedJSON(normalize(s)));
-    var digest = window.crypto && crypto.subtle
+  function digestOf(s) {
+    var p = pack(normalize(s));
+    delete p.v;
+    var data = new TextEncoder().encode(sortedJSON(p));
+    return window.crypto && crypto.subtle
       ? crypto.subtle.digest('SHA-256', data).then(function (b) { return new Uint8Array(b); })
       : Promise.resolve(fnv(data));
-    return digest.then(function (h) {
-      var bits = 0, value = 0, out = '';
-      for (var i = 0; i < h.length && out.length < 8; i++) {
-        value = (value << 8) | h[i]; bits += 8;
-        while (bits >= 5 && out.length < 8) { out += B32.charAt((value >>> (bits - 5)) & 31); bits -= 5; }
-      }
-      return out.slice(0, 4) + '-' + out.slice(4, 8);
-    });
+  }
+  function codeFrom(h) {
+    var bits = 0, value = 0, out = '';
+    for (var i = 0; i < h.length && out.length < 8; i++) {
+      value = (value << 8) | h[i]; bits += 8;
+      while (bits >= 5 && out.length < 8) { out += B32.charAt((value >>> (bits - 5)) & 31); bits -= 5; }
+    }
+    return out.slice(0, 4) + '-' + out.slice(4, 8);
+  }
+  function codeOf(s) { return digestOf(s).then(codeFrom); }
+  function hexOf(bytes) { return Array.prototype.map.call(bytes, function (b) { return (b < 16 ? '0' : '') + b.toString(16); }).join(''); }
+  function sha256hex(text) {
+    return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function (b) { return hexOf(new Uint8Array(b)); });
   }
   function fnv(data) {
     var h = 0x811c9dc5, out = new Uint8Array(8);
@@ -572,7 +626,9 @@
     var s8 = [];
     s8.push(L('هذا اتفاق ودي إلكتروني، وليس عقدًا رسميًا أو حكوميًا. هدفه توضيح ما اتفق عليه الطرفان والرجوع إليه عند أي خلاف، ولا يحتاج طباعة أو توقيعًا.',
               'This is a friendly electronic agreement, not an official or government contract. It records what both sides agreed so they can refer to it if they disagree. No printing or signature is needed.'));
-    s8.push(L('الموافقة: يرسل كل طرف في ' + V(ch) + ': ' + V(approvalText(s, code)) + '. وهذه الرسالة تعني أنه موافق على كل ما في العقد.',
+    if (s.vm) s8.push(L('الموافقة بالبريد: يصل لكل طرف رابط على بريده المذكور في أعلى العقد، فيفتح العقد ويؤكد موافقته. وبعد تأكيد الطرفين يصير العقد «موثّقًا بالبريد» ولا يمكن تغييره، وأي تغيير يكون بنسخة جديدة يؤكدها الطرفان بالبريد من جديد.',
+                        'Approval by e-mail: each side gets a link at the e-mail shown above, opens the contract and confirms. Once both have confirmed, the contract is “confirmed by e-mail” and can’t be changed; any change is a new version both confirm by e-mail again.'));
+    else s8.push(L('الموافقة: يرسل كل طرف في ' + V(ch) + ': ' + V(approvalText(s, code)) + '. وهذه الرسالة تعني أنه موافق على كل ما في العقد.',
               'Approval: each side sends on ' + V(ch) + ': ' + V(approvalText(s, code)) + '. That message means they accept everything in it.'));
     s8.push(L('رمز العقد يتغير إذا تغير أي شيء فيه، والباركود في آخر العقد يفتح النسخة الأصلية للتأكد منها.',
               'The contract code changes if anything in it changes, and the QR code at the end opens the original version to check it.'));
@@ -611,16 +667,17 @@
     h += '<header class="cm-p-head" data-block="head">' +
       '<h2 class="cm-p-title">' + L('عقد خدمات المونتاج', 'Video Editing Agreement') + '</h2>' +
       '<p class="cm-p-subtitle">' + L('اتفاق ودي إلكتروني بين الفريلانسر والعميل', 'A friendly electronic agreement between the freelancer and the client') + '</p>' +
-      '<div class="cm-p-meta"><span>' + t('ver') + ' <b>' + s.ver + '</b></span><span>' + fmtDate(s.dt) + '</span><span>' + t('code') + ' <b class="cm-code">' + esc(code) + '</b></span></div>' +
+      '<div class="cm-p-meta"><span>' + t('ver') + ' <b>' + s.ver + '</b></span><span>' + fmtDate(s.dt) + '</span><span>' + t('code') + ' <b class="cm-code">' + esc(code) + '</b></span>' + stampHTML() + '</div>' +
       '</header><div class="cm-p-body">';
 
     // Parties
     h += '<div class="cm-p-block" data-block="parties"><div class="cm-p-parties">';
-    [['f', s.fn, s.fc, s.fx], ['c', s.cn, s.cc, s.cx]].forEach(function (p) {
+    [['f', s.fn, s.fc, s.fx, s.fm], ['c', s.cn, s.cc, s.cx, s.cm]].forEach(function (p) {
       h += '<div class="cm-p-party"><h4>' + (p[0] === 'f' ? t('fl') : t('cl')) + '</h4>' +
         '<div><span>' + t('name') + ':</span> ' + V(p[1] || '—') + '</div>' +
         '<div><span>' + t('country') + ':</span> ' + V(p[2] || '—') + '</div>' +
-        '<div><span>' + L('التواصل', 'Contact') + ':</span> ' + V(p[3] || '—') + '</div></div>';
+        '<div><span>' + L('التواصل', 'Contact') + ':</span> ' + V(p[3] || '—') + '</div>' +
+        (s.vm ? '<div><span>' + t('vMail') + ':</span> ' + V(p[4] || '—') + '</div>' : '') + '</div>';
     });
     h += '</div></div>';
 
@@ -698,7 +755,12 @@
   var mode = 'wizard';   // wizard | result | received | bad
   var dark = null;       // the sheet's own light / dark reading; null = follow the site's theme
   function paperDark() { return dark === null ? document.documentElement.getAttribute('data-theme') === 'dark' : dark; }
-  var current = { code: '', url: '', qr: '' };
+  // hash = the contract's full fingerprint, pair = fingerprint of the two e-mails,
+  // vs = what the confirmation service says (null until asked)
+  var current = { code: '', url: '', qr: '', hash: '', pair: '', vs: null };
+  var confirmToken = '';   // the secret from a confirmation e-mail (?v=…)
+  var confirmInfo = null;  // what that secret belongs to, or { error }
+  var vNote = '';          // last message of the confirmation box
   var fromLink = false;
 
   function saveDraft() {
@@ -805,8 +867,15 @@
       h += field(t('workDays'), input('wd', t('workDaysPh')), t('workDaysHint'), true);
       h += field(t('portfolio'), '<label class="cm-switch"><input type="checkbox" data-toggle="pf"' + (S.pf ? ' checked' : '') + '><span>' + t('portfolioOn') + '</span></label>');
       h += field(t('terms'), '<textarea class="cm-textarea" dir="auto" data-set="tr" maxlength="400" placeholder="' + esc(t('termsPh')) + '">' + esc(S.tr) + '</textarea>', '', true);
+      if (API) {
+        h += field(t('vmTitle'), '<label class="cm-switch"><input type="checkbox" data-toggle="vm"' + (S.vm ? ' checked' : '') + '><span>' + t('vmOn') + '</span></label>' +
+          (S.vm ? '<div class="cm-grid2 cm-gap">' + field(t('fMail'), mailInput('fm')) + field(t('cMail'), mailInput('cm')) + '</div>' : ''), t('vmHint'), true);
+      }
     }
     return h;
+  }
+  function mailInput(key) {
+    return '<input class="cm-input" type="email" dir="ltr" inputmode="email" autocomplete="email" data-set="' + key + '" value="' + esc(S[key]) + '" placeholder="name@example.com" maxlength="120">';
   }
   // Currencies: several can be picked; the first one picked is the main one (prices are in it)
   function currencyField() {
@@ -842,6 +911,11 @@
   function validate() {
     if (step === 1 && (!S.fn.trim() || !S.cn.trim())) return t('needNames');
     if (step === 3 && total(S) == null) return S.md === 'p' ? t('needPackage') : t('needPrice');
+    if (step === 6 && S.vm) {
+      var a = String(S.fm).trim().toLowerCase(), b = String(S.cm).trim().toLowerCase();
+      if (!MAIL_RE.test(a) || !MAIL_RE.test(b)) return t('needMails');
+      if (a === b) return t('sameMail');
+    }
     return '';
   }
   function eachText() {
@@ -864,34 +938,162 @@
   /* ---------- rendering: the finished contract ---------- */
   function build() {
     if (!S.dt) S.dt = today();
+    current.vs = null;
+    vNote = '';
     return encodeState(S).then(function (enc) {
       current.url = shareBase() + '#c=' + enc;
-      return codeOf(S);
-    }).then(function (code) {
-      current.code = code;
+      return digestOf(S);
+    }).then(function (h) {
+      current.code = codeFrom(h);
+      current.hash = h.length === 32 ? hexOf(h) : '';
+      return S.vm && current.hash ? sha256hex(S.fm + '|' + S.cm) : '';
+    }).then(function (pair) {
+      current.pair = pair;
       return qrDataUrl(current.url);
     }).then(function (qr) { current.qr = qr; });
   }
 
   function renderResult() {
-    var received = mode === 'received';
+    var received = mode === 'received', verify = verifying();
     var actions =
-      (received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>' : '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>') +
+      (!received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>'
+        : verify ? ''   // the e-mail box at the end of the contract takes the approval
+        : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
       '<button type="button" class="cm-btn cm-btn-soft" data-act="pdf">' + icon('down') + t('download') + '</button>' +
       '<button type="button" class="cm-btn cm-btn-soft" data-act="copy">' + icon('link') + t('copy') + '</button>' +
       '<button type="button" class="cm-btn cm-btn-soft" data-go="' + (received ? 'editnew' : 'edit') + '">' + icon('edit') + (received ? t('editNew') : t('edit')) + '</button>';
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
       '<div class="cm-ready"><span class="cm-ok">' + icon('ok') + '</span><h2>' + (received ? t('received') : t('ready')) + '</h2><p>' + (received ? t('receivedSub') : t('readySub')) + '</p></div>' +
+      (verify && confirmToken ? '<div class="cm-verify-top" id="cmVerifyTop" role="status">' + confirmHTML() + '</div>' : '') +
       '<div class="cm-actions">' + actions + '</div>' +
       '<p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>' +
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
       '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></div>' +
       '<article class="cm-paper' + (paperDark() ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
-      '<div class="cm-approve"><h3>' + t('approveTitle') + '</h3><p>' + t('approveText', { ch: esc(chName(S)) }) + '</p><q dir="auto">' + esc(approvalText(S, current.code)) + '</q>' +
-      (received ? '' : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
-      (received ? '<a class="cm-link" href="' + esc(shareBase().replace(/#.*$/, '')) + '" data-go="restart">' + t('makeOwn') + '</a>' : '') +
-      '</div></div>';
+      (verify
+        ? '<div class="cm-approve cm-verify" id="cmVerify">' + verifyHTML() + '</div>'
+        : '<div class="cm-approve"><h3>' + t('approveTitle') + '</h3><p>' + t('approveText', { ch: esc(chName(S)) }) + '</p><q dir="auto">' + esc(approvalText(S, current.code)) + '</q>' +
+          (received ? '' : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
+          (received ? '<a class="cm-link" href="' + esc(shareBase().replace(/#.*$/, '')) + '" data-go="restart">' + t('makeOwn') + '</a>' : '') +
+          '</div>') +
+      '</div>';
+    if (verify) loadVerify();
+  }
+
+  /* ---------- e-mail confirmation (optional; needs the service at API) ---------- */
+  function verifying() { return !!(S && S.vm && API && current.hash && current.pair); }
+  function lockedAt() { return S && S.vm && current.vs && current.vs.state === 'locked' ? current.vs.locked_at : 0; }
+  function dayOf(ms) { var d = new Date(ms); return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear(); }
+  function stampHTML() { var at = lockedAt(); return at ? '<span class="cm-p-ok">✓ ' + t('vStamp') + ' · ' + esc(dayOf(at)) + '</span>' : ''; }
+
+  function api(path, body) {
+    var opt = body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : { cache: 'no-store' };
+    return fetch(API.replace(/\/+$/, '') + path, opt).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) { var e = new Error(j.error || 'http'); e.code = j.error || 'http'; throw e; }
+        return j;
+      });
+    }, function () { var e = new Error('net'); e.code = 'net'; throw e; });
+  }
+
+  // Asks the service once per contract (again only after an error)
+  function loadVerify() {
+    if (!verifying() || (current.vs && !current.vs.error)) return;
+    var hash = current.hash;
+    var jobs = [api('/status?h=' + current.hash + '&p=' + current.pair)];
+    if (confirmToken && !confirmInfo) {
+      jobs.push(api('/token?t=' + encodeURIComponent(confirmToken)).catch(function (e) { return { error: e.code === 'bad_token' ? 'bad_token' : 'net' }; }));
+    }
+    Promise.all(jobs).then(function (r) {
+      if (hash !== current.hash) return;   // another contract was opened meanwhile
+      current.vs = r[0];
+      if (r[1]) confirmInfo = r[1].error ? r[1] : (r[1].hash === current.hash && r[1].pair === current.pair ? r[1] : { error: 'other_contract' });
+      updateVerify();
+    }, function (e) {
+      if (hash !== current.hash) return;
+      current.vs = { error: e.code || 'net' };
+      updateVerify();
+    });
+  }
+  function updateVerify() {
+    var box = document.getElementById('cmVerify');
+    if (box) box.innerHTML = verifyHTML();
+    var top = document.getElementById('cmVerifyTop');
+    if (top) top.innerHTML = confirmHTML();
+    var meta = document.querySelector('#cmPaper .cm-p-meta');
+    if (meta && !meta.querySelector('.cm-p-ok')) meta.insertAdjacentHTML('beforeend', stampHTML());
+  }
+  function canConfirm() {
+    var vs = current.vs;
+    return !!(confirmToken && confirmInfo && !confirmInfo.error && vs && !vs.error && !(vs[confirmInfo.role] && vs[confirmInfo.role].confirmed_at));
+  }
+
+  // The box at the end of the contract: where each side stands, and the buttons
+  function verifyHTML() {
+    var vs = current.vs, h = '<h3>' + t('vTitle') + '</h3>';
+    if (!vs) return h + '<p class="cm-vmsg"><span class="cm-spin cm-spin-sm"></span>' + t('vLoading') + '</p>';
+    if (vs.error) return h + '<p class="cm-vmsg">' + t('vError') + '</p>';
+    if (vs.state === 'locked') h += '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vLocked') + '</b><small>' + t('vLockedSub', { d: esc(dayOf(vs.locked_at)) }) + '</small></div></div>';
+    else h += '<p>' + t('vIntro') + '</p>';
+    h += '<ul class="cm-vlist">' + ['f', 'c'].map(function (r) {
+      var sd = vs[r], ok = !!(sd && sd.confirmed_at);
+      var line = ok ? t('vDone', { d: esc(dayOf(sd.confirmed_at)) }) : sd && sd.sent_at ? t('vPending', { m: '<bdi dir="ltr">' + esc(sd.email) + '</bdi>' }) : t('vNotYet');
+      return '<li' + (ok ? ' class="ok"' : '') + '><span class="cm-vdot">' + (ok ? icon('ok') : '') + '</span><span><b>' + esc((r === 'f' ? S.fn : S.cn) || '—') + '</b> <small>(' + (r === 'f' ? t('fl') : t('cl')) + ')</small><br>' + line + '</span></li>';
+    }).join('') + '</ul>';
+    if (canConfirm()) h += '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
+    else if (vs.state !== 'locked') h += '<button type="button" class="cm-btn ' + (vs.state === 'none' ? 'cm-btn-primary' : 'cm-btn-soft') + '" data-act="vsend">' + (vs.state === 'none' ? t('vSend') : t('vResend')) + '</button>';
+    if (vNote) h += '<p class="cm-vmsg">' + vNote + '</p>';
+    return h;
+  }
+
+  // The panel at the top when the page was opened from a confirmation e-mail
+  function confirmHTML() {
+    var h = '<h3>' + t('vMeTitle') + '</h3>', vs = current.vs;
+    if (!confirmInfo || !vs) return h + '<p class="cm-vmsg"><span class="cm-spin cm-spin-sm"></span>' + t('vLoading') + '</p>';
+    if (confirmInfo.error) return h + '<p class="cm-vmsg">' + (confirmInfo.error === 'other_contract' ? t('vOther') : confirmInfo.error === 'bad_token' ? t('vBadLink') : t('vError')) + '</p>';
+    if (vs.error) return h + '<p class="cm-vmsg">' + t('vError') + '</p>';
+    var mine = vs[confirmInfo.role];
+    if (mine && mine.confirmed_at) {
+      return h + '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vMeDone') + '</b>' +
+        (vs.state === 'locked' ? '<small>' + t('vLockedSub', { d: esc(dayOf(vs.locked_at)) }) + '</small>' : '') + '</div></div>';
+    }
+    return h + '<p>' + t('vMeText', { r: '<b>' + (confirmInfo.role === 'f' ? t('fl') : t('cl')) + '</b>' }) + '</p>' +
+      '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>' +
+      (vNote ? '<p class="cm-vmsg">' + vNote + '</p>' : '');
+  }
+
+  function vSend(btn) {
+    if (!verifying()) return;
+    if (btn) { btn.disabled = true; btn.innerHTML = '<span class="cm-spin"></span>' + t('vSending'); }
+    vNote = '';
+    api('/request', {
+      hash: current.hash, code: current.code, ver: S.ver, lang: isEn() ? 'en' : 'ar', link: current.url, total: amount(total(S), S),
+      f: { name: S.fn, email: S.fm }, c: { name: S.cn, email: S.cm }
+    }).then(function (st) {
+      current.vs = st;
+      vNote = st.state === 'locked' ? '' : t('vSent');
+    }, function (e) {
+      vNote = e.code === 'wait' || e.code === 'limit' ? t('vWait') : e.code === 'bad_email' || e.code === 'same_email' ? t('vBadMail') : t('vError');
+    }).then(updateVerify);
+  }
+
+  function vConfirm() {
+    if (!canConfirm()) return;
+    Array.prototype.forEach.call(app.querySelectorAll('[data-act="vconfirm"]'), function (b) { b.disabled = true; b.innerHTML = '<span class="cm-spin"></span>' + t('vSending'); });
+    vNote = '';
+    api('/confirm', { t: confirmToken, hash: current.hash, link: current.url }).then(function (st) {
+      current.vs = st;
+      // the secret has done its job here: take it out of the address bar
+      try {
+        var q = new URLSearchParams(location.search);
+        q.delete('v');
+        history.replaceState(history.state, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash);
+      } catch (e) {}
+    }, function (e) {
+      if (e.code === 'other_contract' || e.code === 'bad_token') confirmInfo = { error: e.code };
+      else vNote = t('vError');
+    }).then(updateVerify);
   }
 
   function icon(name) {
@@ -1040,7 +1242,7 @@
 
   // The file is made once per contract and language, then reused (download, send again…)
   var fileCache = null, fileJob = null;
-  function fileKey() { return current.code + '|' + document.documentElement.lang; }
+  function fileKey() { return current.code + '|' + document.documentElement.lang + '|' + lockedAt(); }   // the stamp changes the file
   function cachedFile() { return fileCache && fileCache.key === fileKey() ? fileCache.file : null; }
   function getFile() {
     var key = fileKey();
@@ -1129,8 +1331,10 @@
   // downloads and the chat opens with the lines ready.
   function doSend(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
+    // With e-mail confirmation on, sending the contract also sends the confirmation e-mails (once)
+    if (verifying() && (!current.vs || current.vs.state === 'none')) vSend(null);
     if (S.ch === 'ig') { openChat(linkMessage(), other); return; }
-    var msg = fileMessage();
+    var msg = verifying() ? t('vMsgMail') : fileMessage();
     var phone = isPhone() && navigator.canShare && window.File;
     if (phone && cachedFile()) { shareFile(cachedFile(), msg, other, btn); return; }
     busy(btn, true);
@@ -1181,7 +1385,12 @@
   });
   app.addEventListener('change', function (e) {
     var el = e.target;
-    if (el.hasAttribute('data-toggle')) { S[el.getAttribute('data-toggle')] = el.checked ? 1 : 0; saveDraft(); }
+    if (el.hasAttribute('data-toggle')) {
+      var tk = el.getAttribute('data-toggle');
+      S[tk] = el.checked ? 1 : 0;
+      saveDraft();
+      if (tk === 'vm') keepScroll(render);   // shows / hides the two e-mail fields
+    }
   });
   function updateTotal() {
     var el = document.getElementById('cmTotal');
@@ -1233,6 +1442,8 @@
       else if (act === 'copy') copyText(current.url).then(function () { toast(t('copied')); });
       else if (act === 'approve') doApprove();
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
+      else if (act === 'vsend') vSend(el);
+      else if (act === 'vconfirm') vConfirm();
     }
   });
 
@@ -1291,6 +1502,12 @@
 
   /* ---------- start ---------- */
   function start() {
+    // a link from a confirmation e-mail carries its secret as ?v=…
+    try {
+      var tv = new URLSearchParams(location.search).get('v') || '';
+      confirmToken = /^[A-Za-z0-9_-]{43}$/.test(tv) ? tv : '';
+    } catch (e) { confirmToken = ''; }
+    confirmInfo = null;
     var m = location.hash.match(/[#&]c=([A-Za-z0-9_-]+)/);
     if (m) {
       app.innerHTML = '<div class="cm-card"><span class="cm-spin dark"></span></div>';
