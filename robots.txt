@@ -1,28 +1,46 @@
-# Link previews off: messaging and social apps show the plain link only.
+# Link previews off: messaging and social apps show the plain link only —
+# except /aqd, the link the Instagram auto-reply sends (it carries a preview card),
+# and its picture.
 # Search engines (Google and others) can still read the whole site.
 
 User-agent: facebookexternalhit
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: Facebot
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: WhatsApp
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: Twitterbot
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: TelegramBot
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: LinkedInBot
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: Slackbot
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: Discordbot
+Allow: /aqd
+Allow: /assets/images/og-contract.png
 Disallow: /
 
 User-agent: *
