@@ -331,6 +331,10 @@
     rh: 0, th: 0,
     // how long the freelancer keeps the project files after the final version (agreed; 30 as before)
     fk: 30,
+    // wording version, for clauses whose MEANING changed (not just clearer words), so a contract
+    // someone already agreed to never reads differently: 1 = as made before 2026-11-05 evening;
+    // 2 = a video started but not sent is paid for the work done (not a flat half). fresh() → 2
+    tv: 1,
     // amendments, oldest first: each keeps the code of the version it changed (c), the
     // reason given (w) and that version's value of every setting it changed (p). So the
     // contract carries its whole history, and every earlier version can be rebuilt (versions())
@@ -342,7 +346,7 @@
   var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200], rh: [0, 168], th: [0, 168] };
   var HOUR_STEP = 12;   // the hours steppers go 12, 24, 36 … 168
   // A new contract (not one from a link or a draft): review and revision times in hours
-  function fresh() { var s = clone(DEF); s.rh = 48; s.th = 48; return s; }
+  function fresh() { var s = clone(DEF); s.rh = 48; s.th = 48; s.tv = 2; return s; }
 
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
   function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -375,6 +379,7 @@
     s.dp = OPT.dp.some(function (o) { return o[0] === dp; }) ? dp : 50;
     var fk = parseInt(src.fk, 10);
     s.fk = OPT.fk.some(function (o) { return o[0] === fk; }) ? fk : 30;
+    s.tv = parseInt(src.tv, 10) === 2 ? 2 : 1;
     s.pf = src.pf ? 1 : 0;
     s.vm = src.vm ? 1 : 0;
     s.fm = s.vm ? s.fm.trim().toLowerCase() : '';
@@ -807,8 +812,18 @@
               'No reply: if one side stops replying and the work is blocked, the other sends a warning message and gives them ' + V(days(s.nt)) + '. With no reply by then, it counts as a cancellation by them.'));
     s7.push(L('إذا ألغى العميل قبل بدء العمل: ' + (s.dp === 100 ? 'يُرجَع له ما دفعه كاملًا.' : s.dp > 0 ? 'يُرجَع له العربون كاملًا.' : 'لا يدفع شيئًا.'),
               'If the client cancels before work starts: ' + (s.dp === 100 ? 'everything paid is refunded in full.' : s.dp > 0 ? 'the upfront payment is refunded in full.' : 'nothing is owed.')));
-    s7.push(L('إذا ألغى العميل بعد بدء العمل، يأخذ الفريلانسر عن كل فيديو: سعره كاملًا إذا أرسل نسخته الأولى، ونصف سعره إذا بدأ العمل عليه ولم يرسل نسخة، ولا شيء إذا لم يبدأ فيه.' + (pack ? ' وفي الباقة، سعر الفيديو الواحد = سعر الباقة ÷ عدد الفيديوهات (' + V(amount(perVideo(s), s)) + ').' : ''),
-              'If the client cancels after work starts, the freelancer gets, per video: the full price if its first version was sent, half if work started but no version was sent, nothing if it hadn’t started.' + (pack ? ' In a package, one video’s price = the package price ÷ the number of videos (' + V(amount(perVideo(s), s)) + ').' : '')));
+    var onePrice = pack ? L(' وفي الباقة، سعر الفيديو الواحد = سعر الباقة ÷ عدد الفيديوهات (' + V(amount(perVideo(s), s)) + ').', ' In a package, one video’s price = the package price ÷ the number of videos (' + V(amount(perVideo(s), s)) + ').') : '';
+    if (s.tv >= 2) {
+      // A video started but not sent: paid for the work done, even unfinished (his rule 2026-11-05:
+      // a flat half is unfair when 80% is done). Contracts made before keep the half (tv 1).
+      s7.push(L('إذا ألغى العميل بعد بدء العمل، يأخذ الفريلانسر عن كل فيديو: سعره كاملًا إذا أرسل نسخته الأولى، ولا شيء إذا لم يبدأ العمل عليه.' + onePrice,
+                'If the client cancels after work starts, the freelancer gets, per video: its full price if its first version was sent, and nothing if work on it hadn’t started.' + onePrice));
+      s7.push(L('وإذا ألغى العميل وقد بدأ الفريلانسر العمل على فيديو ولم يرسل نسخته الأولى بعد، يأخذ الفريلانسر من سعر ذلك الفيديو بقدر ما أنجز منه، حتى لو لم يكتمل. مثلًا: إذا أنجز 80% من الفيديو، يأخذ 80% من سعره. ويُري الفريلانسر العميل ما أنجزه، مثل لقطات أو مقطع قصير من العمل، ليتفقا على النسبة.',
+                'If the client cancels while the freelancer has started a video but not yet sent its first version, the freelancer gets part of that video’s price matching the work done, even if it isn’t finished. For example: 80% of the video done = 80% of its price. The freelancer shows the client what was done — such as screenshots or a short clip of the work — so both agree on the share.'));
+    } else {
+      s7.push(L('إذا ألغى العميل بعد بدء العمل، يأخذ الفريلانسر عن كل فيديو: سعره كاملًا إذا أرسل نسخته الأولى، ونصف سعره إذا بدأ العمل عليه ولم يرسل نسخة، ولا شيء إذا لم يبدأ فيه.' + onePrice,
+                'If the client cancels after work starts, the freelancer gets, per video: the full price if its first version was sent, half if work started but no version was sent, nothing if it hadn’t started.' + onePrice));
+    }
     s7.push(L('إذا ألغى الفريلانسر: يُرجِع للعميل كل ما دفعه عن أي فيديو لم يسلّم نسخته النهائية.', 'If the freelancer cancels, they refund everything paid for any video whose final version wasn’t delivered.'));
     s7.push(L('بعد أي إلغاء: يُقارَن ما دفعه العميل بما يأخذه الفريلانسر حسب هذا البند، فيُرجَع الزائد أو يُدفع الناقص خلال 7 أيام، بنفس طريقة الدفع. وكل فيديو يُدفع سعره كاملًا يستلم العميل نسخته النهائية.',
               'After any cancellation, what the client paid is compared with what the freelancer gets under this section; the extra is refunded or the shortfall paid within 7 days, by the same payment method. Every video paid in full gets its final version.'));
@@ -2215,6 +2230,7 @@
     if (d) {
       S = normalize(d.s); step = Math.min(STEPS, Math.max(1, d.step || 1));
       amend = amendFrom(d.am);   // an amendment in progress picks up where it stopped
+      if (!amend) S.tv = 2;      // a draft isn't agreed yet: today's wording (an amendment keeps its contract's)
       render(t('resumed'));
     } else {
       S = fresh(); amend = null;
