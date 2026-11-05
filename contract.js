@@ -265,6 +265,9 @@
     amBad: ['تنبيه: هذا السجل لا يطابق رمز تلك النسخة، فلا تعتمد عليه قبل أن تقارنه بالنسخة التي عندك.', 'Warning: this record doesn’t match that version’s code — compare it with your own copy before relying on it.'],
     amNoVid: ['لا يوجد', 'Not there'],
     amGone: ['حُذف', 'Removed'],
+    amNotSet: ['لم يُحدَّد', 'Not set'],
+    amInPack: ['ضمن الباقة', 'Part of the package'],
+    amRest: ['باقي البنود لم تتغيّر، وتبقى كما اتفق عليها الطرفان.', 'Every other term is unchanged and stays as both sides agreed.'],
     amVsBoth: ['أكّدها الطرفان بالبريد يوم {d}.', 'Both sides confirmed it by e-mail on {d}.'],
     amVsOne: ['أكّدها {who} بالبريد يوم {d}، ولم يؤكدها {other}.', '{who} confirmed it by e-mail on {d}; {other} did not.'],
     amVsNone: ['لم يؤكدها أحد بالبريد.', 'Nobody confirmed it by e-mail.'],
@@ -879,9 +882,9 @@
 
   /* ---------- amendments: what changed, before and after ---------- */
   // The terms as a reader sees them, [id, label, value], in the order of the maker's steps
-  function terms(s) {
-    var out = [], pk = s.md === 'p';
-    function add(id, label, val) { val = String(val == null ? '' : val).trim(); out.push([id, label, val || '—']); }
+  function terms(s, bridge) {
+    var out = [], pk = s.md === 'p', none = t('amNotSet');
+    function add(id, label, val) { val = String(val == null ? '' : val).trim(); out.push([id, label, val || none]); }
     [['f', s.fn, s.fc, s.fx, s.fm], ['c', s.cn, s.cc, s.cx, s.cm]].forEach(function (p) {
       var who = p[0] === 'f' ? t('fl') : t('cl');
       add(p[0] + 'n', who + ': ' + t('name'), p[1]);
@@ -897,14 +900,29 @@
     add('q', t('quality'), s.q === 'ot' ? (s.qo || optLabel('q', 'ot')) : optLabel('q', s.q));
     add('md', t('pricing'), optLabel('md', s.md));
     add('cu', t('currency'), curName(s) + (s.ca.length ? L('، ويُقبل أيضًا: ', '; also accepted: ') + listJoin(otherCurrencies(s)) : ''));
-    if (pk) {
+    // The total in BOTH ways of pricing (a package's price is its total), so an amendment
+    // always shows how much it was before and after — even when the pricing way changes
+    add('sum', L('السعر الإجمالي', 'Total price'), amount(total(s), s));
+    if (bridge) {
+      // The pricing way changed (package ↔ a price per video): the same questions answered for
+      // both ways, so «after» always says what it is now (he found an empty «—» unclear)
+      var dates = s.vd.map(function (v) { return v.t; }).filter(Boolean).sort();
+      var prices = s.vd.map(function (v) { return price(v.p); });
+      var same = prices.every(function (x) { return x != null && x === prices[0]; });
+      add('cnt', t('kCount'), videosCount(videoCount(s)));
+      add('per', L('سعر الفيديو الواحد', 'Price per video'), pk ? amount(perVideo(s), s) : same ? amount(prices[0], s) : L('يختلف من فيديو لآخر (في الجدول)', 'Differs per video (see the table)'));
+      add('desc', t('kDesc'), pk ? s.kd : listJoin(s.vd.map(function (v) { return String(v.d || '').trim(); }).filter(Boolean)));
+      add('len', L('مدة الفيديو', 'Video length'), pk ? s.kl : listJoin(s.vd.map(function (v) { return String(v.l || '').trim(); }).filter(function (x, i, arr) { return x && arr.indexOf(x) === i; })));
+      add('sched', t('kSched'), pk ? s.ks : L('موعد لكل فيديو في جدول الفيديوهات', 'A date for each video in the videos table'));
+      add('last', L('آخر موعد للتسليم', 'Last delivery date'), pk ? (s.kt ? fmtDate(s.kt) : '') : (dates.length ? fmtDate(dates[dates.length - 1]) : ''));
+    } else if (pk) {
       add('kn', t('kCount'), videosCount(s.kn));
-      add('kp', L('سعر الباقة', 'Package price'), amount(price(s.kp), s));
       add('kd', t('kDesc'), s.kd);
       add('kl', t('kLen'), s.kl);
       add('ks', t('kSched'), s.ks);
       add('kt', t('kLast'), s.kt ? fmtDate(s.kt) : '');
-    } else {
+    }
+    if (!pk) {
       s.vd.forEach(function (v, i) {
         var n = t('video') + ' ' + (i + 1), pr = price(v.p) == null ? '' : amount(price(v.p), s), dt = v.t ? fmtDate(v.t) : '';
         add('v' + i, n, [v.d, v.l, pr, dt].map(function (x) { return String(x || '').trim(); }).filter(Boolean).join(' · '));
@@ -913,14 +931,13 @@
         add('v' + i + 'p', n + ': ' + t('vPrice'), pr);
         add('v' + i + 't', n + ': ' + t('vDate'), dt);
       });
-      add('sum', L('السعر الإجمالي', 'Total price'), amount(total(s), s));
     }
     add('in', L('ما يشمله السعر', 'What the price includes'), listJoin(s.in.map(function (k) { return optLabel('in', k); }).concat(ioItems(s.io))));
     add('mu', t('music'), optLabel('mu', s.mu));
     add('pm', t('payBy'), listJoin(s.pm.map(function (k) { return k === 'ot' ? (s.pmo || optLabel('pm', 'ot')) : optLabel('pm', k); })));
     add('ac', t('account'), s.ac);
     add('dp', t('deposit'), s.dp === 0 ? optLabel('dp', 0) : s.dp + '%');
-    if (videoCount(s) > 1) add('sc', L('دفع الفيديوهات', 'Paying the videos'), optLabel('sc', s.sc));
+    add('sc', L('دفع الفيديوهات', 'Paying the videos'), videoCount(s) > 1 ? optLabel('sc', s.sc) : L('لا ينطبق (فيديو واحد)', 'Not needed (one video)'));
     add('fe', L('رسوم التحويل على', 'Transfer fees paid by'), optLabel('fe', s.fe));
     add('rd', t('rounds'), s.rd === 0 ? L('لا يوجد', 'None') : rounds(s.rd));
     add('ex', t('extra'), s.ex ? s.ex + ' ' + curName(s) : '');
@@ -937,7 +954,7 @@
   // What changed from version a to version b: [label, before, after]. A video found in both
   // is compared field by field; a video added or removed takes one line.
   function changes(a, b) {
-    var la = terms(a), lb = terms(b), A = {}, B = {}, ids = [], seen = {}, ia = 0;
+    var bridge = a.md !== b.md, la = terms(a, bridge), lb = terms(b, bridge), A = {}, B = {}, ids = [], seen = {}, ia = 0;
     la.forEach(function (x) { A[x[0]] = x; });
     lb.forEach(function (x) { B[x[0]] = x; });
     function take(id) { if (!seen[id]) { seen[id] = 1; ids.push(id); } }
@@ -953,8 +970,11 @@
         var both = !!(A['v' + m[1]] && B['v' + m[1]]);
         if (m[2] ? !both : both) return;
       }
-      var x = A[id], y = B[id], before = x ? x[2] : '—', after = y ? y[2] : '—';
-      if (m && !m[2]) { if (!x) before = t('amNoVid'); if (!y) after = t('amGone'); }
+      var x = A[id], y = B[id], before = x ? x[2] : t('amNotSet'), after = y ? y[2] : t('amNotSet');
+      if (m && !m[2]) {   // a video row on one side only: added, removed, or (pricing way changed) in the package
+        if (!x) before = bridge ? t('amInPack') : t('amNoVid');
+        if (!y) after = bridge ? t('amInPack') : t('amGone');
+      }
       if (before !== after) out.push([(y || x)[1], before, after]);
     });
     return out;
@@ -1002,6 +1022,7 @@
         rows.map(function (r) {
           return '<div class="cm-am-row"><span class="cm-am-k">' + esc(r[0]) + '</span><span class="cm-am-b"><small>' + t('amBefore') + '</small>' + Vw(r[1]) + '</span><span class="cm-am-a"><small>' + t('amAfter') + '</small>' + Vw(r[2]) + '</span></div>';
         }).join('') + '</div>' +
+        '<p class="cm-am-rest">' + icon('ok') + '<span>' + t('amRest') + '</span></p>' +
         '<p class="cm-am-of">' + t('amOf', { v: a.from.ver, d: '<bdi dir="ltr">' + esc(fmtDate(a.from.dt)) + '</bdi>', c: '<b class="cm-code">' + esc(a.code) + '</b>' }) +
         ' <span data-am-vs="' + a.n + '">' + histStatus(a) + '</span>' +
         (a.ok ? '' : '<em class="cm-am-bad">' + t('amBad') + '</em>') + '</p></div>';
@@ -1310,7 +1331,7 @@
     if (!rows.length) return '<p class="cm-hint cm-amend-list">' + t('amNoneYet') + '</p>';
     return '<ul class="cm-amend-list">' + rows.map(function (r) {
       return '<li><b>' + esc(r[0]) + '</b><span><s>' + Vw(r[1]) + '</s><i aria-hidden="true">' + L('←', '→') + '</i>' + Vw(r[2]) + '</span></li>';
-    }).join('') + '</ul>';
+    }).join('') + '<li class="cm-amend-rest">' + icon('ok') + '<span>' + t('amRest') + '</span></li></ul>';
   }
   function refreshAmendBox() {
     var box = amend && document.getElementById('cmAmendBox');
