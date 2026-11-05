@@ -84,6 +84,7 @@
     currency: ['العملة', 'Currency'],
     currencySmall: ['يمكن اختيار أكثر من عملة', 'you can pick more than one'],
     curMain: ['أساسية', 'main'],
+    curOwnPh: ['عملة أخرى؟ اكتبها ثم اضغط Enter أو «أضف»، مثل: جنيه مصري', 'Another currency? Type it, then Enter or “Add” — e.g. Egyptian pound'],
     curHint: ['العملة الأساسية للأسعار: {main}. ويمكن الدفع أيضًا بـ: {others}، بسعر الصرف يوم الدفع. ولتغيير العملة الأساسية، ألغِ اختيارها.',
               'Prices are in {main}. Payment is also accepted in: {others}, at the exchange rate on the payment day. To change the main currency, unselect it.'],
     videos: ['الفيديوهات', 'Videos'],
@@ -351,7 +352,7 @@
   var MAX_AM = 20;
   var CODE_RE = /^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$/;   // same alphabet as B32 below
   // io = the client's own extra items of «ما يشمله السعر», one per line (a single item in contracts made before)
-  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 300, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80, fm: 120, cm: 120 };
+  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 30, io: 300, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80, fm: 120, cm: 120 };
   var IO_MAX = 6, IO_LEN = 80;
   function ioItems(io) { return String(io || '').split('\n').map(function (x) { return x.trim(); }).filter(Boolean); }
   var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200], rh: [0, 168], th: [0, 168] };
@@ -1342,16 +1343,33 @@
     return '<input class="cm-input" type="email" dir="ltr" inputmode="email" autocomplete="email" data-set="' + key + '" value="' + esc(S[key]) + '" placeholder="name@example.com" maxlength="120">';
   }
   // Currencies: several can be picked; the first one picked is the main one (prices are in it)
+  // His own currency (his ask 2026-11-05): typed under the chips, Enter / «أضف» puts it among them
+  // (kept as the «أخرى» currency: cu / ca hold 'ot', cuo its name, as contracts made before)
   function currencyField() {
-    var sel = [S.cu].concat(S.ca);
-    var chipsHtml = '<div class="cm-chips" role="group">' + OPT.cu.map(function (o) {
-      var on = sel.indexOf(o[0]) !== -1, main = o[0] === S.cu && S.ca.length > 0;
-      return '<button type="button" class="cm-chip" data-cur="' + o[0] + '" aria-pressed="' + on + '">' + esc(isEn() ? o[2] : o[1]) +
-        (main ? ' <small class="cm-main">' + t('curMain') + '</small>' : '') + '</button>';
+    var sel = [S.cu].concat(S.ca), ownOn = sel.indexOf('ot') !== -1, own = ownOn && String(S.cuo || '').trim();
+    var chipsHtml = '<div class="cm-chips" role="group">' + OPT.cu.filter(function (o) { return o[0] !== 'ot' || ownOn; }).map(function (o) {
+      var on = sel.indexOf(o[0]) !== -1, main = o[0] === S.cu && S.ca.length > 0, mine = o[0] === 'ot';
+      return '<button type="button" class="cm-chip' + (mine ? ' cm-chip-own' : '') + '" data-cur="' + o[0] + '" aria-pressed="' + on + '"' + (mine ? ' title="' + esc(t('removeItem')) + '"' : '') + '>' +
+        esc(mine ? curName(S, 'ot') : (isEn() ? o[2] : o[1])) +
+        (main ? ' <small class="cm-main">' + t('curMain') + '</small>' : '') + (mine ? '<span class="cm-x" aria-hidden="true">×</span>' : '') + '</button>';
     }).join('') + '</div>';
-    var other = sel.indexOf('ot') !== -1 ? '<div class="cm-gap">' + input('cuo', t('other')) + '</div>' : '';
+    var add = own ? '' : '<div class="cm-addrow cm-gap"><input class="cm-input" dir="auto" data-curadd maxlength="' + LIMITS.cuo + '" enterkeyhint="enter" autocomplete="off" placeholder="' + esc(t('curOwnPh')) + '">' +
+      '<button type="button" class="cm-btn cm-btn-soft cm-addbtn" data-curadd-btn>' + t('addItem') + '</button></div>';
     var hint = S.ca.length ? '<p class="cm-hint">' + t('curHint', { main: esc(curName(S)), others: esc(listJoin(otherCurrencies(S))) }) + '</p>' : '';
-    return '<div class="cm-field"><label class="cm-label">' + t('currency') + ' <small>(' + t('currencySmall') + ')</small></label>' + chipsHtml + other + hint + '</div>';
+    return '<div class="cm-field"><label class="cm-label">' + t('currency') + ' <small>(' + t('currencySmall') + ')</small></label>' + chipsHtml + add + hint + '</div>';
+  }
+  // Adds his own currency (an extra accepted one; to make it the main one, unselect the others)
+  function addCur(text) {
+    text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, LIMITS.cuo);
+    if (!text) return false;
+    S.cuo = text;
+    if (S.cu !== 'ot' && S.ca.indexOf('ot') === -1) S.ca.push('ot');
+    saveDraft();
+    return true;
+  }
+  function flushCur() {
+    var box = app.querySelector('[data-curadd]');
+    if (box && box.value.trim()) addCur(box.value);
   }
   function roleCard(val, title, sub, icon) {
     return '<button type="button" class="cm-role" data-chip="ro" data-val="' + val + '" aria-pressed="' + (S.ro === val) + '">' + icon + '<b>' + title + '</b><small>' + sub + '</small></button>';
@@ -2095,9 +2113,14 @@
   // «أعمال أخرى»: Enter adds what was typed as one more choice, and the box is ready for the next one
   app.addEventListener('keydown', function (e) {
     var el = e.target;
-    if (e.key !== 'Enter' || e.isComposing || !el.hasAttribute || !el.hasAttribute('data-ioadd')) return;
-    e.preventDefault();
-    if (addIo(el.value)) { keepScroll(render); focusIoBox(); }
+    if (e.key !== 'Enter' || e.isComposing || !el.hasAttribute) return;
+    if (el.hasAttribute('data-ioadd')) {
+      e.preventDefault();
+      if (addIo(el.value)) { keepScroll(render); focusIoBox(); }
+    } else if (el.hasAttribute('data-curadd')) {   // his own currency, the same way
+      e.preventDefault();
+      if (addCur(el.value)) keepScroll(render);
+    }
   });
   function focusIoBox() {
     var b = app.querySelector('[data-ioadd]');
@@ -2132,7 +2155,11 @@
       if (v === S.cu) { if (S.ca.length) S.cu = S.ca.shift(); }   // the last currency can't be removed
       else if (S.ca.indexOf(v) !== -1) S.ca.splice(S.ca.indexOf(v), 1);
       else S.ca.push(v);
+      if (S.cu !== 'ot' && S.ca.indexOf('ot') === -1) S.cuo = '';   // his own currency taken away: its name goes too
       saveDraft(); keepScroll(render);
+    } else if (el.hasAttribute('data-curadd-btn')) {
+      var cb = app.querySelector('[data-curadd]');
+      if (cb && addCur(cb.value)) keepScroll(render); else if (cb) cb.focus();
     } else if (el.hasAttribute('data-step-key')) {
       var sk = el.getAttribute('data-step-key');
       var lo = sk === 'rh' || sk === 'th' ? HOUR_STEP : NUMS[sk][0];   // in hours, never below 12 (0 means days)
@@ -2193,7 +2220,7 @@
   }
 
   function go(where) {
-    if (mode === 'wizard' && (where === 'next' || where === 'back' || where === 'show')) flushIo();
+    if (mode === 'wizard' && (where === 'next' || where === 'back' || where === 'show')) { flushIo(); flushCur(); }
     if (where === 'next') {
       var err = validate();
       if (err) { showError(err); return; }
