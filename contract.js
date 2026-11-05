@@ -552,6 +552,15 @@
     if (s.ca.length) s2.push(L('يمكن الدفع أيضًا بالعملات التالية: ' + V(listJoin(otherCurrencies(s))) + '، ويُحوَّل المبلغ بسعر الصرف يوم الدفع، بحيث يصل للفريلانسر ما يساوي المبلغ المتفق عليه.',
                                'Payment is also accepted in: ' + V(listJoin(otherCurrencies(s))) + ', converted at the exchange rate on the payment day, so the freelancer receives the equivalent of the agreed amount.'));
     if (pays.length) s2.push(L('طريقة الدفع: ' + V(listJoin(pays)) + (s.ac ? '. بيانات الحساب: ' + refLink(s.ac) : '') + '.', 'Payment method: ' + V(listJoin(pays)) + (s.ac ? '. Account details: ' + refLink(s.ac) : '') + '.'));
+    // Paying with more than one method is fine, as long as every method is an agreed one
+    s2.push(pays.length > 1
+      ? L('لا مانع من الدفع بأكثر من طريقة، مثل جزء بطريقة وجزء بأخرى، ما دامت كلها من الطرق المتفق عليها هنا.',
+          'Paying with more than one method is fine, e.g. part one way and part another, as long as each is one of the methods agreed here.')
+      : pays.length === 1
+        ? L('لا مانع من الدفع بطريقة أخرى أو بأكثر من طريقة، بشرط أن يتفق الطرفان عليها برسالة قبل الدفع.',
+            'Paying another way, or with more than one method, is fine if both sides agree on it in a message before paying.')
+        : L('يُدفع المبلغ بالطريقة التي يتفق عليها الطرفان برسالة، ولا مانع من الدفع بأكثر من طريقة.',
+            'Payment is made the way both sides agree on in a message, and paying with more than one method is fine.'));
     var payer = { c: L('العميل', 'the client'), f: L('الفريلانسر', 'the freelancer'), h: L('الطرفين مناصفة', 'both sides, split equally') }[s.fe];
     s2.push(L('رسوم التحويل وفرق العملة على ' + V(payer) + (s.fe === 'c' ? '، بحيث يصل للفريلانسر المبلغ المتفق عليه كاملًا' : '') + '.',
               'Transfer fees and currency differences are paid by ' + V(payer) + (s.fe === 'c' ? ', so the freelancer receives the full agreed amount' : '') + '.'));
@@ -580,9 +589,12 @@
     } else {
       s4.push(L('يشمل السعر التعديل ' + V(rounds(s.rd)) + ' لكل فيديو. ' + (s.ex ? 'وكل مرة تعديل إضافية بسعر ' + V(s.ex + ' ' + curName(s)) + '.' : 'وسعر أي تعديل إضافي يُتفق عليه برسالة قبل تنفيذه.'),
                 'The price includes ' + V(rounds(s.rd)) + ' per video. ' + (s.ex ? 'Each extra revision costs ' + V(s.ex + ' ' + curName(s)) + '.' : 'Any extra revision is priced in a message before it’s done.')));
-      s4.push(L('معنى «مرة تعديل»: أن يجمع العميل كل ملاحظاته على النسخة ويرسلها في رسالة واحدة. وأي ملاحظات جديدة بعدها على النسخة نفسها تُحسب مرة جديدة.',
-                'One revision means the client gathers all notes on a version and sends them in one message. New notes later on the same version count as another revision.'));
     }
+    // One revision = one batch of notes, so changes can't trickle in one by one as «one revision»
+    s4.push(L('مرة التعديل = دفعة واحدة من الملاحظات: يجمع العميل كل ملاحظاته على النسخة ويرسلها معًا في رسالة واحدة، فتُحسب مرة واحدة.',
+              'One revision = one batch of notes: the client gathers all notes on a version and sends them together in one message, and that counts once.'));
+    s4.push(L('أي ملاحظة تصل بعد هذه الرسالة، ولو كانت ملاحظة واحدة، تُحسب مرة تعديل جديدة. فلا تُرسَل الملاحظات متفرقة على دفعات ثم تُحسب كلها مرة واحدة.',
+              'Any note that arrives after that message, even a single one, counts as a new revision. Notes sent bit by bit can’t all be counted as one revision.'));
     s4.push(L('التعديل هو تغيير داخل الفكرة والستايل المتفق عليهما، مثل: القص والتوقيت والنصوص والألوان والموسيقى.',
               'A revision is a change within the agreed idea and style — cuts, timing, text, colors, music.'));
     s4.push(L('أما تغيير الفكرة أو الستايل أو الفيديو المرجعي، أو إضافة مقاطع أو فيديوهات جديدة، فهو عمل إضافي يُتفق على سعره ومدته برسالة قبل تنفيذه.',
