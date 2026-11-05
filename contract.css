@@ -141,6 +141,13 @@ html[dir="ltr"] .cm-date-btn { right: 5px; }
 }
 
 .cm-main { font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.24); border-radius: 999px; padding: 1px 8px; }
+/* His own items of «ما يشمله السعر»: pressed like the others, a tap removes one */
+.cm-chip-own { max-width: 100%; white-space: normal; text-align: start; line-height: 1.5; }
+.cm-chip-own .cm-x { font-weight: 800; font-size: 17px; line-height: 1; opacity: .8; margin-inline-start: 2px; }
+.cm-chip-own:hover .cm-x { opacity: 1; }
+.cm-addrow { display: flex; gap: 8px; align-items: stretch; }
+.cm-addrow .cm-input { flex: 1; min-width: 0; }
+.cm-addbtn { flex-shrink: 0; padding: 0 20px; border-radius: 14px; }
 
 /* ---------- Who are you ---------- */
 .cm-roles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }

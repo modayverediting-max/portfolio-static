@@ -116,6 +116,11 @@
     // step 4
     incl: ['اختر كل ما يشمله السعر', 'Pick everything the price covers'],
     inclOther: ['أعمال أخرى يشملها السعر', 'Something else included'],
+    inclOtherPh: ['مثلًا: التحريك الاحترافي للكتابة', 'e.g. professional text animation'],
+    inclOtherHint: ['اكتب العمل ثم اضغط Enter أو «أضف»، فيظهر مع الخيارات فوق. ولحذفه اضغط عليه.', 'Type it, then press Enter or “Add”: it joins the choices above. Tap it to remove it.'],
+    addItem: ['أضف', 'Add'],
+    removeItem: ['اضغط للحذف', 'Tap to remove'],
+    ioMax: ['يكفي 6 أعمال إضافية. اكتب الباقي في «شروط إضافية».', 'Six extra items is the limit. Put the rest in “Extra terms”.'],
     music: ['مصدر الموسيقى', 'Who provides the music?'],
     // step 5
     payBy: ['طريقة الدفع', 'Payment method'],
@@ -296,7 +301,7 @@
     q: [['1080', '1080', '1080p'], ['4k', '4K', '4K'], ['ot', 'أخرى', 'Other']],
     cu: [['USD', 'دولار', 'USD'], ['USDT', 'USDT', 'USDT'], ['SAR', 'ريال سعودي', 'SAR'], ['AED', 'درهم إماراتي', 'AED'], ['EUR', 'يورو', 'EUR'], ['DZD', 'دينار جزائري', 'DZD'], ['ot', 'أخرى', 'Other']],
     in: [['cut', 'القص والترتيب', 'Cutting & assembly'], ['cap', 'الكابشن والنصوص', 'Captions & text'], ['mg', 'الموشن جرافيك', 'Motion graphics'], ['col', 'تصحيح الألوان', 'Color correction'], ['snd', 'الهندسة الصوتية والمؤثرات', 'Sound design & SFX'], ['mus', 'الموسيقى', 'Music'], ['thumb', 'الصورة المصغرة', 'Thumbnail'], ['src', 'ملفات المشروع المفتوحة', 'Editable project files']],
-    mu: [['f', 'الفريلانسر (مرخصة أو مجانية)', 'The freelancer (licensed or free)'], ['c', 'العميل', 'The client'], ['n', 'بلا موسيقى', 'No music']],
+    mu: [['f', 'الفريلانسر (مرخصة أو مجانية)', 'The freelancer (licensed or free)'], ['c', 'العميل', 'The client'], ['b', 'الطرفان معًا (جزء من كل طرف)', 'Both (part from each side)'], ['n', 'بلا موسيقى', 'No music']],
     pm: [['pp', 'PayPal', 'PayPal'], ['bank', 'تحويل بنكي', 'Bank transfer'], ['bm', 'بريدي موب', 'BaridiMob'], ['usdt', 'USDT', 'USDT'], ['bnc', 'باينانس', 'Binance'], ['ot', 'أخرى', 'Other']],
     dp: [[0, 'لا توجد', 'None'], [30, '30%', '30%'], [50, '50%', '50%'], [70, '70%', '70%'], [100, '100%', '100%']],
     sc: [['v', 'كل فيديو وحده', 'Video by video'], ['p', 'المشروع كله معًا', 'All together']],
@@ -342,7 +347,10 @@
   };
   var MAX_AM = 20;
   var CODE_RE = /^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$/;   // same alphabet as B32 below
-  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 80, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80, fm: 120, cm: 120 };
+  // io = the client's own extra items of «ما يشمله السعر», one per line (a single item in contracts made before)
+  var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 300, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80, fm: 120, cm: 120 };
+  var IO_MAX = 6, IO_LEN = 80;
+  function ioItems(io) { return String(io || '').split('\n').map(function (x) { return x.trim(); }).filter(Boolean); }
   var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200], rh: [0, 168], th: [0, 168] };
   var HOUR_STEP = 12;   // the hours steppers go 12, 24, 36 … 168
   // A new contract (not one from a link or a draft): review and revision times in hours
@@ -609,8 +617,7 @@
     var type = s.ty === 'ot' ? (s.to || optLabel('ty', 'ot')) : optLabel('ty', s.ty);
     var size = s.sz === 'ot' ? (s.so || optLabel('sz', 'ot')) : optLabel('sz', s.sz);
     var qual = s.q === 'ot' ? (s.qo || optLabel('q', 'ot')) : optLabel('q', s.q);
-    var incl = s.in.map(function (k) { return optLabel('in', k); });
-    if (s.io) incl.push(s.io);
+    var incl = s.in.map(function (k) { return optLabel('in', k); }).concat(ioItems(s.io));
     var pays = s.pm.map(function (k) { return k === 'ot' ? (s.pmo || optLabel('pm', 'ot')) : optLabel('pm', k); });
     var ch = chName(s);
     var dep = sum == null ? null : sum * s.dp / 100;
@@ -796,6 +803,8 @@
     s6.push({
       c: L('الموسيقى والعناصر الخارجية يرسلها العميل، وهو المسؤول عنها.', 'Music and outside elements come from the client, who is responsible for them.'),
       f: L('الموسيقى والعناصر الخارجية يضيفها الفريلانسر من مصادر مرخصة أو مجانية الاستخدام.', 'Music and outside elements are added by the freelancer from licensed or free sources.'),
+      b: L('الموسيقى من الطرفين معًا: يرسل العميل جزءًا منها، ويضيف الفريلانسر الجزء الآخر من مصادر مرخصة أو مجانية الاستخدام، ويتفقان على ذلك برسالة. وكل طرف مسؤول عن الموسيقى والعناصر التي يقدّمها.',
+           'Music comes from both sides: the client sends part of it and the freelancer adds the rest from licensed or free sources, as agreed in a message. Each side is responsible for the music and elements it provides.'),
       n: L('الفيديو بدون موسيقى، وأي عناصر خارجية يرسلها العميل يكون هو المسؤول عنها.', 'The video has no music; the client is responsible for any outside elements they send.')
     }[s.mu]);
     s6.push(L('مواد العميل ملكه، ويحافظ الفريلانسر على خصوصيتها، فلا ينشرها ولا يشاركها مع أحد.', 'The client’s materials are theirs; the freelancer keeps them private and doesn’t publish or share them.'));
@@ -906,9 +915,7 @@
       });
       add('sum', L('السعر الإجمالي', 'Total price'), amount(total(s), s));
     }
-    var incl = s.in.map(function (k) { return optLabel('in', k); });
-    if (s.io) incl.push(s.io);
-    add('in', L('ما يشمله السعر', 'What the price includes'), listJoin(incl));
+    add('in', L('ما يشمله السعر', 'What the price includes'), listJoin(s.in.map(function (k) { return optLabel('in', k); }).concat(ioItems(s.io))));
     add('mu', t('music'), optLabel('mu', s.mu));
     add('pm', t('payBy'), listJoin(s.pm.map(function (k) { return k === 'ot' ? (s.pmo || optLabel('pm', 'ot')) : optLabel('pm', k); })));
     add('ac', t('account'), s.ac);
@@ -1141,6 +1148,31 @@
       return '<button type="button" class="cm-chip" ' + (multi ? 'data-multi' : 'data-chip') + '="' + key + '" data-val="' + o[0] + '" aria-pressed="' + on + '">' + esc(isEn() ? o[2] : o[1]) + '</button>';
     }).join('') + '</div>';
   }
+  // «ما يشمله السعر»: the listed choices, then his own items (pressed; a tap removes one)
+  function inclChips() {
+    var own = ioItems(S.io).map(function (x, i) {
+      return '<button type="button" class="cm-chip cm-chip-own" data-iorm="' + i + '" aria-pressed="true" title="' + esc(t('removeItem')) + '">' + esc(x) + '<span class="cm-x" aria-hidden="true">×</span></button>';
+    }).join('');
+    return chips('in', 'in', true).replace(/<\/div>$/, own + '</div>');
+  }
+  // Adds what was typed in «أعمال أخرى» as one more choice; false when there was nothing to add
+  function addIo(text) {
+    text = String(text || '').replace(/\s+/g, ' ').trim().slice(0, IO_LEN);
+    if (!text) return false;
+    var items = ioItems(S.io);
+    if (items.indexOf(text) === -1) {
+      if (items.length >= IO_MAX) { toast(t('ioMax')); return false; }
+      items.push(text);
+    }
+    S.io = items.join('\n');
+    saveDraft();
+    return true;
+  }
+  // Leaving the step with something still typed in the box: it is kept, not lost
+  function flushIo() {
+    var box = app.querySelector('[data-ioadd]');
+    if (box && box.value.trim()) addIo(box.value);
+  }
   function input(key, ph, attrs) {
     return '<input class="cm-input" dir="auto" data-set="' + key + '" value="' + esc(S[key]) + '" placeholder="' + esc(ph || '') + '" maxlength="' + (LIMITS[key] || 100) + '"' + (attrs || '') + '>';
   }
@@ -1240,8 +1272,10 @@
       h += '<div class="cm-total"><span>' + t('total') + '</span><b id="cmTotal">' + esc(amount(total(S), S)) + '</b></div>';
       h += '<p class="cm-hint">' + t('vDateHint') + '</p>';
     } else if (step === 4) {
-      h += field(t('incl'), chips('in', 'in', true));
-      h += field(t('inclOther'), input('io', ''), '', true);
+      h += field(t('incl'), inclChips());
+      // His own items: typed, then Enter (or «أضف») puts each one among the choices above
+      h += field(t('inclOther'), '<div class="cm-addrow"><input class="cm-input" dir="auto" data-ioadd maxlength="' + IO_LEN + '" enterkeyhint="enter" autocomplete="off" placeholder="' + esc(t('inclOtherPh')) + '">' +
+        '<button type="button" class="cm-btn cm-btn-soft cm-addbtn" data-ioadd-btn>' + t('addItem') + '</button></div>', t('inclOtherHint'), true);
       h += field(t('music'), chips('mu', 'mu'));
     } else if (step === 5) {
       h += field(t('payBy'), chips('pm', 'pm', true) + (S.pm.indexOf('ot') !== -1 ? '<div class="cm-gap">' + input('pmo', t('other')) + '</div>' : ''));
@@ -2037,6 +2071,17 @@
       });
     }
   });
+  // «أعمال أخرى»: Enter adds what was typed as one more choice, and the box is ready for the next one
+  app.addEventListener('keydown', function (e) {
+    var el = e.target;
+    if (e.key !== 'Enter' || e.isComposing || !el.hasAttribute || !el.hasAttribute('data-ioadd')) return;
+    e.preventDefault();
+    if (addIo(el.value)) { keepScroll(render); focusIoBox(); }
+  });
+  function focusIoBox() {
+    var b = app.querySelector('[data-ioadd]');
+    if (b) try { b.focus({ preventScroll: true }); } catch (err) { b.focus(); }
+  }
   function updateTotal() {
     var el = document.getElementById('cmTotal');
     if (el) el.textContent = amount(total(S), S);
@@ -2087,6 +2132,14 @@
     } else if (el.hasAttribute('data-datepick')) {
       var nat = el.parentNode.querySelector('.cm-date-native');
       try { nat.showPicker(); } catch (err) { nat.focus(); try { nat.click(); } catch (err2) {} }
+    } else if (el.hasAttribute('data-ioadd-btn')) {
+      var ib = app.querySelector('[data-ioadd]');
+      if (ib && addIo(ib.value)) { keepScroll(render); focusIoBox(); } else if (ib) ib.focus();
+    } else if (el.hasAttribute('data-iorm')) {
+      var own = ioItems(S.io);
+      own.splice(+el.getAttribute('data-iorm'), 1);
+      S.io = own.join('\n');
+      saveDraft(); keepScroll(render);
     } else if (el.hasAttribute('data-go')) {
       e.preventDefault();
       go(el.getAttribute('data-go'));
@@ -2119,6 +2172,7 @@
   }
 
   function go(where) {
+    if (mode === 'wizard' && (where === 'next' || where === 'back' || where === 'show')) flushIo();
     if (where === 'next') {
       var err = validate();
       if (err) { showError(err); return; }
