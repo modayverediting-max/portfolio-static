@@ -638,9 +638,8 @@
       }
     });
 
-    // Form submit. With a Web3Forms key the email arrives under our own sender name
-    // (FormSubmit can't change its "FormSubmit" sender name); without one it falls back to FormSubmit.
-    // Public form key (Web3Forms says it's safe in page code); account: modayver.editing@gmail.com, form "MODAYVER"
+    // Form submit through Web3Forms: the email arrives under our own sender name.
+    // Public form key (Web3Forms says it's safe in page code). No private address appears in this page.
     var WEB3FORMS_KEY = '34b0facb-8684-4bd6-839c-98284eb120de';
     var formState = 'idle';   // idle → sending → sent. Once sent, the form is gone: one message, sent once.
     function handleSubmit(e) {
@@ -657,21 +656,15 @@
       }
       var name = fields['name'].value.trim();
       var email = fields['email'].value.trim();
-      var data = new FormData(form);
-      // FormSubmit can't rename its sender, so «عميل محتمل» leads the subject line instead
       var subject = 'عميل محتمل - رسالة جديدة من ' + name;
-      data.set('_subject', subject);
-      var url = 'https://formsubmit.co/ajax/modayver.editing@gmail.com';
-      if (WEB3FORMS_KEY) {
-        url = 'https://api.web3forms.com/submit';
-        data = new FormData();
-        data.append('access_key', WEB3FORMS_KEY);
-        data.append('from_name', 'عميل محتمل');
-        data.append('subject', subject);
-        data.append('name', name);
-        data.append('email', email);
-        data.append('message', fields['message'].value.trim());
-      }
+      var url = 'https://api.web3forms.com/submit';
+      var data = new FormData();
+      data.append('access_key', WEB3FORMS_KEY);
+      data.append('from_name', 'عميل محتمل');
+      data.append('subject', subject);
+      data.append('name', name);
+      data.append('email', email);
+      data.append('message', fields['message'].value.trim());
       var btn = document.getElementById('submitBtn');
       var error = document.getElementById('sendError');
       // No connection at all: say so at once, nothing is sent
