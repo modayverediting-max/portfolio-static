@@ -568,10 +568,11 @@
             <div class="send-error" id="sendError" role="alert" data-i18n="contact.send_error" hidden>لم يتم إرسال الرسالة، تأكد من اتصالك بالإنترنت وحاول مرة أخرى.</div>
 
             <form id="contactForm" onsubmit="handleSubmit(event)">
-              <input type="hidden" name="_captcha" value="false">
-              <!-- How the message arrives in the inbox: the subject names the site, the body is a neat table -->
-              <input type="hidden" name="_subject" value="عميل محتمل - رسالة جديدة من موقع مودايفر">
-              <input type="hidden" name="_template" value="table">
+              <!-- People never see this field and leave it empty; the mail service ignores bots that fill it.
+                   Clipped in place (not moved off to a side), so it can't widen the Arabic page. -->
+              <div aria-hidden="true" style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);border:0;white-space:nowrap">
+                <input type="text" name="mv_check" tabindex="-1" autocomplete="off" value="">
+              </div>
               <!-- Name -->
               <div class="form-group">
                 <label class="form-label" data-i18n="contact.name">الاسم</label>
@@ -636,9 +637,12 @@
       }
     });
 
-    // Form submit through Web3Forms: the email arrives under our own sender name.
-    // Public form key (Web3Forms says it's safe in page code). No private address appears in this page.
-    var WEB3FORMS_KEY = '34b0facb-8684-4bd6-839c-98284eb120de';
+    // Form submit: the message goes to our own mail service on Cloudflare (it sends from modayver.com).
+    // The owner gets it in his inbox from «موقع مودايفر»; when he replies, the visitor sees only MODAYVER
+    // and their own words (no form service, no inner labels). If that service can't take it right now,
+    // the message goes through Web3Forms instead, so nothing is lost. No private address is in this page.
+    var MAIL_API = 'https://modayver-contracts.modayver-contracts.workers.dev';
+    var WEB3FORMS_KEY = '34b0facb-8684-4bd6-839c-98284eb120de';   // the spare way; public form key (safe in page code)
     var formState = 'idle';   // idle → sending → sent. Once sent, the form is gone: one message, sent once.
     function handleSubmit(e) {
       e.preventDefault();
@@ -652,19 +656,10 @@
         form.reportValidity();
         return;
       }
+      var en = document.documentElement.lang === 'en';
       var name = fields['name'].value.trim();
       var email = fields['email'].value.trim();
-      // The visitor sees this subject again in the reply ("Re: …"), so it reads well for them.
-      // «عميل محتمل» stays only as the sender name, which only the owner sees.
-      var subject = document.documentElement.lang === 'en' ? 'Message to MODAYVER from ' + name : 'رسالة إلى مودايفر من ' + name;
-      var url = 'https://api.web3forms.com/submit';
-      var data = new FormData();
-      data.append('access_key', WEB3FORMS_KEY);
-      data.append('from_name', 'عميل محتمل');
-      data.append('subject', subject);
-      data.append('name', name);
-      data.append('email', email);
-      data.append('message', fields['message'].value.trim());
+      var message = fields['message'].value.trim();
       var btn = document.getElementById('submitBtn');
       var error = document.getElementById('sendError');
       // No connection at all: say so at once, nothing is sent
@@ -703,26 +698,60 @@
         error.hidden = false;
       }
 
-      // FormSubmit can take many seconds to answer, and has answered with an error
-      // while the email still arrived. So once the message has been on its way for 2s
-      // the confirmation shows; keepalive lets the request finish even if the visitor leaves.
-      var patience = setTimeout(showSent, 2000);
-      fetch(url, {
+      // The spare way: Web3Forms. Its sender name is the site's too, so a reply never shows an inner label.
+      // It can be slow to answer, so once the message has been on its way for 2s the confirmation
+      // shows; keepalive lets the request finish even if the visitor leaves.
+      function sendSpare() {
+        var data = new FormData();
+        data.append('access_key', WEB3FORMS_KEY);
+        data.append('from_name', en ? 'MODAYVER website' : 'موقع مودايفر');
+        data.append('subject', (en ? 'Message to MODAYVER from ' : 'رسالة إلى مودايفر من ') + name);   // seen again in replies ("Re: …")
+        data.append('name', name);
+        data.append('email', email);
+        data.append('message', message);
+        var patience = setTimeout(showSent, 2000);
+        fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: data,
+          keepalive: true
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(result) {
+          clearTimeout(patience);
+          if (!result || String(result.success) !== 'true') throw new Error(result && result.message);
+          showSent();
+        })
+        .catch(function(err) {
+          clearTimeout(patience);
+          showError(err);
+        });
+      }
+
+      // Our own service answers in about a second. A plain-text body keeps it a simple request
+      // (no extra permission round trip first). Too many messages from one visitor (429) stays
+      // refused; anything else that goes wrong (no answer in 8s, an error) uses the spare way.
+      var stop = window.AbortController ? new AbortController() : null;
+      var wait = setTimeout(function() { if (stop) stop.abort(); }, 8000);
+      fetch(MAIL_API + '/contact', {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: data,
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify({ name: name, email: email, message: message, lang: en ? 'en' : 'ar', mv_check: fields['mv_check'] ? fields['mv_check'].value : '' }),
+        signal: stop ? stop.signal : undefined,
         keepalive: true
       })
-      .then(function(response) { return response.json(); })
-      .then(function(result) {
-        clearTimeout(patience);
-        // FormSubmit answers success as the text "true", Web3Forms as true
-        if (!result || String(result.success) !== 'true') throw new Error(result && result.message);
-        showSent();
+      .then(function(response) {
+        clearTimeout(wait);
+        if (response.status === 429) return showError(new Error('too many messages'));
+        return response.json().then(function(result) {
+          if (!response.ok || !result || result.ok !== true) throw new Error((result && result.error) || 'status ' + response.status);
+          showSent();
+        });
       })
       .catch(function(err) {
-        clearTimeout(patience);
-        showError(err);
+        clearTimeout(wait);
+        console.warn('mail service did not take it, using the spare way', err);
+        sendSpare();
       });
     }
 
