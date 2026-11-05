@@ -9,15 +9,10 @@
   background: linear-gradient(180deg, #3D7EE0 0px, #5E96E6 300px, #D6E6FB 680px, #F2F7FD 980px) no-repeat #F2F7FD;
   min-height: 100vh;
 }
-.cm-nav-current { position: relative; }
-.cm-nav-current::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: -7px;
-  height: 2px;
-  border-radius: 2px;
-  background: #fff;
-}
+/* The header holds only the dark / light and AR / EN switches (no logo, menu or contact
+   button: a free tool for both sides, never an ad). The header frame is always laid out
+   right-to-left, so flex-end keeps the switches on the left, where every page has them. */
+.contract-page .header-inner { justify-content: flex-end; }
 
 /* ---------- Intro ---------- */
 .cm-hero { padding: 118px 16px 26px; text-align: center; color: #fff; }
