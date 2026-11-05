@@ -202,7 +202,12 @@
     vBadLink: ['رابط التأكيد غير صالح. اطلب رسالة جديدة من صفحة العقد.', 'This confirmation link isn’t valid. Ask for a new e-mail from the contract page.'],
     vStamp: ['موثّق بالبريد', 'Confirmed by e-mail'],
     vMail: ['البريد', 'E-mail'],
-    vMsgMail: ['مرحبًا، هذا عقد المونتاج بيننا في الملف المرفق.\nوستصلك رسالة على بريدك لتؤكد موافقتك عليه.', 'Hi, here is our editing contract (attached file).\nYou’ll also get an e-mail to confirm your approval.']
+    vMsgMail: ['مرحبًا، هذا عقد المونتاج بيننا في الملف المرفق.\nوستصلك رسالة على بريدك لتؤكد موافقتك عليه.', 'Hi, here is our editing contract (attached file).\nYou’ll also get an e-mail to confirm your approval.'],
+    // short link (with the service): the message carries a one-line link, nothing to attach
+    shortMsg: ['مرحبًا، هذا عقد المونتاج بيننا:\n{link}\nإن كنت موافقًا عليه، فأرسل: «{ok}»', 'Hi, here is our editing contract:\n{link}\nIf you agree, reply with: “{ok}”'],
+    shortMsgMail: ['مرحبًا، هذا عقد المونتاج بيننا:\n{link}\nوستصلك رسالة على بريدك لتؤكد موافقتك عليه.', 'Hi, here is our editing contract:\n{link}\nYou’ll also get an e-mail to confirm your approval.'],
+    linkMaking: ['جارٍ تجهيز الرابط…', 'Preparing the link…'],
+    chatOpened: ['فُتحت المحادثة والرسالة جاهزة، وفيها رابط قصير يفتح العقد.', 'The chat is open with the message ready, including a short link to the contract.']
   };
 
   function t(key, vars) {
@@ -979,6 +984,42 @@
           '</div>') +
       '</div>';
     if (verify) loadVerify();
+    // make the short link early, so «أرسل العقد» opens the chat at once
+    if (API && mode === 'result' && !(current.short && current.shortFor === current.code)) setTimeout(function () { if (mode === 'result') shortLink(); }, 700);
+  }
+
+  /* ---------- short link (needs the service at API) ---------- */
+  // The contract is encrypted here with a fresh key. The service keeps only the unreadable
+  // result; the key travels in the link after #s= (a part of the address never sent anywhere).
+  var shortJob = null;
+  function shortLink() {
+    if (!API || !(window.crypto && crypto.subtle) || !current.url) return Promise.resolve('');
+    if (current.short && current.shortFor === current.code) return Promise.resolve(current.short);
+    if (shortJob && shortJob.code === current.code) return shortJob.p;
+    var code = current.code, payload = current.url.split('#c=')[1] || '';
+    var key = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+    var p = crypto.subtle.importKey('raw', key, 'AES-GCM', false, ['encrypt']).then(function (k) {
+      return crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, k, new TextEncoder().encode(payload));
+    }).then(function (ct) {
+      var all = new Uint8Array(12 + ct.byteLength);
+      all.set(iv, 0);
+      all.set(new Uint8Array(ct), 12);
+      return api('/s', { d: toB64url(all) });
+    }).then(function (r) {
+      var link = shareBase() + '#s=' + r.id + '.' + toB64url(key);
+      if (current.code === code) { current.short = link; current.shortFor = code; }
+      return link;
+    }).catch(function (e) { console.error(e); shortJob = null; return ''; });
+    shortJob = { code: code, p: p };
+    return p;
+  }
+  function openShort(id, keyText) {
+    return api('/s/' + id).then(function (r) {
+      var all = fromB64url(r.d);
+      return crypto.subtle.importKey('raw', fromB64url(keyText), 'AES-GCM', false, ['decrypt']).then(function (k) {
+        return crypto.subtle.decrypt({ name: 'AES-GCM', iv: all.slice(0, 12) }, k, all.slice(12));
+      });
+    }).then(function (plain) { return new TextDecoder().decode(plain); });
   }
 
   /* ---------- e-mail confirmation (optional; needs the service at API) ---------- */
@@ -1234,9 +1275,9 @@
   }
   function fileName() { return L('عقد مونتاج ', 'Editing contract ') + current.code + '.pdf'; }
 
-  function busy(btn, on) {
+  function busy(btn, on, text) {
     if (!btn) return;
-    if (on) { btn._html = btn.innerHTML; btn.innerHTML = '<span class="cm-spin"></span>' + t('making'); btn.disabled = true; }
+    if (on) { btn._html = btn.innerHTML; btn.innerHTML = '<span class="cm-spin"></span>' + (text || t('making')); btn.disabled = true; }
     else { btn.innerHTML = btn._html || btn.innerHTML; btn.disabled = false; }
   }
 
@@ -1326,13 +1367,36 @@
     btn.classList.toggle('cm-pulse', on);
   }
 
-  // Sending = the file + two short lines (no long link in the chat).
-  // On a phone the share sheet takes both at once; on a computer the file
-  // downloads and the chat opens with the lines ready.
+  // Sending. With the service (API): a message with a one-line link that opens the contract,
+  // nothing to attach. Without it, or if it doesn't answer: the file + two short lines
+  // (on a phone the share sheet takes both; on a computer the file downloads and the chat opens).
   function doSend(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
     // With e-mail confirmation on, sending the contract also sends the confirmation e-mails (once)
     if (verifying() && (!current.vs || current.vs.state === 'none')) vSend(null);
+    if (API) {
+      var ready = current.short && current.shortFor === current.code ? current.short : '';
+      if (ready) { sendLink(ready, other); return; }
+      busy(btn, true, t('linkMaking'));
+      shortLink().then(function (link) {
+        busy(btn, false);
+        if (link) sendLink(link, other); else sendFile(btn, other);
+      });
+      return;
+    }
+    sendFile(btn, other);
+  }
+  function sendLink(link, other) {
+    var msg = t(verifying() ? 'shortMsgMail' : 'shortMsg', { link: link, ok: approvalText(S, current.code) });
+    if (isPhone() && navigator.share) {
+      navigator.share({ text: msg }).catch(function (e) { if (e && e.name === 'NotAllowedError') openChat(msg, other); });
+      return;
+    }
+    var url = chatUrl(msg, other);
+    openChat(msg, other);
+    if (url && S.ch !== 'em') sendNote(t('chatOpened') + ' <a class="cm-link" href="' + esc(url) + '" target="_blank" rel="noopener">' + t('openChat', { ch: esc(chName(S)) }) + '</a>');
+  }
+  function sendFile(btn, other) {
     if (S.ch === 'ig') { openChat(linkMessage(), other); return; }
     var msg = verifying() ? t('vMsgMail') : fileMessage();
     var phone = isPhone() && navigator.canShare && window.File;
@@ -1439,7 +1503,7 @@
       var act = el.getAttribute('data-act');
       if (act === 'pdf') doPdf(el);
       else if (act === 'send') doSend(el);
-      else if (act === 'copy') copyText(current.url).then(function () { toast(t('copied')); });
+      else if (act === 'copy') (API ? shortLink() : Promise.resolve('')).then(function (link) { return copyText(link || current.url); }).then(function () { toast(t('copied')); });
       else if (act === 'approve') doApprove();
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
       else if (act === 'vsend') vSend(el);
@@ -1508,14 +1572,21 @@
       confirmToken = /^[A-Za-z0-9_-]{43}$/.test(tv) ? tv : '';
     } catch (e) { confirmToken = ''; }
     confirmInfo = null;
+    // a short link (#s=<id>.<key>) or a full one (#c=<contract>)
+    var sm = location.hash.match(/[#&]s=([A-Za-z0-9]{8})\.([A-Za-z0-9_-]{22})/);
     var m = location.hash.match(/[#&]c=([A-Za-z0-9_-]+)/);
-    if (m) {
+    if (sm || m) {
       app.innerHTML = '<div class="cm-card"><span class="cm-spin dark"></span></div>';
-      decodeState(m[1]).then(function (s) {
+      (sm ? (API ? openShort(sm[1], sm[2]) : Promise.reject(new Error('no service'))) : Promise.resolve(m[1])).then(function (payload) {
+        if (!/^[A-Za-z0-9_-]+$/.test(payload)) throw new Error('bad payload');
+        return decodeState(payload);
+      }).then(function (s) {
         S = s; fromLink = true; mode = 'received';
         return build();
-      }).then(function () { render(); })
-        .catch(function (e) { console.error(e); S = clone(DEF); mode = 'bad'; render(); });
+      }).then(function () {
+        if (sm) { current.short = shareBase() + '#s=' + sm[1] + '.' + sm[2]; current.shortFor = current.code; }
+        render();
+      }).catch(function (e) { console.error(e); S = clone(DEF); mode = 'bad'; render(); });
       return;
     }
     var d = loadDraft();
@@ -1530,6 +1601,6 @@
   start();
   // A contract link opened while the page is already open (same address, new #c=…)
   window.addEventListener('hashchange', function () {
-    if (/[#&]c=/.test(location.hash)) { start(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    if (/[#&][cs]=/.test(location.hash)) { start(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   });
 })();
