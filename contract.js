@@ -141,6 +141,8 @@
     terms: ['شروط إضافية', 'Extra terms'],
     termsPh: ['أي اتفاق آخر غير مذكور في البنود', 'Anything you agreed that isn’t covered'],
     workDay: ['أيام عمل', 'work days'],
+    keep: ['مدة احتفاظ الفريلانسر بملفات المشروع بعد التسليم', 'How long the freelancer keeps the project files after delivery'],
+    keepHint: ['بعد هذه المدة لا يُطالَب الفريلانسر بالملفات، فاتفقا عليها قبل البدء.', 'After this, the freelancer isn’t responsible for the files — agree on it before starting.'],
     unitH: ['بالساعات', 'In hours'],
     unitD: ['بأيام العمل', 'In work days'],
     hourU: ['ساعة', 'hours'],
@@ -299,7 +301,8 @@
     dp: [[0, 'لا توجد', 'None'], [30, '30%', '30%'], [50, '50%', '50%'], [70, '70%', '70%'], [100, '100%', '100%']],
     sc: [['v', 'كل فيديو وحده', 'Video by video'], ['p', 'المشروع كله معًا', 'All together']],
     fe: [['c', 'العميل', 'The client'], ['f', 'الفريلانسر', 'The freelancer'], ['h', 'مناصفة', 'Split equally']],
-    md: [['v', 'سعر لكل فيديو', 'Each video has its price'], ['p', 'باقة: عدد فيديوهات بسعر واحد', 'Package: several videos, one price']]
+    md: [['v', 'سعر لكل فيديو', 'Each video has its price'], ['p', 'باقة: عدد فيديوهات بسعر واحد', 'Package: several videos, one price']],
+    fk: [[7, '7 أيام', '7 days'], [14, '14 يومًا', '14 days'], [30, '30 يومًا', '30 days'], [60, '60 يومًا', '60 days'], [90, '90 يومًا', '90 days']]
   };
   function optLabel(group, val) {
     var o = OPT[group].filter(function (x) { return String(x[0]) === String(val); })[0];
@@ -326,6 +329,8 @@
     // review time (rh) and time per revision (th) in hours; 0 = in work days (rv / tn), as every
     // contract made before 2026-11-05 reads. New contracts start in hours (fresh()): more precise.
     rh: 0, th: 0,
+    // how long the freelancer keeps the project files after the final version (agreed; 30 as before)
+    fk: 30,
     // amendments, oldest first: each keeps the code of the version it changed (c), the
     // reason given (w) and that version's value of every setting it changed (p). So the
     // contract carries its whole history, and every earlier version can be rebuilt (versions())
@@ -368,6 +373,8 @@
     s.fe = inList('fe', src.fe, 'c');
     var dp = parseInt(src.dp, 10);
     s.dp = OPT.dp.some(function (o) { return o[0] === dp; }) ? dp : 50;
+    var fk = parseInt(src.fk, 10);
+    s.fk = OPT.fk.some(function (o) { return o[0] === fk; }) ? fk : 30;
     s.pf = src.pf ? 1 : 0;
     s.vm = src.vm ? 1 : 0;
     s.fm = s.vm ? s.fm.trim().toLowerCase() : '';
@@ -790,7 +797,8 @@
     s6.push(s.pf
       ? L('يحق للفريلانسر عرض الفيديو في معرض أعماله بعد أن ينشره العميل.', 'The freelancer may show the video in their portfolio after the client publishes it.')
       : L('لا يعرض الفريلانسر الفيديو في معرض أعماله إلا بإذن مكتوب من العميل.', 'The freelancer won’t show the video in their portfolio without the client’s written permission.'));
-    s6.push(L('يحتفظ الفريلانسر بملفات المشروع 30 يومًا بعد تسليم النسخة النهائية، وبعدها لا يُطالَب بها.', 'The freelancer keeps the project files for 30 days after the final delivery and isn’t responsible for them after that.'));
+    s6.push(L('يحتفظ الفريلانسر بملفات المشروع مدة ' + V(optLabel('fk', s.fk)) + ' بعد تسليم النسخة النهائية، كما اتفق الطرفان، وبعدها لا يُطالَب بها.',
+              'The freelancer keeps the project files for ' + V(optLabel('fk', s.fk)) + ' after the final delivery, as both sides agreed, and isn’t responsible for them after that.'));
     out.push({ t: L('الحقوق والخصوصية', 'Rights & privacy'), items: s6 });
 
     // 7 Cancelling
@@ -898,6 +906,7 @@
     add('tn', t('turn'), s.th ? hours(s.th) : days(s.tn));
     add('nt', t('notice'), days(s.nt));
     add('wd', t('workDays'), s.wd || L('أيام العمل الرسمية وتوقيت بلد الفريلانسر', 'The freelancer’s official work days and time zone'));
+    add('fk', L('مدة الاحتفاظ بملفات المشروع', 'Keeping the project files'), optLabel('fk', s.fk));
     add('pf', t('portfolio'), s.pf ? L('مسموح بعد نشر الفيديو', 'Allowed once the video is published') : L('بإذن مكتوب من العميل فقط', 'Only with the client’s written permission'));
     add('tr', t('terms'), s.tr);
     add('vm', t('vTitle'), s.vm ? L('نعم', 'Yes') : L('لا', 'No'));
@@ -1232,6 +1241,7 @@
       h += field(t('review'), unitChips('rh') + '<div class="cm-gap">' + (S.rh ? stepper('rh', t('hourU'), HOUR_STEP) : stepper('rv', t('workDay'))) + '</div>', t('rvHint'));
       h += field(t('turn'), unitChips('th') + '<div class="cm-gap">' + (S.th ? stepper('th', t('hourU'), HOUR_STEP) : stepper('tn', t('workDay'))) + '</div>');
       h += field(t('notice'), stepper('nt', t('workDay')), t('noticeHint'));
+      h += field(t('keep'), chips('fk', 'fk'), t('keepHint'));
       h += field(t('workDays'), input('wd', t('workDaysPh')), t('workDaysHint'), true);
       h += field(t('portfolio'), '<label class="cm-switch"><input type="checkbox" data-toggle="pf"' + (S.pf ? ' checked' : '') + '><span>' + t('portfolioOn') + '</span></label>');
       h += field(t('terms'), '<textarea class="cm-textarea" dir="auto" data-set="tr" maxlength="400" placeholder="' + esc(t('termsPh')) + '">' + esc(S.tr) + '</textarea>', '', true);
@@ -2026,7 +2036,7 @@
     if (el.hasAttribute('data-chip')) {
       var key = el.getAttribute('data-chip');
       v = el.getAttribute('data-val');
-      S[key] = key === 'dp' ? parseInt(v, 10) : v;
+      S[key] = key === 'dp' || key === 'fk' ? parseInt(v, 10) : v;
       saveDraft(); keepScroll(render);
     } else if (el.hasAttribute('data-multi')) {
       var mk = el.getAttribute('data-multi');
