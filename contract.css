@@ -301,6 +301,7 @@
 .cm-actions .cm-btn-primary { grid-column: 1 / -1; }
 @media (min-width: 680px) { .cm-actions { grid-template-columns: 1.4fr 1fr 1fr 1fr; } .cm-actions .cm-btn-primary { grid-column: auto; } }
 .cm-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin: 4px 2px 12px; flex-wrap: wrap; }
+.cm-toolbar-end { display: inline-flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .cm-code-pill { display: inline-flex; gap: 8px; align-items: center; background: #fff; color: #00376C; border-radius: 999px; padding: 6px 14px; font-weight: 700; font-size: 14px; box-shadow: 0 6px 18px -12px rgba(0,55,108,.5); }
 .cm-code-pill code, .cm-code { font-family: ui-monospace, Menlo, Consolas, monospace; letter-spacing: .5px; direction: ltr; unicode-bidi: isolate; }
 /* After sending on a computer: the file is downloaded, what's left to do */

@@ -143,6 +143,9 @@
     badLink: ['الرابط ناقص أو تالف. اطلب من الطرف الآخر إرساله مرة أخرى.', 'This link is incomplete or broken. Ask the other side to send it again.'],
     download: ['تنزيل العقد', 'Download'],
     send: ['أرسل العقد', 'Send it'],
+    sendLink: ['أرسل رابطًا', 'Send a link'],
+    linkFail: ['تعذّر تجهيز الرابط الآن. أرسل العقد ملفًا، أو حاول بعد قليل.', 'Couldn’t make the link right now. Send the file instead, or try again shortly.'],
+    shareMissing: ['لم تجد واتساب في القائمة؟ نزّل الملف ثم أرفقه في المحادثة بنفسك:', 'WhatsApp not in the list? Download the file and attach it in the chat yourself:'],
     copy: ['نسخ الرابط', 'Copy link'],
     edit: ['تعديل', 'Edit'],
     editNew: ['تعديل (نسخة جديدة)', 'Edit (new version)'],
@@ -960,12 +963,14 @@
 
   function renderResult() {
     var received = mode === 'received', verify = verifying();
+    var linkInBar = !!(API && !received);   // with «أرسل رابطًا» in the row, «نسخ الرابط» moves to the bar under it
     var actions =
-      (!received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>'
+      (!received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>' +
+          (API ? '<button type="button" class="cm-btn cm-btn-soft" data-act="sendlink">' + icon('link') + t('sendLink') + '</button>' : '')
         : verify ? ''   // the e-mail box at the end of the contract takes the approval
         : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
       '<button type="button" class="cm-btn cm-btn-soft" data-act="pdf">' + icon('down') + t('download') + '</button>' +
-      '<button type="button" class="cm-btn cm-btn-soft" data-act="copy">' + icon('link') + t('copy') + '</button>' +
+      (linkInBar ? '' : '<button type="button" class="cm-btn cm-btn-soft" data-act="copy">' + icon('link') + t('copy') + '</button>') +
       '<button type="button" class="cm-btn cm-btn-soft" data-go="' + (received ? 'editnew' : 'edit') + '">' + icon('edit') + (received ? t('editNew') : t('edit')) + '</button>';
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
@@ -974,7 +979,8 @@
       '<div class="cm-actions">' + actions + '</div>' +
       '<p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>' +
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
-      '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></div>' +
+      '<span class="cm-toolbar-end">' + (linkInBar ? '<button type="button" class="cm-link" data-act="copy">' + t('copy') + '</button>' : '') +
+      '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></span></div>' +
       '<article class="cm-paper' + (paperDark() ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
       (verify
         ? '<div class="cm-approve cm-verify" id="cmVerify">' + verifyHTML() + '</div>'
@@ -984,8 +990,6 @@
           '</div>') +
       '</div>';
     if (verify) loadVerify();
-    // make the short link early, so «أرسل العقد» opens the chat at once
-    if (API && mode === 'result' && !(current.short && current.shortFor === current.code)) setTimeout(function () { if (mode === 'result') shortLink(); }, 700);
   }
 
   /* ---------- short link (needs the service at API) ---------- */
@@ -1367,24 +1371,27 @@
     btn.classList.toggle('cm-pulse', on);
   }
 
-  // Sending. With the service (API): a message with a one-line link that opens the contract,
-  // nothing to attach. Without it, or if it doesn't answer: the file + two short lines
-  // (on a phone the share sheet takes both; on a computer the file downloads and the chat opens).
+  // «أرسل العقد»: the PDF itself reaches the other side. Where the browser can share files
+  // (phones, and Chrome / Edge / Safari on computers) the system share list opens with the
+  // file and two short lines, so WhatsApp gets the file directly. Elsewhere the file
+  // downloads and the chat opens with the lines ready, to attach it by hand.
   function doSend(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
     // With e-mail confirmation on, sending the contract also sends the confirmation e-mails (once)
     if (verifying() && (!current.vs || current.vs.state === 'none')) vSend(null);
-    if (API) {
-      var ready = current.short && current.shortFor === current.code ? current.short : '';
-      if (ready) { sendLink(ready, other); return; }
-      busy(btn, true, t('linkMaking'));
-      shortLink().then(function (link) {
-        busy(btn, false);
-        if (link) sendLink(link, other); else sendFile(btn, other);
-      });
-      return;
-    }
     sendFile(btn, other);
+  }
+  // «أرسل رابطًا» (with the service): three short lines with a one-line link to the contract
+  function doSendLink(btn) {
+    var other = S.ro === 'c' ? 'f' : 'c';
+    if (verifying() && (!current.vs || current.vs.state === 'none')) vSend(null);
+    var ready = current.short && current.shortFor === current.code ? current.short : '';
+    if (ready) { sendLink(ready, other); return; }
+    busy(btn, true, t('linkMaking'));
+    shortLink().then(function (link) {
+      busy(btn, false);
+      if (link) sendLink(link, other); else toast(t('linkFail'));
+    });
   }
   function sendLink(link, other) {
     var msg = t(verifying() ? 'shortMsgMail' : 'shortMsg', { link: link, ok: approvalText(S, current.code) });
@@ -1397,25 +1404,34 @@
     if (url && S.ch !== 'em') sendNote(t('chatOpened') + ' <a class="cm-link" href="' + esc(url) + '" target="_blank" rel="noopener">' + t('openChat', { ch: esc(chName(S)) }) + '</a>');
   }
   function sendFile(btn, other) {
-    if (S.ch === 'ig') { openChat(linkMessage(), other); return; }
+    if (S.ch === 'ig') {   // Instagram messages can't carry a file: a link goes instead
+      (API ? shortLink() : Promise.resolve('')).then(function (l) { if (l) sendLink(l, other); else openChat(linkMessage(), other); });
+      return;
+    }
     var msg = verifying() ? t('vMsgMail') : fileMessage();
-    var phone = isPhone() && navigator.canShare && window.File;
-    if (phone && cachedFile()) { shareFile(cachedFile(), msg, other, btn); return; }
+    var share = !!(navigator.canShare && navigator.share && window.File);
+    if (share && cachedFile()) { shareFile(cachedFile(), msg, other, btn); return; }
     busy(btn, true);
     getFile().then(function (file) {
       busy(btn, false);
-      if (phone) shareFile(file, msg, other, btn);
+      if (share) shareFile(file, msg, other, btn);
       else { saveFile(file); afterSave(msg, other); }
     }).catch(function (e) { console.error(e); busy(btn, false); toast(t('fileFail')); });
   }
   function shareFile(file, msg, other, btn) {
     if (!navigator.canShare({ files: [file] })) { saveFile(file); afterSave(msg, other); return; }
     navigator.share({ files: [file], text: msg }).then(function () { readyBtn(btn, false); }, function (e) {
-      if (e && e.name === 'AbortError') return;
+      // Closed the list: on a computer WhatsApp may simply not be in it, so offer the by-hand way
+      if (e && e.name === 'AbortError') { if (!isPhone()) manualNote(msg, other); return; }
       // Making the file took longer than one tap allows: the next tap sends it at once
       if (e && e.name === 'NotAllowedError') { readyBtn(btn, true); return; }
       saveFile(file); afterSave(msg, other);
     });
+  }
+  function manualNote(msg, other) {
+    var ch = esc(chName(S)), url = chatUrl(msg, other);
+    sendNote(t('shareMissing') + ' <button type="button" class="cm-link" data-act="pdf">' + t('download') + '</button>' +
+      (url && S.ch !== 'em' ? ' · <a class="cm-link" href="' + esc(url) + '" target="_blank" rel="noopener">' + t('openChat', { ch: ch }) + '</a>' : ''));
   }
   function afterSave(msg, other) {
     var ch = esc(chName(S)), url = chatUrl(msg, other);
@@ -1503,6 +1519,7 @@
       var act = el.getAttribute('data-act');
       if (act === 'pdf') doPdf(el);
       else if (act === 'send') doSend(el);
+      else if (act === 'sendlink') doSendLink(el);
       else if (act === 'copy') (API ? shortLink() : Promise.resolve('')).then(function (link) { return copyText(link || current.url); }).then(function () { toast(t('copied')); });
       else if (act === 'approve') doApprove();
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
@@ -1512,9 +1529,11 @@
   });
 
   // On a computer, start making the file as soon as the mouse reaches the send / download buttons
+  // (and the short link when the mouse reaches «أرسل رابطًا» / «نسخ الرابط»)
   app.addEventListener('pointerover', function (e) {
-    if (e.pointerType !== 'mouse' || (mode !== 'result' && mode !== 'received') || !current.code || cachedFile()) return;
-    if (e.target.closest && e.target.closest('[data-act="send"], [data-act="pdf"]')) getFile().catch(function () {});
+    if (e.pointerType !== 'mouse' || (mode !== 'result' && mode !== 'received') || !current.code || !e.target.closest) return;
+    if (!cachedFile() && e.target.closest('[data-act="send"], [data-act="pdf"]')) getFile().catch(function () {});
+    if (API && e.target.closest('[data-act="sendlink"], [data-act="copy"]')) shortLink();
   });
 
   function keepScroll(fn) {
