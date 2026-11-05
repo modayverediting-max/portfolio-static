@@ -654,7 +654,9 @@
       }
       var name = fields['name'].value.trim();
       var email = fields['email'].value.trim();
-      var subject = 'عميل محتمل - رسالة جديدة من ' + name;
+      // The visitor sees this subject again in the reply ("Re: …"), so it reads well for them.
+      // «عميل محتمل» stays only as the sender name, which only the owner sees.
+      var subject = document.documentElement.lang === 'en' ? 'Message to MODAYVER from ' + name : 'رسالة إلى مودايفر من ' + name;
       var url = 'https://api.web3forms.com/submit';
       var data = new FormData();
       data.append('access_key', WEB3FORMS_KEY);
