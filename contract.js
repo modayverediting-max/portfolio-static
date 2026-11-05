@@ -184,7 +184,7 @@
     // e-mail confirmation (optional)
     vmTitle: ['توثيق الموافقة بالبريد', 'Confirm by e-mail'],
     vmOn: ['أريد أن يؤكد الطرفان موافقتهما بالبريد', 'Both sides confirm their approval by e-mail'],
-    vmHint: ['لمزيد من الثقة: يصل لكل طرف بريد من موقعنا ليؤكد موافقته بضغطة، ويظهر على العقد ختم «موثّق بالبريد». وبعدها لا يتغير العقد إلا بنسخة جديدة يؤكدها الطرفان من جديد.', 'For more trust: each side gets an e-mail from our site to confirm with one click, and the contract shows a “Confirmed by e-mail” stamp. After that it only changes through a new version both confirm again.'],
+    vmHint: ['لمزيد من الثقة: يصل لكل طرف بريد من موقعنا ليؤكد موافقته بضغطة، ويظهر على العقد ختم «موثّق بالبريد». وبعدها لا يتغير العقد إلا بنسخة جديدة يؤكدها الطرفان من جديد. ولإرسال الرسائل نحفظ بريد الطرفين واسميهما وتاريخ موافقة كل منهما فقط، لا نص العقد.', 'For more trust: each side gets an e-mail from our site to confirm with one click, and the contract shows a “Confirmed by e-mail” stamp. After that it only changes through a new version both confirm again. To send the e-mails we keep only both addresses, both names and the approval dates — never the contract text.'],
     fMail: ['بريد الفريلانسر', 'Freelancer’s e-mail'],
     cMail: ['بريد العميل', 'Client’s e-mail'],
     needMails: ['اكتب بريد الفريلانسر وبريد العميل بشكل صحيح، أو ألغِ التوثيق بالبريد.', 'Enter both e-mail addresses correctly, or turn off e-mail confirmation.'],
@@ -217,7 +217,7 @@
     shortMsg: ['مرحبًا، هذا عقد المونتاج بيننا:\n{link}\nإن كنت موافقًا عليه، فأرسل: «{ok}»', 'Hi, here is our editing contract:\n{link}\nIf you agree, reply with: “{ok}”'],
     shortMsgMail: ['مرحبًا، هذا عقد المونتاج بيننا:\n{link}\nوستصلك رسالة على بريدك لتؤكد موافقتك عليه.', 'Hi, here is our editing contract:\n{link}\nYou’ll also get an e-mail to confirm your approval.'],
     linkMaking: ['جارٍ تجهيز الرابط…', 'Preparing the link…'],
-    chatOpened: ['فُتحت المحادثة والرسالة جاهزة، وفيها رابط قصير يفتح العقد.', 'The chat is open with the message ready, including a short link to the contract.']
+    chatOpened: ['فُتحت المحادثة والرسالة جاهزة، وفيها رابط قصير يفتح العقد. ويُحفظ العقد مشفّرًا، فلا يقرؤه إلا من معه الرابط.', 'The chat is open with the message ready, including a short link to the contract. The contract is stored encrypted, so only people with the link can read it.']
   };
 
   function t(key, vars) {

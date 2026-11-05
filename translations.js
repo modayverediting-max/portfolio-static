@@ -124,5 +124,5 @@ window.TRANSLATIONS_EN = {
   'cm.sub': 'A clear, friendly agreement between the freelancer and the client: answer a few short questions, then download the contract or send it right away.',
   'cm.b1': 'Free',
   'cm.b2': 'No sign-up',
-  'cm.b3': 'We don’t store your data'
+  'cm.b3': 'We never read your contract'
 };
