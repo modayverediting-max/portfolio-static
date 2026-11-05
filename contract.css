@@ -393,7 +393,11 @@
 
 /* ---------- E-mail confirmation (optional) ---------- */
 .cm-verify > p { margin: 0 0 4px; color: #3E5677; font-size: 14.5px; line-height: 1.9; }
-.cm-vlist { list-style: none; padding: 0; margin: 12px 0 14px; display: grid; gap: 8px; }
+/* The two sides stand side by side: the freelancer on the right, the client on the left */
+.cm-vlist { list-style: none; padding: 0; margin: 12px 0 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.cm-vlist li > span:last-child { min-width: 0; }
+.cm-vlist bdi { overflow-wrap: anywhere; }
+@media (max-width: 559px) { .cm-vlist li { flex-direction: column; gap: 6px; padding: 10px 11px; font-size: 13.5px; line-height: 1.75; } }
 .cm-vlist li { display: flex; gap: 10px; align-items: flex-start; background: #F6F9FE; border: 1px solid #E3ECF8; border-radius: 14px; padding: 10px 13px; font-size: 14.5px; line-height: 1.85; color: #3E5677; }
 .cm-vlist li b { color: #00376C; }
 .cm-vlist li small { color: #5E7190; }

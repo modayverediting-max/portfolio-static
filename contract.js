@@ -205,7 +205,7 @@
     vError: ['تعذّر الاتصال بخدمة التوثيق الآن. حاول بعد قليل.', 'Couldn’t reach the confirmation service. Try again shortly.'],
     vLoading: ['جارٍ التحقق…', 'Checking…'],
     vDone: ['أكّد موافقته يوم {d}', 'confirmed on {d}'],
-    vPending: ['بانتظار تأكيده (أُرسل الرابط إلى {m})', 'waiting (link sent to {m})'],
+    vPending: ['بانتظار تأكيده<br><small>أُرسل الرابط إلى {m}</small>', 'waiting<br><small>link sent to {m}</small>'],
     vNotYet: ['لم تُرسل له رسالة بعد', 'not e-mailed yet'],
     vLocked: ['العقد موثّق بالبريد', 'Confirmed by e-mail'],
     vLockedSub: ['أكّد الطرفان موافقتهما يوم {d}، فلا يمكن تغيير هذا العقد. وأي تغيير يكون بنسخة جديدة يؤكدها الطرفان من جديد.', 'Both sides confirmed on {d}, so this contract can’t change. Any change is a new version both confirm again.'],
@@ -1102,7 +1102,7 @@
     else h += '<p>' + t('vIntro') + '</p>';
     h += '<ul class="cm-vlist">' + ['f', 'c'].map(function (r) {
       var sd = vs[r], ok = !!(sd && sd.confirmed_at);
-      var line = ok ? t('vDone', { d: esc(dayOf(sd.confirmed_at)) }) : sd && sd.sent_at ? t('vPending', { m: '<bdi dir="ltr">' + esc(sd.email) + '</bdi>' }) : t('vNotYet');
+      var line = ok ? t('vDone', { d: esc(dayOf(sd.confirmed_at)) }) : sd && sd.sent_at ? t('vPending', { m: '<bdi dir="ltr">' + esc(sd.email).replace('@', '<wbr>@') + '</bdi>' }) : t('vNotYet');
       return '<li' + (ok ? ' class="ok"' : '') + '><span class="cm-vdot">' + (ok ? icon('ok') : '') + '</span><span><b>' + esc((r === 'f' ? S.fn : S.cn) || '—') + '</b> <small>(' + (r === 'f' ? t('fl') : t('cl')) + ')</small><br>' + line + '</span></li>';
     }).join('') + '</ul>';
     if (confirmToken && confirmInfo && confirmInfo.error) h += '<p class="cm-vmsg">' + (confirmInfo.error === 'other_contract' ? t('vOther') : confirmInfo.error === 'bad_token' ? t('vBadLink') : t('vError')) + '</p>';
