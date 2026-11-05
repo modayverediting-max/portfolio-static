@@ -503,6 +503,37 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
   .cm-am-row small { display: block; font-size: 11.5px; font-weight: 700; color: var(--p-soft); line-height: 1.6; }
 }
 
+/* ---------- Questions and answers under the lines (written into the contract) ---------- */
+.cm-result .cm-paper .cm-li[data-k] { cursor: pointer; margin: 0 -8px; padding-inline: 8px; border-radius: 10px; transition: background .2s; }
+@media (hover: hover) { .cm-result .cm-paper .cm-li[data-k]:hover { background: rgba(61,126,224,.06); } }
+.cm-result .cm-paper .cm-li.cm-li-on { background: rgba(61,126,224,.09); }
+.cm-qa { margin: 8px 0 2px; border: 1px solid var(--p-am-line); border-inline-start: 4px solid var(--p-badge); border-radius: 12px; background: var(--p-bg); padding: 8px 12px; font-size: 14px; line-height: 1.85; cursor: default; }
+.cm-qa-q b, .cm-qa-a b { color: var(--p-ink); font-size: 13.5px; }
+.cm-qa small { color: var(--p-soft); font-size: 12px; margin-inline-start: 4px; }
+.cm-qa p { margin: 2px 0 0; }
+.cm-qa-a { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--p-line); }
+.cm-qa .cm-qa-doc { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; margin-top: 7px; font-size: 12.5px; font-weight: 700; color: var(--p-badge); line-height: 1.7; }
+.cm-qa-doc > .cm-ic { width: 14px; height: 14px; flex-shrink: 0; }
+.cm-qa-doc > span { flex: 1 1 200px; }
+.cm-qa .cm-qa-open { color: var(--p-soft); }
+.cm-qa .cm-qa-btn { flex: 0 0 auto; padding: 7px 18px; font-size: 14px; border-radius: 12px; }
+.cm-qa .cm-qa-x { color: var(--p-soft); font-size: 13px; margin: 0 0 4px; }
+.cm-qa.cm-need { border-color: #E5484D; animation: cmShake .45s cubic-bezier(.36,.07,.19,.97); }
+.cm-ask { margin-top: 10px; padding: 12px; border-radius: 14px; background: var(--p-sec); border: 1.5px solid var(--p-badge); cursor: default; }
+.cm-ask .cm-label { color: var(--p-ink); font-size: 14.5px; margin-bottom: 6px; }
+.cm-ask .cm-textarea { min-height: 84px; font-size: 15px; }
+.cm-ask .cm-hint { color: var(--p-soft); margin-top: 6px; font-size: 12.5px; line-height: 1.7; }
+.cm-ask-row { display: flex; gap: 8px; margin-top: 10px; }
+.cm-ask-row .cm-btn { padding: 11px 16px; font-size: 15px; }
+.cm-ask-row .cm-btn-ghost { flex: 0 0 auto; }
+.cm-qa-hint { display: flex; gap: 8px; align-items: flex-start; margin: -2px 2px 12px; font-size: 13.5px; line-height: 1.8; color: #0B3466; font-weight: 600; }
+.cm-qa-hint .cm-ic { color: #3D7EE0; margin-top: 3px; }
+.cm-am-tag { font-size: 12px; font-weight: 700; color: var(--p-badge); border: 1px solid var(--p-badge); border-radius: 999px; padding: 0 9px; }
+[data-theme="dark"] .cm-qa-hint { color: #CFE3FF; }
+[data-theme="dark"] .cm-qa-hint .cm-ic { color: #80C2FF; }
+.cm-print .cm-qa { font-size: 13px; line-height: 1.7; padding: 6px 11px; }
+.cm-print .cm-qa .cm-qa-doc { font-size: 12px; }
+
 /* ---------- A short message over the page (after confirming / approving) ---------- */
 .cm-dialog { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(6,22,48,.46); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity .25s; font-family: 'Alexandria', sans-serif; }
 .cm-dialog.show { opacity: 1; }
@@ -681,7 +712,7 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 
 /* ---------- Printing straight from the browser ---------- */
 @media print {
-  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst { display: none !important; }
+  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst, .cm-qa-hint, .cm-ask, .cm-qa-btn { display: none !important; }
   .contract-page { background: #fff; }
   .cm-app-wrap { padding: 0; }
   .cm-paper { box-shadow: none; border-radius: 0; }

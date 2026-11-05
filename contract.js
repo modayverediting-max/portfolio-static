@@ -273,7 +273,42 @@
     amVsOne: ['أكّدها {who} بالبريد يوم {d}، ولم يؤكدها {other}.', '{who} confirmed it by e-mail on {d}; {other} did not.'],
     amVsNone: ['لم يؤكدها أحد بالبريد.', 'Nobody confirmed it by e-mail.'],
     // before agreeing: read it all, ask about anything unclear (red, with a box to tick)
-    readWarn: ['قبل أن توافق: اقرأ العقد كاملًا، بكل بنوده وشروطه، واسأل الطرف الآخر عن أي تفصيل لم تفهمه. فموافقتك تعني أنك فهمت كل ما فيه وتوافق عليه.', 'Before you agree: read the whole contract, every clause and term, and ask the other side about any detail you don’t understand. Agreeing means you understood all of it and accept it.'],
+    readWarn: ['قبل أن توافق: اقرأ العقد كاملًا، بكل بنوده وشروطه، واسأل الطرف الآخر عن أي تفصيل لم تفهمه (اضغط على البند نفسه واكتب سؤالك). فموافقتك تعني أنك فهمت كل ما فيه وتوافق عليه.', 'Before you agree: read the whole contract, every clause and term, and ask the other side about any detail you don’t understand (tap the clause and write your question). Agreeing means you understood all of it and accept it.'],
+    // questions and answers written into the contract, under the line they are about
+    clause: ['البند {s}، السطر {i}', 'clause {s}, line {i}'],
+    qaHint: ['عندك سؤال عن بند؟ اضغط على السطر نفسه واكتب سؤالك، فيُكتب في العقد تحت السطر ويجيب عنه الطرف الآخر هناك.', 'A question about a clause? Tap the line and write it: it is written into the contract under that line, and the other side answers it there.'],
+    qaAskLabel: ['سؤالك عن {k}', 'Your question about {k}'],
+    qaAnsLabel: ['جوابك عن هذا السؤال', 'Your answer to this question'],
+    qaAskPh: ['مثلًا: هل تُحسب أيام العطل من مدة المراجعة؟', 'e.g. Do holidays count in the review time?'],
+    qaAnsPh: ['اكتب جوابك بوضوح', 'Write your answer clearly'],
+    qaAskNote: ['يُكتب سؤالك في العقد تحت هذا السطر بنسخة جديدة، ثم ترسل الرابط للطرف الآخر ليجيب عنه.', 'Your question goes into the contract under this line, as a new version; then you send the link to the other side to answer.'],
+    qaAnsNote: ['يُكتب جوابك في العقد تحت السؤال بنسخة جديدة، ثم ترسل الرابط للطرف الآخر.', 'Your answer goes into the contract under the question, as a new version; then you send the link to the other side.'],
+    qaSendQ: ['أضف السؤال إلى العقد', 'Add the question to the contract'],
+    qaSendA: ['أضف الجواب إلى العقد', 'Add the answer to the contract'],
+    qaCancel: ['إلغاء', 'Cancel'],
+    qaEmpty: ['اكتب النص أولًا.', 'Write it first.'],
+    qaMax: ['وصل العقد إلى أكبر عدد من الأسئلة. اتفقا على الباقي برسالة.', 'The contract holds as many questions as it can. Settle the rest in a message.'],
+    qaQ: ['سؤال من {who}', 'Question from the {who}'],
+    qaA: ['جواب {who}', 'Answer from the {who}'],
+    qaAnswerBtn: ['أجب', 'Answer'],
+    qaDocQ: ['تم توثيق السؤال في هذا العقد (النسخة {q})، وهو بانتظار جواب {who}.', 'The question is written into this contract (version {q}); waiting for the {who}’s answer.'],
+    qaDocBoth: ['تم توثيق السؤال والجواب في هذا العقد (السؤال في النسخة {q}، والجواب في النسخة {a}).', 'The question and the answer are written into this contract (question in version {q}, answer in version {a}).'],
+    qaOther: ['أسئلة عن نص تغيّر مكانه', 'Questions about text that moved'],
+    qaAbout: ['عن {k}: «{x}»', 'About {k}: “{x}”'],
+    qaAskedT: ['تم توثيق سؤالك في العقد', 'Your question is written into the contract'],
+    qaAskedSub: ['أرسل الرابط الآن للطرف الآخر ليجيب عنه تحت السطر نفسه. والسؤال والجواب يبقيان مكتوبين في العقد.', 'Now send the link to the other side to answer it under the same line. The question and the answer both stay written in the contract.'],
+    qaAnsweredT: ['تم توثيق السؤال والجواب في العقد', 'The question and the answer are written into the contract'],
+    qaAnsweredSub: ['أرسل الرابط الآن للطرف الآخر. وإن كان كل شيء واضحًا، فيمكنكما الموافقة على هذه النسخة.', 'Now send the link to the other side. If everything is clear, you can both approve this version.'],
+    qaGotQT: ['وصلك سؤال عن العقد', 'You received a question about the contract'],
+    qaGotQSub: ['تجد السؤال تحت السطر الذي يخصه. اضغط «أجب» واكتب جوابك، فيُوثَّق في العقد نفسه، ثم أرسله للطرف الآخر.', 'You’ll find it under its line. Press “Answer” and write yours: it is written into the contract itself; then send it back.'],
+    qaGotAT: ['وصلك جواب عن سؤالك', 'Your question was answered'],
+    qaGotASub: ['تجد الجواب تحت السطر نفسه، وتم توثيق السؤال والجواب في العقد. وإن كان كل شيء واضحًا، فوافق على العقد.', 'It’s under the same line; the question and the answer are written into the contract. If everything is clear, approve the contract.'],
+    qaBlock: ['في العقد سؤال بانتظار جوابه. بعد الجواب يمكن الموافقة على العقد.', 'A question in the contract is waiting for its answer. Approve once it’s answered.'],
+    qaMsgAsk: ['مرحبًا، كتبت سؤالًا داخل عقد المونتاج بيننا. افتح الرابط وأجب عنه تحت السطر نفسه:\n{link}', 'Hi, I wrote a question inside our editing contract. Open the link and answer it under the line:\n{link}'],
+    qaMsgAns: ['مرحبًا، أجبت عن سؤالك داخل عقد المونتاج بيننا، وتجد الجواب تحت السطر نفسه:\n{link}\nإن كان كل شيء واضحًا، فوافق على العقد.', 'Hi, I answered your question inside our editing contract; it’s under the same line:\n{link}\nIf everything is clear, please approve the contract.'],
+    qaClause: ['الأسئلة والأجوبة المكتوبة تحت البنود جزء من هذا الاتفاق، وتوضّح معنى السطر الذي كُتبت تحته.', 'The questions and answers written under the clauses are part of this agreement and explain the line they are under.'],
+    qaTagAsk: ['سؤال', 'Question'],
+    qaTagAns: ['جواب', 'Answer'],
     readOk: ['قرأت العقد كاملًا وفهمته، وأوافق على كل ما فيه.', 'I read the whole contract, I understand it, and I accept all of it.'],
     readNeed: ['ضع علامة على «قرأت العقد كاملًا» أولًا.', 'Tick “I read the whole contract” first.'],
     // after confirming: the contract can't change unless both sides agree to an amendment
@@ -347,9 +382,13 @@
     // amendments, oldest first: each keeps the code of the version it changed (c), the
     // reason given (w) and that version's value of every setting it changed (p). So the
     // contract carries its whole history, and every earlier version can be rebuilt (versions())
-    am: []
+    am: [],
+    // questions and answers about single lines, written into the contract (his ask 2026-11-05):
+    // k = «section.line», x = that line's text when asked, q / by / d / qv = the question, its side
+    // (f / c), date and version; a / e / av = the answer, its date and version ('' while waiting)
+    qa: []
   };
-  var MAX_AM = 20;
+  var MAX_AM = 30, MAX_QA = 12;
   var CODE_RE = /^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$/;   // same alphabet as B32 below
   // io = the client's own extra items of «ما يشمله السعر», one per line (a single item in contracts made before)
   var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 30, io: 300, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80, fm: 120, cm: 120 };
@@ -410,7 +449,18 @@
       });
     }
     s.am = normAm(src.am);
+    s.qa = normQa(src.qa);
     return s;
+  }
+  function normQa(list) {
+    if (!Array.isArray(list)) return [];
+    var day = function (x) { return /^\d{4}-\d{2}-\d{2}$/.test(x || '') ? x : ''; };
+    var num = function (x) { var n = parseInt(x, 10); return n >= 1 && n <= 999 ? n : 0; };
+    return list.slice(0, MAX_QA).map(function (r) {
+      r = r && typeof r === 'object' ? r : {};
+      return { k: /^\d{1,2}\.\d{1,2}$/.test(r.k || '') ? r.k : '', x: str(r.x, 160), q: str(r.q, 300), by: r.by === 'c' ? 'c' : 'f', d: day(r.d), qv: num(r.qv),
+               a: str(r.a, 400), e: day(r.e), av: num(r.av) };
+    }).filter(function (r) { return r.k && r.q.trim(); });
   }
   // The amendments a link carries (never trusted): only known settings in each one, kept
   // exactly as given (an earlier version rebuilt from them goes through normalize again)
@@ -858,6 +908,8 @@
     if (s.tr) s8.push(L('شروط إضافية (لها الأولوية إذا اختلفت مع البنود السابقة): ' + V(s.tr), 'Extra terms (these come first if they conflict with the clauses above): ' + V(s.tr)));
     s8.push(L('عند أي خلاف: يرجع الطرفان أولًا إلى هذا العقد، ثم إلى رسائلهما في ' + V(ch) + '، ويحاولان الحل بالتفاهم.',
               'If you disagree: first refer to this contract, then to your messages on ' + V(ch) + ', and settle it amicably.'));
+    // Last, so the lines above keep their numbers (a question names its line by number)
+    if (s.qa.length) s8.push(t('qaClause'));
     out.push({ t: L('الموافقة على العقد', 'Approving the agreement'), items: s8 });
     return out;
   }
@@ -950,6 +1002,9 @@
     add('pf', t('portfolio'), s.pf ? L('مسموح بعد نشر الفيديو', 'Allowed once the video is published') : L('بإذن مكتوب من العميل فقط', 'Only with the client’s written permission'));
     add('tr', t('terms'), s.tr);
     add('vm', t('vTitle'), s.vm ? L('نعم', 'Yes') : L('لا', 'No'));
+    s.qa.forEach(function (r, i) {
+      add('qa' + i, L('سؤال عن ', 'Question about ') + clauseName(r.k), L('س: ', 'Q: ') + r.q + (r.a ? L(' — ج: ', ' — A: ') + r.a : L(' (بانتظار الجواب)', ' (waiting for the answer)')));
+    });
     return out;
   }
   // What changed from version a to version b: [label, before, after]. A video found in both
@@ -976,7 +1031,7 @@
         if (!x) before = bridge ? t('amInPack') : t('amNoVid');
         if (!y) after = bridge ? t('amInPack') : t('amGone');
       }
-      if (before !== after) out.push([(y || x)[1], before, after]);
+      if (before !== after) out.push([(y || x)[1], before, after, id]);
     });
     return out;
   }
@@ -1008,6 +1063,97 @@
     function nm(r) { return esc((r === 'f' ? s.fn : s.cn) || '—') + ' (' + (r === 'f' ? t('fl') : t('cl')) + ')'; }
     return t('amVsOne', { who: nm(who), other: nm(other), d: esc(dayOf(vs[who].confirmed_at)) });
   }
+  /* ---------- questions and answers under the lines (written into the contract) ---------- */
+  function clauseName(k) { var p = String(k).split('.'); return t('clause', { s: p[0], i: p[1] }); }
+  // Who is looking: from a confirmation e-mail we know; a received contract is read by the side that
+  // didn't make this version; your own result is yours
+  function viewerRole() {
+    if (confirmInfo && !confirmInfo.error && confirmInfo.role) return confirmInfo.role;
+    return mode === 'received' ? (S.ro === 'c' ? 'f' : 'c') : S.ro;
+  }
+  function canAnswer(r) { return (mode === 'received' || mode === 'result') && !r.a && viewerRole() !== r.by; }
+  function qaOpen(s) { return (s || S).qa.some(function (r) { return !r.a; }); }
+  // The newest version only asked or answered something: 'ask' | 'answer' | ''
+  function lastQaKind() {
+    var h = current.hist && current.hist[0];
+    if (!h) return '';
+    var done = function (s) { return s.qa.filter(function (r) { return r.a; }).length; };
+    if (done(h.to) > done(h.from)) return 'answer';
+    if (h.to.qa.length > h.from.qa.length) return 'ask';
+    return '';
+  }
+  // The questions picked by «pick», each with its answer (or who it waits for) and a line saying
+  // it is written into this contract, with the versions
+  function qaHTML(s, pick, forFile, withText) {
+    return s.qa.map(function (r, idx) {
+      if (!pick(r)) return '';
+      var asker = r.by === 'f' ? t('fl') : t('cl'), other = r.by === 'f' ? t('cl') : t('fl');
+      var h = '<div class="cm-qa">' + (withText && r.x ? '<p class="cm-qa-x">' + t('qaAbout', { k: esc(clauseName(r.k)), x: esc(r.x) }) + '</p>' : '') +
+        '<div class="cm-qa-q"><b>' + t('qaQ', { who: asker }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.d)) + '</bdi></small><p>' + V(r.q) + '</p></div>';
+      if (r.a) {
+        h += '<div class="cm-qa-a"><b>' + t('qaA', { who: other }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.e)) + '</bdi></small><p>' + V(r.a) + '</p></div>' +
+          '<p class="cm-qa-doc">' + icon('ok') + '<span>' + t('qaDocBoth', { q: r.qv || '—', a: r.av || '—' }) + '</span></p>';
+      } else {
+        h += '<p class="cm-qa-doc cm-qa-open">' + icon('ok') + '<span>' + t('qaDocQ', { q: r.qv || '—', who: other }) + '</span>' +
+          (!forFile && canAnswer(r) ? ' <button type="button" class="cm-btn cm-btn-primary cm-qa-btn" data-qa-ans="' + idx + '">' + t('qaAnswerBtn') + '</button>' : '') + '</p>';
+      }
+      return h + '</div>';
+    }).join('');
+  }
+  // A question or an answer = a new version of the same contract, kept in its history (like an amendment)
+  function qaVersion(change, kind) {
+    var base = clone(S), code = current.code, next = clone(S);
+    change(next);
+    next.ver = Math.min(999, next.ver + 1); next.dt = today();
+    next.am = base.am.concat([{ c: code, w: '', p: patchOf(base, next) }]);
+    S = normalize(next);
+    amend = null; confirmToken = ''; confirmInfo = null; fromLink = false; qaJust = kind;
+    return build().then(function () {
+      if ((current.url.split('#c=')[1] || '').length > 11500) { toast(t('tooLong')); }
+      mode = 'result'; saveDraft(); render(); scrollToCard();
+      try { history.replaceState(history.state, '', location.pathname); } catch (e) {}
+    });
+  }
+  function openAsk(li, ansIdx) {
+    closeAsk();
+    var k = li.getAttribute('data-k'), ans = ansIdx != null, box = document.createElement('div');
+    if (!ans && S.qa.length >= MAX_QA) { toast(t('qaMax')); return; }
+    box.className = 'cm-ask';
+    box.innerHTML = '<label class="cm-label">' + (ans ? t('qaAnsLabel') : t('qaAskLabel', { k: esc(clauseName(k)) })) + '</label>' +
+      '<textarea class="cm-textarea" dir="auto" maxlength="' + (ans ? 400 : 300) + '" placeholder="' + esc(t(ans ? 'qaAnsPh' : 'qaAskPh')) + '"></textarea>' +
+      '<p class="cm-hint">' + t(ans ? 'qaAnsNote' : 'qaAskNote') + '</p>' +
+      '<div class="cm-ask-row"><button type="button" class="cm-btn cm-btn-primary" data-ask-send="' + (ans ? 'a' + ansIdx : 'q' + k) + '">' + t(ans ? 'qaSendA' : 'qaSendQ') + '</button>' +
+      '<button type="button" class="cm-btn cm-btn-ghost" data-ask-close>' + t('qaCancel') + '</button></div>';
+    (li.querySelector('.cm-li > div') || li).appendChild(box);
+    li.classList.add('cm-li-on');
+    var ta = box.querySelector('textarea');
+    try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); }
+    var r = box.getBoundingClientRect();
+    if (r.bottom > window.innerHeight - 20) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function closeAsk() {
+    var old = app.querySelector('.cm-ask');
+    if (old) old.remove();
+    Array.prototype.forEach.call(app.querySelectorAll('.cm-li-on'), function (x) { x.classList.remove('cm-li-on'); });
+  }
+  function sendAsk(btn) {
+    var box = btn.closest('.cm-ask'), ta = box && box.querySelector('textarea'), text = ta ? ta.value.replace(/\s+/g, ' ').trim() : '';
+    if (!text) { if (ta) ta.focus(); toast(t('qaEmpty')); return; }
+    var what = btn.getAttribute('data-ask-send'), me = viewerRole(), day = today();
+    busy(btn, true, t('making'));
+    if (what.charAt(0) === 'q') {
+      var k = what.slice(1), li = btn.closest('.cm-li'), body = li && li.querySelector('.cm-li > div');
+      var line = '';
+      if (body) { var c = body.cloneNode(true); Array.prototype.forEach.call(c.querySelectorAll('.cm-qa, .cm-ask'), function (x) { x.remove(); }); line = c.textContent.replace(/\s+/g, ' ').trim().slice(0, 160); }
+      qaVersion(function (n) { n.ro = me; n.qa.push({ k: k, x: line, q: text.slice(0, 300), by: me, d: day, qv: n.ver + 1, a: '', e: '', av: 0 }); }, 'ask');
+    } else {
+      var i = +what.slice(1);
+      if (!S.qa[i] || S.qa[i].a) { busy(btn, false); return; }
+      qaVersion(function (n) { n.ro = me; n.qa[i].a = text.slice(0, 400); n.qa[i].e = day; n.qa[i].av = n.ver + 1; }, 'answer');
+    }
+  }
+  var qaJust = '';   // this page just added a question or an answer ('ask' / 'answer')
+
   // «سجل التعديلات» at the top of the sheet: one block per amendment, newest first
   function amendHTML() {
     var hist = current.hist || [];
@@ -1015,8 +1161,12 @@
     var h = '<div class="cm-p-block cm-am-head" data-block="am"><h3><i>' + icon('edit') + '</i>' + t('amTitle') + '</h3><p>' + t('amIntro') + '</p></div>';
     hist.forEach(function (a, i) {
       var rows = changes(a.from, a.to);
+      // A version that only asked or answered a question says so
+      var qaOnly = rows.length && rows.every(function (r) { return /^qa\d+$/.test(r[3]); });
+      var done = function (s) { return s.qa.filter(function (r) { return r.a; }).length; };
+      var tag = qaOnly ? t(done(a.to) > done(a.from) ? 'qaTagAns' : 'qaTagAsk') : '';
       h += '<div class="cm-p-block cm-am" data-block="am">' +
-        '<div class="cm-am-top"><b>' + t('amN', { n: a.n }) + '</b>' + (i === 0 && hist.length > 1 ? '<span class="cm-am-new">' + t('amLatest') + '</span>' : '') +
+        '<div class="cm-am-top"><b>' + t('amN', { n: a.n }) + '</b>' + (tag ? '<span class="cm-am-tag">' + tag + '</span>' : '') + (i === 0 && hist.length > 1 ? '<span class="cm-am-new">' + t('amLatest') + '</span>' : '') +
         '<span class="cm-am-meta">' + t('amFromTo', { a: a.from.ver, b: a.to.ver }) + ' · <bdi dir="ltr">' + esc(fmtDate(a.to.dt)) + '</bdi></span></div>' +
         (a.why ? '<p class="cm-am-why"><span>' + t('amWhyShow') + '</span> ' + V(a.why) + '</p>' : '') +
         '<div class="cm-am-rows"><div class="cm-am-row cm-am-hd"><span>' + t('amTerm') + '</span><span>' + t('amBefore') + '</span><span>' + t('amAfter') + '</span></div>' +
@@ -1078,12 +1228,21 @@
       h += '</tbody><tfoot><tr><td colspan="3">' + t('total') + '</td><td colspan="2">' + V(amount(sum, s)) + '</td></tr></tfoot></table></div>';
     }
 
-    // Clauses
+    // Clauses; each line carries its key (section.line) and, under it, the questions asked about it
+    var seen = {};
     sections(s, code).forEach(function (sec, i) {
       h += '<section class="cm-p-sec" data-block="sec"><h3><i>' + (i + 1) + '</i>' + sec.t + '</h3><div class="cm-p-items">';
-      sec.items.forEach(function (it, j) { h += '<div class="cm-li"><span class="cm-li-n">' + (j + 1) + '</span><div>' + it + '</div></div>'; });
+      sec.items.forEach(function (it, j) {
+        var k = (i + 1) + '.' + (j + 1);
+        seen[k] = 1;
+        h += '<div class="cm-li" data-k="' + k + '"><span class="cm-li-n">' + (j + 1) + '</span><div>' + it + qaHTML(s, function (r) { return r.k === k; }, forFile) + '</div></div>';
+      });
       h += '</div></section>';
     });
+    // A question whose line no longer exists (an amendment changed the clause): kept, with the text it was about
+    var lost = s.qa.filter(function (r) { return !seen[r.k]; });
+    if (lost.length) h += '<section class="cm-p-sec" data-block="sec"><h3><i>؟</i>' + t('qaOther') + '</h3><div class="cm-p-items"><div class="cm-li"><div>' +
+      qaHTML(s, function (r) { return !seen[r.k]; }, forFile, true) + '</div></div></div></section>';
 
     // Square code
     h += '<div class="cm-p-block" data-block="qr"><div class="cm-p-qr">' + (qrImg ? '<img src="' + qrImg + '" alt="QR">' : '') +
@@ -1469,9 +1628,16 @@
       editBtnHTML();
     var title = received ? t(am ? 'amReceived' : 'received') : t(amend ? 'amReady' : 'ready');
     var sub = received ? (am ? t('amReceivedSub', { v: S.ver }) : t(verify ? 'receivedSubMail' : 'receivedSub')) : t(amend ? 'amReadySub' : 'readySub');
+    // A question or an answer just added here, or received: say so first
+    var qk = received ? lastQaKind() : qaJust;
+    var forMe = received && S.qa.some(canAnswer);
+    if (!received && qk === 'ask') { title = t('qaAskedT'); sub = t('qaAskedSub'); }
+    else if (!received && qk === 'answer') { title = t('qaAnsweredT'); sub = t('qaAnsweredSub'); }
+    else if (forMe) { title = t('qaGotQT'); sub = t('qaGotQSub'); }
+    else if (received && qk === 'answer') { title = t('qaGotAT'); sub = t('qaGotASub'); }
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
-      '<div class="cm-ready"><span class="cm-ok">' + icon(am ? 'edit' : 'ok') + '</span><h2>' + title + '</h2><p>' + sub + '</p></div>' +
+      '<div class="cm-ready"><span class="cm-ok">' + icon(qk || forMe ? 'ask' : am ? 'edit' : 'ok') + '</span><h2>' + title + '</h2><p>' + sub + '</p></div>' +
       // The e-mail box comes first, so each side sees where the other one stands before the contract
       (verify ? '<div class="cm-approve cm-verify cm-verify-first' + (confirmToken ? ' cm-verify-mine' : '') + '" id="cmVerify">' + verifyHTML() + '</div>' : '') +
       (received && !verify ? readGateHTML('cmReadTop') : '') +
@@ -1480,6 +1646,7 @@
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
       '<span class="cm-toolbar-end">' + (linkInBar ? '<button type="button" class="cm-link" data-act="copy">' + t('copy') + '</button>' : '') +
       '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></span></div>' +
+      '<p class="cm-qa-hint">' + icon('ask') + '<span>' + t('qaHint') + '</span></p>' +
       '<article class="cm-paper' + (paperDark() ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
       (verify
         ? '<div class="cm-approve cm-verify" id="cmVerifyEnd"' + (verifyEndHTML() ? '' : ' hidden') + '>' + verifyEndHTML() + '</div>'
@@ -1626,6 +1793,16 @@
     return '<h3>' + t('vMeTitle') + '</h3><p>' + t('vEndText') + '</p>' + readGateHTML() +
       '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
   }
+  // No approval while a question in the contract waits for its answer (his rule: ask, answer, then agree)
+  function qaBlocks(act) { return (act === 'approve' || act === 'vconfirm' || act === 'vsend') && qaOpen(); }
+  function showOpenQuestion() {
+    toast(t('qaBlock'));
+    var q = app.querySelector('#cmPaper .cm-qa-open');
+    if (!q) return;
+    q.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var box = q.closest('.cm-qa');
+    if (box) { box.classList.remove('cm-need'); void box.offsetWidth; box.classList.add('cm-need'); }
+  }
   // Approvals of a received contract wait for «قرأت العقد كاملًا»
   function needsRead(act) {
     if (mode !== 'received' || readOk) return false;
@@ -1733,6 +1910,7 @@
       ok: '<path d="M20 6 9 17l-5-5"/>',
       cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
       warn: '<path d="M10.3 3.9 1.8 18.5a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.5h.01"/>',
+      ask: '<path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3 21l1.4-5.4A8.5 8.5 0 1 1 21 12z"/><path d="M9.6 9.4a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.1-2.4 3.4M12 16.6h.01"/>',
       lock: '<rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>'
     }[name];
     return '<svg class="cm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
@@ -1966,14 +2144,15 @@
   // downloads and the chat opens with the lines ready, to attach it by hand.
   function doSend(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
-    // With e-mail confirmation on, sending the contract also sends the confirmation e-mails (once)
-    if (verifying() && (!current.vs || current.vs.state === 'none')) vSend(null);
+    // With e-mail confirmation on, sending the contract also sends the confirmation e-mails (once),
+    // but not while a question waits for its answer (confirming comes after the answers)
+    if (verifying() && !qaOpen() && (!current.vs || current.vs.state === 'none')) vSend(null);
     sendFile(btn, other);
   }
   // «أرسل رابطًا» (with the service): three short lines with a one-line link to the contract
   function doSendLink(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
-    if (verifying() && (!current.vs || current.vs.state === 'none')) vSend(null);
+    if (verifying() && !qaOpen() && (!current.vs || current.vs.state === 'none')) vSend(null);
     var ready = current.short && current.shortFor === current.code ? current.short : '';
     if (ready) { sendLink(ready, other); return; }
     busy(btn, true, t('linkMaking'));
@@ -1994,7 +2173,9 @@
     copyText(text).then(function (ok) { toast(t(ok ? 'copied' : 'copyFail')); });
   }
   function sendLink(link, other) {
-    var msg = t(verifying() ? 'shortMsgMail' : 'shortMsg', { link: link, ok: approvalText(S, current.code) });
+    var qk = qaKindHere();
+    var msg = qk === 'ask' ? t('qaMsgAsk', { link: link }) : qk === 'answer' ? t('qaMsgAns', { link: link })
+      : t(verifying() ? 'shortMsgMail' : 'shortMsg', { link: link, ok: approvalText(S, current.code) });
     if (isPhone() && navigator.share) {
       navigator.share({ text: msg }).catch(function (e) { if (e && e.name === 'NotAllowedError') openChat(msg, other); });
       return;
@@ -2003,8 +2184,11 @@
     openChat(msg, other);
     if (url && S.ch !== 'em') sendNote(t('chatOpened') + ' <a class="cm-link" href="' + esc(url) + '" target="_blank" rel="noopener">' + t('openChat', { ch: esc(chName(S)) }) + '</a>');
   }
+  // This page just asked or answered something (the message then says so, and goes as a link:
+  // the other side answers on the page, not in a file)
+  function qaKindHere() { return mode === 'result' ? (qaJust || lastQaKind()) : ''; }
   function sendFile(btn, other) {
-    if (S.ch === 'ig') {   // Instagram messages can't carry a file: a link goes instead
+    if (S.ch === 'ig' || qaKindHere()) {   // Instagram can't carry a file; a question / answer needs the page: a link goes
       (API ? shortLink() : Promise.resolve('')).then(function (l) { if (l) sendLink(l, other); else openChat(linkMessage(), other); });
       return;
     }
@@ -2157,6 +2341,13 @@
       else S.ca.push(v);
       if (S.cu !== 'ot' && S.ca.indexOf('ot') === -1) S.cuo = '';   // his own currency taken away: its name goes too
       saveDraft(); keepScroll(render);
+    } else if (el.hasAttribute('data-qa-ans')) {
+      var qli = el.closest('.cm-li');
+      if (qli) openAsk(qli, +el.getAttribute('data-qa-ans'));
+    } else if (el.hasAttribute('data-ask-send')) {
+      sendAsk(el);
+    } else if (el.hasAttribute('data-ask-close')) {
+      closeAsk();
     } else if (el.hasAttribute('data-curadd-btn')) {
       var cb = app.querySelector('[data-curadd]');
       if (cb && addCur(cb.value)) keepScroll(render); else if (cb) cb.focus();
@@ -2193,6 +2384,7 @@
       go(el.getAttribute('data-go'));
     } else if (el.hasAttribute('data-act')) {
       var act = el.getAttribute('data-act');
+      if (qaBlocks(act)) { showOpenQuestion(); return; }   // a question waits for its answer
       if (needsRead(act)) { nudgeRead(el); return; }   // «قرأت العقد كاملًا» first
       if (act === 'pdf') doPdf(el);
       else if (act === 'send') doSend(el);
@@ -2203,6 +2395,16 @@
       else if (act === 'vsend') vSend(el);
       else if (act === 'vconfirm') vConfirm();
     }
+  });
+
+  // A tap on a line of the contract opens the box to ask about it (not on links, buttons or the boxes)
+  app.addEventListener('click', function (e) {
+    if ((mode !== 'received' && mode !== 'result') || !e.target.closest) return;
+    var li = e.target.closest('#cmPaper .cm-li[data-k]');
+    if (!li || e.target.closest('a, button, input, textarea, .cm-qa, .cm-ask')) return;
+    if (window.getSelection && String(window.getSelection())) return;   // selecting text to copy, not asking
+    if (li.classList.contains('cm-li-on')) { closeAsk(); return; }
+    openAsk(li);
   });
 
   // On a computer, start making the file as soon as the mouse reaches the send / download buttons
@@ -2221,6 +2423,7 @@
 
   function go(where) {
     if (mode === 'wizard' && (where === 'next' || where === 'back' || where === 'show')) { flushIo(); flushCur(); }
+    if (where !== 'next' && where !== 'back') qaJust = '';   // only right after asking / answering
     if (where === 'next') {
       var err = validate();
       if (err) { showError(err); return; }
@@ -2310,7 +2513,7 @@
         if (!/^[A-Za-z0-9_-]+$/.test(payload)) throw new Error('bad payload');
         return decodeState(payload);
       }).then(function (s) {
-        S = s; fromLink = true; mode = 'received'; amend = null;
+        S = s; fromLink = true; mode = 'received'; amend = null; qaJust = '';
         return build();
       }).then(function () {
         if (sm) { current.short = shareBase() + '#s=' + sm[1] + '.' + sm[2]; current.shortFor = current.code; }
