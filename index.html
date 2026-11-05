@@ -21,6 +21,12 @@
     // without running scripts, so they find no title and no image and show
     // the plain link. Visitors get the real page (home.html), fetched and
     // written in place; the address stays the same.
+    // The address reads modayver.com, never «index.html» (GitHub Pages serves both)
+    try {
+      if (/(^|\.)modayver\.com$/.test(location.hostname) && /\.html$/.test(location.pathname)) {
+        history.replaceState(null, '', location.pathname.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '') + location.search + location.hash);
+      }
+    } catch (e) {}
     fetch('home.html', { cache: 'no-cache' })
       .then(function(r) { return r.text(); })
       .then(function(html) {

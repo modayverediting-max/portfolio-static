@@ -14,11 +14,17 @@
     html[data-theme="dark"] body { background: linear-gradient(0deg, #0A1830 0%, #1B4B95 100%); }
   </style>
   <script>
-    // modayver.com/contact.html — the contact page.
+    // modayver.com/contact — the contact page.
     // Chat apps (Instagram, WhatsApp…) build link previews from this file
     // without running scripts, so they find no title and no image and show
     // the plain link. Visitors get the real page (contact-page.html),
     // fetched and written in place; the address stays the same.
+    // The address reads modayver.com/contact, never «.html» (GitHub Pages serves both)
+    try {
+      if (/(^|\.)modayver\.com$/.test(location.hostname) && /\.html$/.test(location.pathname)) {
+        history.replaceState(null, '', location.pathname.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '') + location.search + location.hash);
+      }
+    } catch (e) {}
     fetch('contact-page.html', { cache: 'no-cache' })
       .then(function(r) { return r.text(); })
       .then(function(html) {
