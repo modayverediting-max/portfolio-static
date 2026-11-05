@@ -17,12 +17,19 @@
     pdf: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
   };
   var DRAFT_KEY = 'modayver-contract-draft';
-  // E-mail confirmation service (a small Cloudflare Worker, folder «خادم التوثيق» next to the
-  // site folder). Empty = the option stays hidden. On this PC a test copy can be set with
-  // localStorage 'modayver-cm-api' (honoured on localhost only).
-  var API = '';
+  // The contract service (a small Cloudflare Worker, folder «خادم التوثيق» next to the site
+  // folder): short links, and the e-mail confirmation. Empty = both stay off.
+  // VERIFY: the e-mail confirmation also needs the mail service (Resend + the domain's DNS);
+  // until that is set up, only the short link uses API and the confirmation option stays hidden.
+  // On this PC a test copy can be set with localStorage 'modayver-cm-api' and
+  // 'modayver-cm-verify' = '1' (honoured on localhost only).
+  var API = 'https://modayver-contracts.modayver-contracts.workers.dev';   // his Cloudflare account (2026-11-05)
+  var VERIFY = false;
   try {
-    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && localStorage.getItem('modayver-cm-api')) API = localStorage.getItem('modayver-cm-api');
+    if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+      if (localStorage.getItem('modayver-cm-api')) API = localStorage.getItem('modayver-cm-api');
+      if (localStorage.getItem('modayver-cm-verify') === '1') VERIFY = true;
+    }
   } catch (e) {}
   var MAIL_RE = /^[^\s@<>()[\]\\,;:"']{1,64}@[A-Za-z0-9.-]{1,180}\.[A-Za-z]{2,24}$/;   // same rule as the service
   var STEPS = 6;
@@ -875,7 +882,7 @@
       h += field(t('workDays'), input('wd', t('workDaysPh')), t('workDaysHint'), true);
       h += field(t('portfolio'), '<label class="cm-switch"><input type="checkbox" data-toggle="pf"' + (S.pf ? ' checked' : '') + '><span>' + t('portfolioOn') + '</span></label>');
       h += field(t('terms'), '<textarea class="cm-textarea" dir="auto" data-set="tr" maxlength="400" placeholder="' + esc(t('termsPh')) + '">' + esc(S.tr) + '</textarea>', '', true);
-      if (API) {
+      if (API && VERIFY) {
         h += field(t('vmTitle'), '<label class="cm-switch"><input type="checkbox" data-toggle="vm"' + (S.vm ? ' checked' : '') + '><span>' + t('vmOn') + '</span></label>' +
           (S.vm ? '<div class="cm-grid2 cm-gap">' + field(t('fMail'), mailInput('fm')) + field(t('cMail'), mailInput('cm')) + '</div>' : ''), t('vmHint'), true);
       }
@@ -1027,7 +1034,7 @@
   }
 
   /* ---------- e-mail confirmation (optional; needs the service at API) ---------- */
-  function verifying() { return !!(S && S.vm && API && current.hash && current.pair); }
+  function verifying() { return !!(S && S.vm && API && VERIFY && current.hash && current.pair); }
   function lockedAt() { return S && S.vm && current.vs && current.vs.state === 'locked' ? current.vs.locked_at : 0; }
   function dayOf(ms) { var d = new Date(ms); return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear(); }
   function stampHTML() { var at = lockedAt(); return at ? '<span class="cm-p-ok">✓ ' + t('vStamp') + ' · ' + esc(dayOf(at)) + '</span>' : ''; }
