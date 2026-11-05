@@ -406,10 +406,11 @@
 .cm-vseal small { display: block; font-size: 13.5px; line-height: 1.8; opacity: .92; }
 .cm-vmsg { margin: 10px 0 0; font-size: 14px; color: #3E5677; line-height: 1.85; display: flex; gap: 8px; align-items: center; }
 .cm-spin-sm { width: 14px; height: 14px; border-width: 2px; border-color: #DCE6F5; border-top-color: #3D7EE0; }
-.cm-verify-top { margin: 0 0 16px; background: #fff; border: 2px solid #3D7EE0; border-radius: 22px; padding: 16px 18px; box-shadow: 0 16px 40px -26px rgba(0,55,108,.5); }
-.cm-verify-top h3 { margin: 0 0 4px; color: #00376C; font-size: 18px; }
-.cm-verify-top p { margin: 0 0 12px; color: #3E5677; font-size: 14.5px; line-height: 1.9; }
-.cm-verify-top .cm-btn { width: 100%; }
+/* The e-mail box sits first, under the heading; opened from a confirmation e-mail it is outlined */
+.cm-verify-first { margin: 0 0 16px; }
+.cm-verify-mine { border: 2px solid #3D7EE0; }
+.cm-verify[hidden] { display: none; }
+#cmVerifyEnd > p { margin-bottom: 12px; }
 .cm-p-meta .cm-p-ok { background: #fff; color: #00376C; border-color: #fff; font-weight: 700; }
 
 /* ---------- Toast ---------- */
@@ -525,14 +526,12 @@
 [data-theme="dark"] .cm-approve q { background: rgba(128,194,255,0.12); color: #CFE3FF; }
 [data-theme="dark"] .cm-sendnote { background: rgba(128,194,255,0.12); color: #DCEBFF; }
 [data-theme="dark"] .cm-verify > p,
-[data-theme="dark"] .cm-vmsg,
-[data-theme="dark"] .cm-verify-top p { color: #A9BBD6; }
+[data-theme="dark"] .cm-vmsg { color: #A9BBD6; }
 [data-theme="dark"] .cm-vlist li { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.10); color: #C9D6E8; }
 [data-theme="dark"] .cm-vlist li b { color: #E6EEF9; }
 [data-theme="dark"] .cm-vlist li small { color: #93A5BF; }
 [data-theme="dark"] .cm-vdot { background: rgba(255,255,255,0.12); }
-[data-theme="dark"] .cm-verify-top { background: rgba(14,33,66,0.85); border-color: #80C2FF; box-shadow: 0 16px 40px -26px rgba(0,0,0,.7); }
-[data-theme="dark"] .cm-verify-top h3 { color: #fff; }
+[data-theme="dark"] .cm-verify-mine { border-color: #80C2FF; }
 [data-theme="dark"] .cm-spin-sm { border-color: rgba(255,255,255,0.15); border-top-color: #80C2FF; }
 [data-theme="dark"] .cm-sendnote .cm-ic { color: #80C2FF; }
 [data-theme="dark"] .cm-paper { box-shadow: 0 30px 70px -30px rgba(0,0,0,.8); }

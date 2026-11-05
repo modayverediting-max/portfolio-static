@@ -150,6 +150,7 @@
     readySub: ['راجِعه، ثم نزّله أو أرسله إلى الطرف الآخر.', 'Check it, then download it or send it to the other side.'],
     received: ['وصلك عقد مونتاج', 'You received an editing contract'],
     receivedSub: ['هذه هي النسخة الأصلية كما أُرسلت تمامًا. اقرأ العقد، وإن كنت موافقًا فاضغط «أوافق».', 'This is the original, exactly as it was sent. Read it, and if you agree, press “I agree”.'],
+    receivedSubMail: ['هذه هي النسخة الأصلية كما أُرسلت تمامًا. تحت هذا حالة التوثيق بالبريد لكل طرف، ثم العقد كاملًا.', 'This is the original, exactly as it was sent. Below: where each side stands on the e-mail confirmation, then the full contract.'],
     badLink: ['الرابط ناقص أو تالف. اطلب من الطرف الآخر إرساله مرة أخرى.', 'This link is incomplete or broken. Ask the other side to send it again.'],
     download: ['تنزيل العقد', 'Download'],
     send: ['أرسل العقد', 'Send it'],
@@ -209,7 +210,9 @@
     vLocked: ['العقد موثّق بالبريد', 'Confirmed by e-mail'],
     vLockedSub: ['أكّد الطرفان موافقتهما يوم {d}، فلا يمكن تغيير هذا العقد. وأي تغيير يكون بنسخة جديدة يؤكدها الطرفان من جديد.', 'Both sides confirmed on {d}, so this contract can’t change. Any change is a new version both confirm again.'],
     vMeTitle: ['أكّد موافقتك', 'Confirm your approval'],
-    vMeText: ['أنت تؤكد موافقتك على هذا العقد بصفتك {r}. اقرأ العقد أولًا، ثم اضغط الزر.', 'You are confirming this contract as {r}. Read it first, then press the button.'],
+    vMeText: ['أنت تؤكد موافقتك على هذا العقد بصفتك {r}. اقرأ العقد أولًا، ثم اضغط الزر هنا أو في آخره.', 'You are confirming this contract as {r}. Read it first, then press the button here or at its end.'],
+    vMeWait: ['ننتظر الآن تأكيد الطرف الآخر، وتصل لكما رسالة حين يكتمل التوثيق.', 'Now waiting for the other side. You’ll both get an e-mail once it’s complete.'],
+    vEndText: ['قرأت العقد؟ إن كنت موافقًا عليه، فأكّد موافقتك من هنا.', 'Read it all? If you agree, confirm here.'],
     vMeBtn: ['أؤكد موافقتي', 'I confirm'],
     vMeDone: ['أكّدتَ موافقتك على هذا العقد. شكرًا لك.', 'You confirmed this contract. Thank you.'],
     vOther: ['رابط التأكيد هذا يخص نسخة أخرى من العقد، لذلك لا يمكن التأكيد هنا. افتح الرابط الأحدث من بريدك.', 'This confirmation link belongs to another version of the contract, so it can’t be used here. Open the newest link from your e-mail.'],
@@ -978,15 +981,16 @@
     var actions =
       (!received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>' +
           (API ? '<button type="button" class="cm-btn cm-btn-soft" data-act="sendlink">' + icon('link') + t('sendLink') + '</button>' : '')
-        : verify ? ''   // the e-mail box at the end of the contract takes the approval
+        : verify ? ''   // the e-mail box at the top takes the approval
         : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
       '<button type="button" class="cm-btn cm-btn-soft" data-act="pdf">' + icon('down') + t('download') + '</button>' +
       (linkInBar ? '' : '<button type="button" class="cm-btn cm-btn-soft" data-act="copy">' + icon('link') + t('copy') + '</button>') +
       '<button type="button" class="cm-btn cm-btn-soft" data-go="' + (received ? 'editnew' : 'edit') + '">' + icon('edit') + (received ? t('editNew') : t('edit')) + '</button>';
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
-      '<div class="cm-ready"><span class="cm-ok">' + icon('ok') + '</span><h2>' + (received ? t('received') : t('ready')) + '</h2><p>' + (received ? t('receivedSub') : t('readySub')) + '</p></div>' +
-      (verify && confirmToken ? '<div class="cm-verify-top" id="cmVerifyTop" role="status">' + confirmHTML() + '</div>' : '') +
+      '<div class="cm-ready"><span class="cm-ok">' + icon('ok') + '</span><h2>' + (received ? t('received') : t('ready')) + '</h2><p>' + (received ? t(verify ? 'receivedSubMail' : 'receivedSub') : t('readySub')) + '</p></div>' +
+      // The e-mail box comes first, so each side sees where the other one stands before the contract
+      (verify ? '<div class="cm-approve cm-verify cm-verify-first' + (confirmToken ? ' cm-verify-mine' : '') + '" id="cmVerify">' + verifyHTML() + '</div>' : '') +
       '<div class="cm-actions">' + actions + '</div>' +
       '<p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>' +
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
@@ -994,7 +998,7 @@
       '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></span></div>' +
       '<article class="cm-paper' + (paperDark() ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
       (verify
-        ? '<div class="cm-approve cm-verify" id="cmVerify">' + verifyHTML() + '</div>'
+        ? '<div class="cm-approve cm-verify" id="cmVerifyEnd"' + (verifyEndHTML() ? '' : ' hidden') + '>' + verifyEndHTML() + '</div>'
         : '<div class="cm-approve"><h3>' + t('approveTitle') + '</h3><p>' + t('approveText', { ch: esc(chName(S)) }) + '</p><q dir="auto">' + esc(approvalText(S, current.code)) + '</q>' +
           (received ? '' : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
           (received ? '<a class="cm-link" href="' + esc(shareBase().replace(/#.*$/, '')) + '" data-go="restart">' + t('makeOwn') + '</a>' : '') +
@@ -1075,8 +1079,8 @@
   function updateVerify() {
     var box = document.getElementById('cmVerify');
     if (box) box.innerHTML = verifyHTML();
-    var top = document.getElementById('cmVerifyTop');
-    if (top) top.innerHTML = confirmHTML();
+    var end = document.getElementById('cmVerifyEnd');
+    if (end) { var e = verifyEndHTML(); end.innerHTML = e; end.hidden = !e; }
     var meta = document.querySelector('#cmPaper .cm-p-meta');
     if (meta && !meta.querySelector('.cm-p-ok')) meta.insertAdjacentHTML('beforeend', stampHTML());
   }
@@ -1085,38 +1089,34 @@
     return !!(confirmToken && confirmInfo && !confirmInfo.error && vs && !vs.error && !(vs[confirmInfo.role] && vs[confirmInfo.role].confirmed_at));
   }
 
-  // The box at the end of the contract: where each side stands, and the buttons
+  // The e-mail box at the top of the contract: where each side stands, and the buttons.
+  // Opened from a confirmation e-mail, it also says whom you confirm as.
   function verifyHTML() {
     var vs = current.vs, h = '<h3>' + t('vTitle') + '</h3>';
-    if (!vs) return h + '<p class="cm-vmsg"><span class="cm-spin cm-spin-sm"></span>' + t('vLoading') + '</p>';
+    if (!vs || (confirmToken && !confirmInfo)) return h + '<p class="cm-vmsg"><span class="cm-spin cm-spin-sm"></span>' + t('vLoading') + '</p>';
     if (vs.error) return h + '<p class="cm-vmsg">' + t('vError') + '</p>';
+    var me = confirmToken && confirmInfo && !confirmInfo.error ? confirmInfo.role : '';
     if (vs.state === 'locked') h += '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vLocked') + '</b><small>' + t('vLockedSub', { d: esc(dayOf(vs.locked_at)) }) + '</small></div></div>';
+    else if (me && vs[me] && vs[me].confirmed_at) h += '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vMeDone') + '</b><small>' + t('vMeWait') + '</small></div></div>';
+    else if (canConfirm()) h += '<p>' + t('vMeText', { r: '<b>' + (me === 'f' ? t('fl') : t('cl')) + '</b>' }) + '</p>';
     else h += '<p>' + t('vIntro') + '</p>';
     h += '<ul class="cm-vlist">' + ['f', 'c'].map(function (r) {
       var sd = vs[r], ok = !!(sd && sd.confirmed_at);
       var line = ok ? t('vDone', { d: esc(dayOf(sd.confirmed_at)) }) : sd && sd.sent_at ? t('vPending', { m: '<bdi dir="ltr">' + esc(sd.email) + '</bdi>' }) : t('vNotYet');
       return '<li' + (ok ? ' class="ok"' : '') + '><span class="cm-vdot">' + (ok ? icon('ok') : '') + '</span><span><b>' + esc((r === 'f' ? S.fn : S.cn) || '—') + '</b> <small>(' + (r === 'f' ? t('fl') : t('cl')) + ')</small><br>' + line + '</span></li>';
     }).join('') + '</ul>';
+    if (confirmToken && confirmInfo && confirmInfo.error) h += '<p class="cm-vmsg">' + (confirmInfo.error === 'other_contract' ? t('vOther') : confirmInfo.error === 'bad_token' ? t('vBadLink') : t('vError')) + '</p>';
     if (canConfirm()) h += '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
     else if (vs.state !== 'locked') h += '<button type="button" class="cm-btn ' + (vs.state === 'none' ? 'cm-btn-primary' : 'cm-btn-soft') + '" data-act="vsend">' + (vs.state === 'none' ? t('vSend') : t('vResend')) + '</button>';
     if (vNote) h += '<p class="cm-vmsg">' + vNote + '</p>';
     return h;
   }
 
-  // The panel at the top when the page was opened from a confirmation e-mail
-  function confirmHTML() {
-    var h = '<h3>' + t('vMeTitle') + '</h3>', vs = current.vs;
-    if (!confirmInfo || !vs) return h + '<p class="cm-vmsg"><span class="cm-spin cm-spin-sm"></span>' + t('vLoading') + '</p>';
-    if (confirmInfo.error) return h + '<p class="cm-vmsg">' + (confirmInfo.error === 'other_contract' ? t('vOther') : confirmInfo.error === 'bad_token' ? t('vBadLink') : t('vError')) + '</p>';
-    if (vs.error) return h + '<p class="cm-vmsg">' + t('vError') + '</p>';
-    var mine = vs[confirmInfo.role];
-    if (mine && mine.confirmed_at) {
-      return h + '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vMeDone') + '</b>' +
-        (vs.state === 'locked' ? '<small>' + t('vLockedSub', { d: esc(dayOf(vs.locked_at)) }) + '</small>' : '') + '</div></div>';
-    }
-    return h + '<p>' + t('vMeText', { r: '<b>' + (confirmInfo.role === 'f' ? t('fl') : t('cl')) + '</b>' }) + '</p>' +
-      '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>' +
-      (vNote ? '<p class="cm-vmsg">' + vNote + '</p>' : '');
+  // At the end of the contract, for whoever reads to the bottom before confirming
+  function verifyEndHTML() {
+    if (!canConfirm()) return '';
+    return '<h3>' + t('vMeTitle') + '</h3><p>' + t('vEndText') + '</p>' +
+      '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
   }
 
   function vSend(btn) {
@@ -1630,6 +1630,7 @@
       }).then(function () {
         if (sm) { current.short = shareBase() + '#s=' + sm[1] + '.' + sm[2]; current.shortFor = current.code; }
         render();
+        if (confirmToken) scrollToCard();   // from a confirmation e-mail: the e-mail box is the first thing in view
         // An older long link (#c=…): the address bar switches to the one-line link, so a link
         // copied from the bar or the browser's share menu is short too
         if (!sm) {
