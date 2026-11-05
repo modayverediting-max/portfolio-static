@@ -82,6 +82,13 @@
 .cm-input::placeholder, .cm-textarea::placeholder { color: #9DB0C9; }
 .cm-input:focus, .cm-textarea:focus { outline: none; border-color: #3D7EE0; box-shadow: 0 0 0 4px rgba(61,126,224,.15); }
 .cm-input[type="date"] { min-height: 48px; }
+/* The browser writes the date hint («يوم/شهر/سنة») in its own language, and Chrome / Edge
+   reverse the letters of Arabic hints unless each part keeps normal text direction */
+.cm-input[type="date"]::-webkit-datetime-edit,
+.cm-input[type="date"]::-webkit-datetime-edit-fields-wrapper { unicode-bidi: normal !important; }
+.cm-input[type="date"]::-webkit-datetime-edit-day-field,
+.cm-input[type="date"]::-webkit-datetime-edit-month-field,
+.cm-input[type="date"]::-webkit-datetime-edit-year-field { unicode-bidi: plaintext !important; }
 .cm-textarea { min-height: 100px; resize: vertical; line-height: 1.8; }
 .cm-grid2 { display: grid; grid-template-columns: 1fr; gap: 0 12px; }
 @media (min-width: 560px) { .cm-grid2 { grid-template-columns: 1fr 1fr; } }

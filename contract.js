@@ -32,6 +32,9 @@
     }
   } catch (e) {}
   var MAIL_RE = /^[^\s@<>()[\]\\,;:"']{1,64}@[A-Za-z0-9.-]{1,180}\.[A-Za-z]{2,24}$/;   // same rule as the service
+  // The browser draws date boxes in ITS own language. Forcing left-to-right on an Arabic browser
+  // shows the hint «يوم/شهر/سنة» with its letters reversed, so the box follows the browser.
+  var DATE_DIR = /^(ar|fa|he|ur)\b/i.test(navigator.language || '') ? 'rtl' : 'ltr';
   var STEPS = 6;
   var MAX_VIDEOS = 20;
 
@@ -163,6 +166,7 @@
     approveTitle: ['الموافقة على العقد', 'Approving the contract'],
     approveText: ['يرسل كل طرف هذه الرسالة عبر {ch}:', 'Each side sends this message on {ch}:'],
     copied: ['تم النسخ', 'Copied'],
+    copyFail: ['تعذّر النسخ، اضغط «نسخ الرابط» مرة أخرى.', 'Couldn’t copy. Press “Copy link” again.'],
     msgCopied: ['نُسخت الرسالة، أرسلها عبر {ch}', 'Message copied — send it on {ch}'],
     making: ['جارٍ تجهيز الملف…', 'Preparing the file…'],
     fileFail: ['تعذّر تجهيز الملف. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.', 'We couldn’t prepare the file. Check your connection and try again.'],
@@ -843,7 +847,7 @@
         '</div><p class="cm-each" id="cmEach">' + eachText() + '</p>' +
         field(t('kDesc'), input('kd', t('kDescPh')), '', true) +
         '<div class="cm-grid2">' + field(t('kLen'), input('kl', t('kLenPh')), '', true) + field(t('kSched'), input('ks', t('kSchedPh')), '', true) + '</div>' +
-        field(t('kLast'), '<input class="cm-input" type="date" dir="ltr" data-set="kt" value="' + esc(S.kt) + '">', '', true) +
+        field(t('kLast'), '<input class="cm-input" type="date" dir="' + DATE_DIR + '" data-set="kt" value="' + esc(S.kt) + '">', '', true) +
         '</div>';
       h += '<div class="cm-total"><span>' + L('سعر الباقة', 'Package price') + '</span><b id="cmTotal">' + esc(amount(total(S), S)) + '</b></div>';
     } else if (step === 3) {
@@ -857,7 +861,7 @@
           '<div class="cm-grid3">' +
           '<label class="cm-mini"><span>' + t('vLen') + '</span><input class="cm-input" dir="auto" data-vid="' + i + '" data-vf="l" value="' + esc(v.l) + '" placeholder="' + esc(t('vLenPh')) + '" maxlength="30"></label>' +
           '<label class="cm-mini"><span>' + t('vPrice') + '</span><input class="cm-input" dir="ltr" inputmode="decimal" data-vid="' + i + '" data-vf="p" value="' + esc(v.p) + '" placeholder="0" maxlength="14"></label>' +
-          '<label class="cm-mini"><span>' + t('vDate') + '</span><input class="cm-input" type="date" dir="ltr" data-vid="' + i + '" data-vf="t" value="' + esc(v.t) + '"></label>' +
+          '<label class="cm-mini"><span>' + t('vDate') + '</span><input class="cm-input" type="date" dir="' + DATE_DIR + '" data-vid="' + i + '" data-vf="t" value="' + esc(v.t) + '"></label>' +
           '</div></div>';
       });
       if (S.vd.length < MAX_VIDEOS) h += '<button type="button" class="cm-add" data-vadd="1">' + t('add') + '</button>';
@@ -1179,15 +1183,18 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2600);
   }
+  // Resolves true only when the text really reached the clipboard
   function copyText(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text);
-    return new Promise(function (resolve) {
-      var ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    function byHand() {
+      var ta = document.createElement('textarea'), ok = false;
+      ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0';
       document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); } catch (e) {}
-      ta.remove(); resolve();
-    });
+      try { ok = document.execCommand('copy'); } catch (e) {}
+      ta.remove();
+      return ok;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text).then(function () { return true; }, byHand);
+    return Promise.resolve(byHand());
   }
 
   /* ---------- the file (A4 pages, never cutting a clause in half) ---------- */
@@ -1400,6 +1407,17 @@
       if (link) sendLink(link, other); else toast(t('linkFail'));
     });
   }
+  // «نسخ الرابط»: only the one-line link goes to the clipboard, never the long one
+  function doCopy() {
+    var ready = current.short && current.shortFor === current.code ? current.short : '';
+    if (ready || !API) { copyNow(ready || current.url); return; }   // no service = local copies only
+    shortLink().then(function (l) { return l || shortLink(); }).then(function (l) {
+      if (l) copyNow(l); else toast(t('linkFail'));
+    });
+  }
+  function copyNow(text) {
+    copyText(text).then(function (ok) { toast(t(ok ? 'copied' : 'copyFail')); });
+  }
   function sendLink(link, other) {
     var msg = t(verifying() ? 'shortMsgMail' : 'shortMsg', { link: link, ok: approvalText(S, current.code) });
     if (isPhone() && navigator.share) {
@@ -1527,7 +1545,7 @@
       if (act === 'pdf') doPdf(el);
       else if (act === 'send') doSend(el);
       else if (act === 'sendlink') doSendLink(el);
-      else if (act === 'copy') (API ? shortLink() : Promise.resolve('')).then(function (link) { return copyText(link || current.url); }).then(function () { toast(t('copied')); });
+      else if (act === 'copy') doCopy();
       else if (act === 'approve') doApprove();
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
       else if (act === 'vsend') vSend(el);
@@ -1612,6 +1630,15 @@
       }).then(function () {
         if (sm) { current.short = shareBase() + '#s=' + sm[1] + '.' + sm[2]; current.shortFor = current.code; }
         render();
+        // An older long link (#c=…): the address bar switches to the one-line link, so a link
+        // copied from the bar or the browser's share menu is short too
+        if (!sm) {
+          var c0 = current.code;
+          shortLink().then(function (l) {
+            if (!l || mode !== 'received' || current.code !== c0 || !/[#&]c=/.test(location.hash)) return;
+            try { history.replaceState(history.state, '', location.pathname + location.search + l.slice(l.indexOf('#'))); } catch (e) {}
+          });
+        }
       }).catch(function (e) { console.error(e); S = clone(DEF); mode = 'bad'; render(); });
       return;
     }
