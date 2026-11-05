@@ -108,7 +108,8 @@
     kLen: ['المدة التقريبية للفيديو', 'Approximate length'],
     kLenPh: ['مثلًا: من 30 إلى 60 ثانية', 'e.g. 30–60 seconds'],
     kSched: ['جدول التسليم', 'Delivery schedule'],
-    kSchedPh: ['مثلًا: 5 فيديوهات أسبوعيًا', 'e.g. 5 videos a week'],
+    kSchedPh: ['مثلًا: 3 فيديوهات كل أسبوع', 'e.g. 3 videos every week'],
+    kSchedHint: ['اكتب كم فيديو وكل كم مدة، لا رقمًا وحده، ليكون واضحًا للطرفين.', 'Write how many videos and how often — not a number alone — so it’s clear to both sides.'],
     kLast: ['آخر موعد لتسليم كل الفيديوهات', 'Last date for all videos'],
     kHint: ['لا حاجة إلى إدخال كل فيديو على حدة؛ يكفي العدد والسعر.', 'No need to list every video: the count and the price are enough.'],
     needPackage: ['اكتب عدد الفيديوهات وسعر الباقة (بالأرقام فقط).', 'Enter the number of videos and the package price (numbers only).'],
@@ -122,7 +123,8 @@
     accountPh: ['مثلًا: بريد PayPal أو رقم الحساب البنكي', 'e.g. PayPal email or account number'],
     deposit: ['الدفعة المقدمة (العربون)', 'Upfront payment (deposit)'],
     depositHint: ['تُدفع قبل بدء العمل، ويُدفع الباقي بعد موافقة العميل على الفيديو.', 'Paid before work starts; the rest after the client approves the video.'],
-    scope: ['يُحسب الدفع', 'Payment applies'],
+    scope: ['كيف تُدفع الفيديوهات؟', 'How are the videos paid?'],
+    scopeHint: ['«كل فيديو وحده»: يُدفع كل فيديو في وقته. «المشروع كله معًا»: يُدفع العربون مرة واحدة قبل البدء، والباقي مرة واحدة بعد الموافقة على كل الفيديوهات.', '“Video by video”: each video is paid in its own time. “All together”: one deposit before starting, and the rest once all the videos are approved.'],
     fees: ['من يتحمّل رسوم التحويل؟', 'Who pays transfer fees?'],
     // step 6
     rounds: ['مرات التعديل المجانية لكل فيديو', 'Free revisions per video'],
@@ -139,6 +141,10 @@
     terms: ['شروط إضافية', 'Extra terms'],
     termsPh: ['أي اتفاق آخر غير مذكور في البنود', 'Anything you agreed that isn’t covered'],
     workDay: ['أيام عمل', 'work days'],
+    unitH: ['بالساعات', 'In hours'],
+    unitD: ['بأيام العمل', 'In work days'],
+    hourU: ['ساعة', 'hours'],
+    rvHint: ['تبدأ المدة من وقت وصول الفيديو إلى العميل. والساعات أدق من الأيام، فلا يختلف الطرفان في حسابها.', 'The time starts when the video reaches the client. Hours are more precise than days, so there’s nothing to disagree about.'],
     // validation
     needNames: ['اكتب اسم الفريلانسر واسم العميل.', 'Enter both the freelancer’s and the client’s name.'],
     needPrice: ['اكتب سعر كل فيديو (بالأرقام فقط).', 'Enter a price for every video (numbers only).'],
@@ -156,7 +162,6 @@
     shareMissing: ['لم تجد واتساب في القائمة؟ نزّل الملف ثم أرفقه في المحادثة بنفسك:', 'WhatsApp not in the list? Download the file and attach it in the chat yourself:'],
     copy: ['نسخ الرابط', 'Copy link'],
     edit: ['تعديل', 'Edit'],
-    editNew: ['تعديل (نسخة جديدة)', 'Edit (new version)'],
     makeOwn: ['اصنع عقدك', 'Make your own'],
     darkOn: ['قراءة داكنة', 'Dark reading'],
     darkOff: ['قراءة فاتحة', 'Light reading'],
@@ -189,7 +194,7 @@
     // e-mail confirmation (optional)
     vmTitle: ['توثيق الموافقة بالبريد', 'Confirm by e-mail'],
     vmOn: ['أريد أن يؤكد الطرفان موافقتهما بالبريد', 'Both sides confirm their approval by e-mail'],
-    vmHint: ['لمزيد من الثقة: يصل لكل طرف بريد من موقعنا ليؤكد موافقته بضغطة، ويظهر على العقد ختم «موثّق بالبريد». وبعدها لا يتغير العقد إلا بنسخة جديدة يؤكدها الطرفان من جديد. ولإرسال الرسائل نحفظ بريد الطرفين واسميهما وتاريخ موافقة كل منهما فقط، لا نص العقد.', 'For more trust: each side gets an e-mail from our site to confirm with one click, and the contract shows a “Confirmed by e-mail” stamp. After that it only changes through a new version both confirm again. To send the e-mails we keep only both addresses, both names and the approval dates — never the contract text.'],
+    vmHint: ['لمزيد من الثقة: يصل لكل طرف بريد من موقعنا ليؤكد موافقته بضغطة، ويظهر على العقد ختم «موثّق بالبريد». وبعدها لا يتغيّر العقد إلا بتعديل يؤكده الطرفان من جديد. ولإرسال الرسائل نحفظ بريد الطرفين واسميهما وتاريخ موافقة كل منهما فقط، لا نص العقد.', 'For more trust: each side gets an e-mail from our site to confirm with one click, and the contract shows a “Confirmed by e-mail” stamp. After that it only changes through an amendment both confirm again. To send the e-mails we keep only both addresses, both names and the approval dates — never the contract text.'],
     fMail: ['بريد الفريلانسر', 'Freelancer’s e-mail'],
     cMail: ['بريد العميل', 'Client’s e-mail'],
     needMails: ['اكتب بريد الفريلانسر وبريد العميل بشكل صحيح، أو ألغِ التوثيق بالبريد.', 'Enter both e-mail addresses correctly, or turn off e-mail confirmation.'],
@@ -208,7 +213,7 @@
     vPending: ['بانتظار تأكيده<br><small>أُرسل الرابط إلى {m}</small>', 'waiting<br><small>link sent to {m}</small>'],
     vNotYet: ['لم تُرسل له رسالة بعد', 'not e-mailed yet'],
     vLocked: ['العقد موثّق بالبريد', 'Confirmed by e-mail'],
-    vLockedSub: ['أكّد الطرفان موافقتهما يوم {d}، فلا يمكن تغيير هذا العقد. وأي تغيير يكون بنسخة جديدة يؤكدها الطرفان من جديد.', 'Both sides confirmed on {d}, so this contract can’t change. Any change is a new version both confirm again.'],
+    vLockedSub: ['أكّد الطرفان موافقتهما يوم {d}، فالعقد ثابت كما وافقا عليه، ولا يتغيّر إلا بتعديل يوافق عليه الطرفان كلاهما.', 'Both sides confirmed on {d}, so the contract stays as they agreed; it only changes through an amendment both agree to.'],
     vMeTitle: ['أكّد موافقتك', 'Confirm your approval'],
     vMeText: ['أنت تؤكد موافقتك على هذا العقد بصفتك {r}. اقرأ العقد أولًا، ثم اضغط الزر هنا أو في آخره.', 'You are confirming this contract as {r}. Read it first, then press the button here or at its end.'],
     vMeWait: ['ننتظر الآن تأكيد الطرف الآخر، وتصل لكما رسالة حين يكتمل التوثيق.', 'Now waiting for the other side. You’ll both get an e-mail once it’s complete.'],
@@ -224,7 +229,54 @@
     shortMsg: ['مرحبًا، هذا عقد المونتاج بيننا:\n{link}\nإن كنت موافقًا عليه، فأرسل: «{ok}»', 'Hi, here is our editing contract:\n{link}\nIf you agree, reply with: “{ok}”'],
     shortMsgMail: ['مرحبًا، هذا عقد المونتاج بيننا:\n{link}\nوستصلك رسالة على بريدك لتؤكد موافقتك عليه.', 'Hi, here is our editing contract:\n{link}\nYou’ll also get an e-mail to confirm your approval.'],
     linkMaking: ['جارٍ تجهيز الرابط…', 'Preparing the link…'],
-    chatOpened: ['فُتحت المحادثة والرسالة جاهزة، وفيها رابط قصير يفتح العقد. ويُحفظ العقد مشفّرًا، فلا يقرؤه إلا من معه الرابط.', 'The chat is open with the message ready, including a short link to the contract. The contract is stored encrypted, so only people with the link can read it.']
+    chatOpened: ['فُتحت المحادثة والرسالة جاهزة، وفيها رابط قصير يفتح العقد. ويُحفظ العقد مشفّرًا، فلا يقرؤه إلا من معه الرابط.', 'The chat is open with the message ready, including a short link to the contract. The contract is stored encrypted, so only people with the link can read it.'],
+    tooLong: ['صار العقد أطول مما يتسع له الرابط. اختصر الأوصاف أو الشروط الإضافية، أو اصنع عقدًا جديدًا.', 'The contract is now longer than a link can carry. Shorten the descriptions or extra terms, or make a new contract.'],
+    // amendments: an agreed change added to the same contract, with what was there before and after
+    amAdd: ['أضف تعديلًا', 'Add an amendment'],
+    amBanner: ['أنت تُعدّ تعديلًا على العقد {c}، وسيصير النسخة {v}. غيّر ما اتفقتما عليه فقط، وسيُكتب في أول العقد ما كان قبله وما صار بعده.', 'You are preparing an amendment to contract {c}; it will become version {v}. Change only what you agreed on: the start of the contract will show what it was before and what it is now.'],
+    amCancel: ['إلغاء التعديل', 'Cancel the amendment'],
+    amWhat: ['ما تغيّر في هذا التعديل', 'What this amendment changes'],
+    amNoneYet: ['لم تغيّر أي بند بعد. ارجع إلى الخطوات السابقة وغيّر ما اتفقتما عليه.', 'Nothing has changed yet. Go back to the earlier steps and change what you agreed on.'],
+    amNone: ['لم تغيّر أي بند في العقد بعد. غيّر ما اتفقتما عليه، ثم اضغط «اعرض العقد».', 'Nothing in the contract has changed yet. Change what you agreed on, then press “Show the contract”.'],
+    amWhy: ['سبب التعديل', 'Reason for the amendment'],
+    amWhyPh: ['مثلًا: أضفنا فيديو بطلب العميل', 'e.g. one more video, as the client asked'],
+    amMax: ['وصل هذا العقد إلى أكبر عدد من التعديلات. اصنع عقدًا جديدًا.', 'This contract holds as many amendments as it can. Make a new contract.'],
+    amReady: ['التعديل جاهز', 'Your amendment is ready'],
+    amReadySub: ['راجِعه، ثم أرسله إلى الطرف الآخر. ولا يُعتمد التعديل إلا إذا وافق عليه الطرفان كلاهما.', 'Check it, then send it to the other side. The amendment only counts once both sides agree to it.'],
+    amReceived: ['وصلك تعديل على عقد المونتاج', 'You received an amendment to the editing contract'],
+    amReceivedSub: ['هذه النسخة {v} من العقد. في أوله «سجل التعديلات»: ما كان قبل كل تعديل وما صار بعده. ولا يُعتمد التعديل إلا إذا وافق عليه الطرفان كلاهما، حتى من وافق منهما على النسخة السابقة.', 'This is version {v} of the contract. At its start, “Amendments” shows what each change was before and what it is now. An amendment only counts once both sides agree to it — even one who agreed to the previous version.'],
+    amTitle: ['سجل التعديلات', 'Amendments'],
+    amIntro: ['عُدِّل هذا العقد بعد نسخته الأولى، وكل تعديل مكتوب هنا: ما كان قبله، وما صار بعده. ولا يُعتمد أي تعديل إلا إذا وافق عليه الطرفان كلاهما، حتى من وافق منهما على النسخة السابقة.', 'This contract was amended after its first version, and every amendment is written here: what it was before, and what it is now. No amendment counts unless both sides agree to it — even one who agreed to the previous version.'],
+    amN: ['التعديل {n}', 'Amendment {n}'],
+    amLatest: ['الأحدث', 'Latest'],
+    amFromTo: ['من النسخة {a} إلى النسخة {b}', 'Version {a} to version {b}'],
+    amTerm: ['البند', 'Term'],
+    amBefore: ['قبل', 'Before'],
+    amAfter: ['بعد', 'After'],
+    amWhyShow: ['سبب التعديل:', 'Reason:'],
+    amOf: ['النسخة التي عُدِّلت: النسخة {v}، بتاريخ {d}، رمزها {c}.', 'The version amended: version {v}, dated {d}, code {c}.'],
+    amBad: ['تنبيه: هذا السجل لا يطابق رمز تلك النسخة، فلا تعتمد عليه قبل أن تقارنه بالنسخة التي عندك.', 'Warning: this record doesn’t match that version’s code — compare it with your own copy before relying on it.'],
+    amNoVid: ['لا يوجد', 'Not there'],
+    amGone: ['حُذف', 'Removed'],
+    amVsBoth: ['أكّدها الطرفان بالبريد يوم {d}.', 'Both sides confirmed it by e-mail on {d}.'],
+    amVsOne: ['أكّدها {who} بالبريد يوم {d}، ولم يؤكدها {other}.', '{who} confirmed it by e-mail on {d}; {other} did not.'],
+    amVsNone: ['لم يؤكدها أحد بالبريد.', 'Nobody confirmed it by e-mail.'],
+    // before agreeing: read it all, ask about anything unclear (red, with a box to tick)
+    readWarn: ['قبل أن توافق: اقرأ العقد كاملًا، بكل بنوده وشروطه، واسأل الطرف الآخر عن أي تفصيل لم تفهمه. فموافقتك تعني أنك فهمت كل ما فيه وتوافق عليه.', 'Before you agree: read the whole contract, every clause and term, and ask the other side about any detail you don’t understand. Agreeing means you understood all of it and accept it.'],
+    readOk: ['قرأت العقد كاملًا وفهمته، وأوافق على كل ما فيه.', 'I read the whole contract, I understand it, and I accept all of it.'],
+    readNeed: ['ضع علامة على «قرأت العقد كاملًا» أولًا.', 'Tick “I read the whole contract” first.'],
+    // after confirming: the contract can't change unless both sides agree to an amendment
+    vSafe: ['وهذا العقد ثابت كما وافقتَ عليه، ولا يتغيّر فيه شيء إلا إذا وافقتما كلاكما على تعديل.', 'This contract stays exactly as you agreed to it; nothing in it changes unless you both agree to an amendment.'],
+    dlgMine: ['تم تأكيد موافقتك', 'Your approval is confirmed'],
+    dlgMineSub: ['ننتظر الآن تأكيد الطرف الآخر، وتصلكما رسالة حين يكتمل التوثيق.', 'Now waiting for the other side; you’ll both get an e-mail once it’s complete.'],
+    dlgDone: ['اكتمل توثيق العقد', 'The contract is confirmed'],
+    dlgDoneSub: ['أكّد الطرفان موافقتهما، فصار العقد موثّقًا بالبريد، وتصلكما رسالة بذلك.', 'Both sides have confirmed, so the contract is confirmed by e-mail; you’ll both get an e-mail saying so.'],
+    dlgSent: ['بقي أن ترسل رسالة موافقتك', 'Now send your approval message'],
+    dlgSentSub: ['جهّزنا رسالة موافقتك في {ch}. أرسلها هناك لتكتمل موافقتك على هذه النسخة.', 'Your approval message is ready on {ch}. Send it there to complete your approval of this version.'],
+    dlgSafeT: ['اطمئن، العقد لا يتغيّر وحده', 'Rest assured: the contract can’t change on its own'],
+    dlgSafe: ['هذا العقد محفوظ كما وافقتَ عليه تمامًا، ولا يتغيّر فيه أي بند إلا إذا وافق الطرفان كلاهما على تعديل، في أي مرحلة من المشروع.', 'It is kept exactly as you agreed to it. No term changes unless both sides agree to an amendment, at any stage of the project.'],
+    dlgSafe2: ['وإذا أُضيف تعديل، فلن يُعتمد إلا إذا وافقتَ عليه أنت أيضًا، ويظهر في العقد نفسه ما كان قبله وما صار بعده.', 'If an amendment is added, it won’t count unless you agree to it too, and the contract itself shows what it was before and what it is now.'],
+    dlgOk: ['تمام', 'OK']
   };
 
   function t(key, vars) {
@@ -243,9 +295,9 @@
     cu: [['USD', 'دولار', 'USD'], ['USDT', 'USDT', 'USDT'], ['SAR', 'ريال سعودي', 'SAR'], ['AED', 'درهم إماراتي', 'AED'], ['EUR', 'يورو', 'EUR'], ['DZD', 'دينار جزائري', 'DZD'], ['ot', 'أخرى', 'Other']],
     in: [['cut', 'القص والترتيب', 'Cutting & assembly'], ['cap', 'الكابشن والنصوص', 'Captions & text'], ['mg', 'الموشن جرافيك', 'Motion graphics'], ['col', 'تصحيح الألوان', 'Color correction'], ['snd', 'الهندسة الصوتية والمؤثرات', 'Sound design & SFX'], ['mus', 'الموسيقى', 'Music'], ['thumb', 'الصورة المصغرة', 'Thumbnail'], ['src', 'ملفات المشروع المفتوحة', 'Editable project files']],
     mu: [['f', 'الفريلانسر (مرخصة أو مجانية)', 'The freelancer (licensed or free)'], ['c', 'العميل', 'The client'], ['n', 'بلا موسيقى', 'No music']],
-    pm: [['pp', 'PayPal', 'PayPal'], ['bank', 'تحويل بنكي', 'Bank transfer'], ['bm', 'بريدي موب', 'BaridiMob'], ['usdt', 'USDT', 'USDT'], ['ot', 'أخرى', 'Other']],
+    pm: [['pp', 'PayPal', 'PayPal'], ['bank', 'تحويل بنكي', 'Bank transfer'], ['bm', 'بريدي موب', 'BaridiMob'], ['usdt', 'USDT', 'USDT'], ['bnc', 'باينانس', 'Binance'], ['ot', 'أخرى', 'Other']],
     dp: [[0, 'لا توجد', 'None'], [30, '30%', '30%'], [50, '50%', '50%'], [70, '70%', '70%'], [100, '100%', '100%']],
-    sc: [['v', 'لكل فيديو على حدة', 'Per video'], ['p', 'للمشروع كاملًا', 'For the whole project']],
+    sc: [['v', 'كل فيديو وحده', 'Video by video'], ['p', 'المشروع كله معًا', 'All together']],
     fe: [['c', 'العميل', 'The client'], ['f', 'الفريلانسر', 'The freelancer'], ['h', 'مناصفة', 'Split equally']],
     md: [['v', 'سعر لكل فيديو', 'Each video has its price'], ['p', 'باقة: عدد فيديوهات بسعر واحد', 'Package: several videos, one price']]
   };
@@ -270,10 +322,22 @@
     // more currencies accepted besides the main one (cu); prices are always in cu
     ca: [],
     // optional e-mail confirmation (vm = on) with each side's address
-    vm: 0, fm: '', cm: ''
+    vm: 0, fm: '', cm: '',
+    // review time (rh) and time per revision (th) in hours; 0 = in work days (rv / tn), as every
+    // contract made before 2026-11-05 reads. New contracts start in hours (fresh()): more precise.
+    rh: 0, th: 0,
+    // amendments, oldest first: each keeps the code of the version it changed (c), the
+    // reason given (w) and that version's value of every setting it changed (p). So the
+    // contract carries its whole history, and every earlier version can be rebuilt (versions())
+    am: []
   };
+  var MAX_AM = 20;
+  var CODE_RE = /^[0-9A-HJKMNP-TV-Z]{4}-[0-9A-HJKMNP-TV-Z]{4}$/;   // same alphabet as B32 below
   var LIMITS = { fn: 60, fc: 40, fx: 60, cn: 60, cc: 40, cx: 60, co: 40, to: 40, st: 140, rf: 200, so: 30, qo: 30, cuo: 20, io: 80, pmo: 40, ac: 120, ex: 20, wd: 80, tr: 400, kp: 14, kd: 80, kl: 30, ks: 80, fm: 120, cm: 120 };
-  var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200] };
+  var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200], rh: [0, 168], th: [0, 168] };
+  var HOUR_STEP = 12;   // the hours steppers go 12, 24, 36 … 168
+  // A new contract (not one from a link or a draft): review and revision times in hours
+  function fresh() { var s = clone(DEF); s.rh = 48; s.th = 48; return s; }
 
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
   function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -321,7 +385,40 @@
         return { d: str(v.d, 80), l: str(v.l, 30), p: str(v.p, 14), t: /^\d{4}-\d{2}-\d{2}$/.test(v.t || '') ? v.t : '' };
       });
     }
+    s.am = normAm(src.am);
     return s;
+  }
+  // The amendments a link carries (never trusted): only known settings in each one, kept
+  // exactly as given (an earlier version rebuilt from them goes through normalize again)
+  function normAm(list) {
+    if (!Array.isArray(list)) return [];
+    return list.slice(0, MAX_AM).map(function (r) {
+      r = r && typeof r === 'object' ? r : {};
+      var src = r.p && typeof r.p === 'object' && !Array.isArray(r.p) ? r.p : {}, p = {};
+      Object.keys(DEF).forEach(function (k) { if (k !== 'am' && k !== 'v' && src[k] !== undefined) p[k] = src[k]; });
+      return { c: CODE_RE.test(r.c || '') ? r.c : '', w: str(r.w, 140), p: p };
+    });
+  }
+  // What an amendment keeps: the old value of every setting that changed
+  function patchOf(a, b) {
+    var p = {};
+    Object.keys(DEF).forEach(function (k) {
+      if (k !== 'am' && k !== 'v' && sortedJSON(a[k]) !== sortedJSON(b[k])) p[k] = clone(a[k]);
+    });
+    return p;
+  }
+  // Every version of the contract, oldest first (the last one is s itself), rebuilt
+  // backwards: undoing the newest amendment gives the version before it, and so on
+  function versions(s) {
+    var out = [s], cur = s;
+    for (var i = s.am.length - 1; i >= 0; i--) {
+      var prev = clone(cur), patch = s.am[i].p;
+      Object.keys(patch).forEach(function (k) { prev[k] = clone(patch[k]); });
+      prev.am = s.am.slice(0, i);
+      cur = normalize(prev);
+      out.unshift(cur);
+    }
+    return out;
   }
 
   // Only what differs from the defaults travels in the link, so the square code stays small
@@ -421,6 +518,8 @@
     var rtl =/[֐-ࣿ]/.test(s), ltr = !rtl && /[0-9A-Za-z+@]/.test(s);
     return '<bdi class="cm-v"' + (rtl ? ' dir="rtl"' : ltr ? ' dir="ltr"' : '') + '>' + esc(s) + '</bdi>';
   }
+  // The same, for narrow cells: an e-mail address may break before its «@», not mid-word
+  function Vw(x) { return V(x).replace(/@/g, '<wbr>@'); }
   // A link is shown short (no tracking tail) and opens in a new tab; any other text stays
   // as it is. The data can come from anyone's link, so only plain http(s) addresses become links.
   function refLink(x) {
@@ -462,6 +561,12 @@
     if (n === 1) return 'يوم عمل واحد';
     if (n === 2) return 'يومي عمل';   // always after «خلال» or «مهلة», so this form
     return n + (n <= 10 ? ' أيام عمل' : ' يوم عمل');
+  }
+  function hours(n) {
+    if (isEn()) return n + (n === 1 ? ' hour' : ' hours');
+    if (n === 1) return 'ساعة واحدة';
+    if (n === 2) return 'ساعتين';
+    return n + (n <= 10 ? ' ساعات' : ' ساعة');
   }
   // How many times the client may ask for changes, as in «التعديل مرتين»
   function rounds(n) {
@@ -516,17 +621,24 @@
     s1.push(incl.length
       ? L('يشمل السعر: ' + V(listJoin(incl)) + '. وأي عمل غير مذكور هنا يُعتبر عملًا إضافيًا له سعر منفصل (البند 4).', 'The price includes: ' + V(listJoin(incl)) + '. Anything not listed here is extra work with its own price (section 4).')
       : L('لم يُحدَّد ما يشمله السعر، لذلك يُتفق على أي عمل برسالة مكتوبة قبل البدء.', 'Nothing was listed as included, so any work is agreed in a written message before starting.'));
-    s1.push(L('يرسل العميل كل المواد المطلوبة بجودة جيدة، ويتأكد أن له حق استخدامها. والفريلانسر غير مسؤول عن ضعف جودة المواد الأصلية.',
-              'The client sends all needed materials in good quality and makes sure they have the right to use them. The freelancer isn’t responsible for poor quality in the original footage.'));
+    // Whose materials are whose: the client's own footage, and the right to use anything added
+    s1.push(L('يرسل العميل كل المواد المطلوبة بجودة جيدة، مثل المقاطع المصوّرة والصور والشعار، ويتأكد أن له حق استخدامها. والفريلانسر غير مسؤول عن ضعف جودة هذه المواد التي استلمها من العميل.',
+              'The client sends all needed materials in good quality — such as footage, photos and the logo — and makes sure they have the right to use them. The freelancer isn’t responsible for poor quality in these materials received from the client.'));
+    s1.push(L('أي مؤثرات أو موسيقى أو خطوط كتابة أو قوالب أو عناصر أخرى يضيفها أحد الطرفين إلى الفيديو، يجب أن يملك هو حق استخدامها (مرخصة أو مجانية الاستخدام)، ويكون هو المسؤول عنها.',
+              'Any effects, music, fonts, templates or other elements either side adds to the video must be ones that side has the right to use (licensed or free to use), and that side is responsible for them.'));
+    // Delivery dates, one idea per line (he found the one long sentence hard to follow)
     if (!pack) {
-      s1.push(L('موعد التسليم في الجدول هو موعد إرسال النسخة الأولى الكاملة من كل فيديو للمراجعة.',
-                'The delivery date in the table is when the first full version of each video is sent for review.'));
+      s1.push(L('موعد التسليم المكتوب لكل فيديو في الجدول هو اليوم الذي يرسل فيه الفريلانسر النسخة الأولى الكاملة من ذلك الفيديو ليراجعها العميل، وليس موعد النسخة النهائية.',
+                'The delivery date written for each video in the table is the day the freelancer sends the first full version of that video for the client to review — not the date of the final version.'));
     } else if (s.ks || s.kt) {
-      s1.push(L('موعد التسليم هو موعد إرسال النسخة الأولى الكاملة من كل فيديو للمراجعة' + (s.ks ? '، حسب جدول التسليم: ' + V(s.ks) : '') + (s.kt ? '، وآخر موعد لتسليم كل الفيديوهات ' + V(fmtDate(s.kt)) : '') + '.',
-                'The delivery date is when the first full version of each video is sent for review' + (s.ks ? ', following the schedule: ' + V(s.ks) : '') + (s.kt ? '; the last date for all videos is ' + V(fmtDate(s.kt)) : '') + '.'));
+      s1.push(L('موعد التسليم هو اليوم الذي يرسل فيه الفريلانسر النسخة الأولى الكاملة من الفيديو ليراجعها العميل، وليس موعد النسخة النهائية.',
+                'A delivery date is the day the freelancer sends the first full version of a video for the client to review — not the date of the final version.'));
+      if (s.ks) s1.push(L('جدول التسليم المتفق عليه: ' + V(s.ks) + '.', 'Agreed delivery schedule: ' + V(s.ks) + '.'));
+      if (s.kt) s1.push(L('آخر موعد: تصل النسخة الأولى من كل فيديوهات الباقة إلى العميل في موعد أقصاه ' + V(fmtDate(s.kt)) + '.',
+                          'Last date: the first versions of all the package’s videos reach the client by ' + V(fmtDate(s.kt)) + ' at the latest.'));
     } else {
-      s1.push(L('موعد التسليم هو موعد إرسال النسخة الأولى الكاملة من كل فيديو للمراجعة، ويُتفق عليه برسالة قبل بدء العمل على الفيديو.',
-                'The delivery date is when the first full version of each video is sent for review; it is agreed in a message before work on that video starts.'));
+      s1.push(L('موعد تسليم كل فيديو هو اليوم الذي يرسل فيه الفريلانسر نسخته الأولى الكاملة ليراجعها العميل، ويُتفق عليه برسالة قبل بدء العمل على ذلك الفيديو.',
+                'Each video’s delivery date — the day the freelancer sends its first full version for the client to review — is agreed in a message before work on it starts.'));
     }
     out.push({ t: L('تفاصيل المشروع', 'Project details'), items: s1 });
 
@@ -536,19 +648,43 @@
       ? L('سعر الباقة: ' + V(amount(sum, s)) + ' مقابل ' + V(videosCount(N)) + '، أي ' + V(amount(perVideo(s), s)) + ' للفيديو الواحد.',
           'Package price: ' + V(amount(sum, s)) + ' for ' + V(videosCount(N)) + ', i.e. ' + V(amount(perVideo(s), s)) + ' per video.')
       : L('السعر الإجمالي: ' + V(amount(sum, s)) + '.', 'Total price: ' + V(amount(sum, s)) + '.'));
+    // How and when the money is paid: one idea per line, in everyday words, with the amounts
+    // written out (he found «يُحسب موعد التسليم من يوم وصوله» and «يكون الدفع للمشروع كاملًا
+    // مرة واحدة» unclear). With several videos it says plainly: all together, or video by video.
+    var many = N > 1, each = many && s.sc === 'v';
+    if (many) s2.push(each
+      ? L('الدفع عن كل فيديو وحده: يُدفع كل فيديو في وقته، دون انتظار باقي الفيديوهات' + (pack ? '، وسعر الفيديو الواحد في الباقة ' + V(amount(perVideo(s), s)) : '') + '.',
+          'Each video is paid on its own, in its own time, without waiting for the other videos' + (pack ? '; one video in the package costs ' + V(amount(perVideo(s), s)) : '') + '.')
+      : L('الدفع عن المشروع كله معًا، لا عن كل فيديو وحده.', 'The whole project is paid together, not video by video.'));
     if (s.dp === 0) {
-      s2.push(L('لا يوجد عربون (دفعة مقدمة)، ويبدأ العمل ويُحسب موعد التسليم من يوم وصول كل المواد.',
-                'There is no upfront payment; work starts, and the delivery date counts, from the day all materials arrive.'));
+      s2.push(L('لا يوجد عربون (دفعة مقدمة).', 'There is no upfront payment (deposit).'));
+      s2.push(each
+        ? L('يُدفع سعر كل فيديو بعد أن يوافق العميل عليه، وقبل أن يستلم نسخته النهائية.', 'Each video’s price is paid after the client approves it and before receiving its final version.')
+        : L('يُدفع المبلغ كله (' + V(amount(sum, s)) + ')' + (many ? ' دفعة واحدة بعد أن يوافق العميل على كل الفيديوهات، وقبل أن يستلم نسخها النهائية.' : ' بعد أن يوافق العميل على الفيديو، وقبل أن يستلم النسخة النهائية.'),
+            'The full amount (' + V(amount(sum, s)) + ') is paid ' + (many ? 'at once, after the client approves all the videos and before receiving their final versions.' : 'after the client approves the video and before receiving the final version.')));
     } else if (s.dp === 100) {
-      s2.push(L('يُدفع المبلغ كاملًا قبل بدء العمل، ويبدأ العمل ويُحسب موعد التسليم من يوم وصوله مع كل المواد.',
-                'The full amount is paid before work starts; work starts, and the delivery date counts, from the day it arrives along with all materials.'));
+      s2.push(each
+        ? L('يدفع العميل سعر كل فيديو كاملًا قبل بدء العمل عليه، والمجموع لكل الفيديوهات ' + V(amount(sum, s)) + '.', 'The client pays each video’s full price before work on it starts — ' + V(amount(sum, s)) + ' for all the videos.')
+        : L('يدفع العميل المبلغ كاملًا، أي ' + V(amount(sum, s)) + '، ' + (many ? 'دفعة واحدة ' : '') + 'قبل بدء العمل.', 'The client pays the full amount — ' + V(amount(sum, s)) + ' — ' + (many ? 'at once, ' : '') + 'before work starts.'));
     } else {
-      s2.push(L('العربون (الدفعة المقدمة): ' + V(s.dp + '% = ' + amount(dep, s)) + '، يُدفع قبل بدء العمل، ويبدأ العمل ويُحسب موعد التسليم من يوم وصوله مع كل المواد.',
-                'Upfront payment (deposit): ' + V(s.dp + '% = ' + amount(dep, s)) + ', paid before work starts; work starts, and the delivery date counts, from the day it arrives along with all materials.'));
-      s2.push(L('باقي المبلغ: ' + V((100 - s.dp) + '% = ' + amount(rest, s)) + '، يُدفع بعد موافقة العميل على الفيديو، وقبل استلام النسخة النهائية.',
-                'The rest, ' + V((100 - s.dp) + '% = ' + amount(rest, s)) + ', is paid after the client approves the video and before receiving the final version.'));
+      s2.push(each
+        ? L('العربون (الدفعة المقدمة): يدفع العميل ' + V(s.dp + '%') + ' من سعر كل فيديو قبل بدء العمل عليه، ومجموعه لكل الفيديوهات ' + V(amount(dep, s)) + '.',
+            'Deposit (upfront payment): the client pays ' + V(s.dp + '%') + ' of each video’s price before work on it starts — ' + V(amount(dep, s)) + ' for all the videos.')
+        : L('العربون (الدفعة المقدمة): يدفع العميل ' + V(s.dp + '%') + ' من السعر، أي ' + V(amount(dep, s)) + '، ' + (many ? 'دفعة واحدة ' : '') + 'قبل بدء العمل.',
+            'Deposit (upfront payment): the client pays ' + V(s.dp + '%') + ' of the price — ' + V(amount(dep, s)) + ' — ' + (many ? 'at once, ' : '') + 'before work starts.'));
+      s2.push(each
+        ? L('باقي سعر كل فيديو (' + V((100 - s.dp) + '%') + '): يدفعه العميل بعد أن يوافق على ذلك الفيديو، وقبل أن يستلم نسخته النهائية، ومجموعه لكل الفيديوهات ' + V(amount(rest, s)) + '.',
+            'The rest of each video’s price (' + V((100 - s.dp) + '%') + '): paid after the client approves that video and before receiving its final version — ' + V(amount(rest, s)) + ' for all the videos.')
+        : L('باقي المبلغ (' + V((100 - s.dp) + '%') + '، أي ' + V(amount(rest, s)) + '): يدفعه العميل ' + (many ? 'دفعة واحدة بعد أن يوافق على كل الفيديوهات، وقبل أن يستلم نسخها النهائية.' : 'بعد أن يوافق على الفيديو، وقبل أن يستلم النسخة النهائية.'),
+            'The rest (' + V((100 - s.dp) + '%') + ' — ' + V(amount(rest, s)) + '): the client pays it ' + (many ? 'at once, after approving all the videos and before receiving their final versions.' : 'after approving the video and before receiving the final version.')));
     }
-    if (N > 1) s2.push(L('يكون الدفع ' + V(s.sc === 'p' ? 'للمشروع كاملًا مرة واحدة' : 'لكل فيديو على حدة') + '.', 'Payment is made ' + V(s.sc === 'p' ? 'for the whole project at once' : 'for each video separately') + '.'));
+    // When work starts, and what a late payment or late materials do to the date
+    var paid = s.dp === 0 ? '' : s.dp === 100 ? L(each ? ' وسعره' : ' والمبلغ', each ? ' and its price' : ' and the payment') : L(each ? ' وعربونه' : ' والعربون', each ? ' and its deposit' : ' and the deposit');
+    s2.push(each
+      ? L('لا يبدأ الفريلانسر العمل على أي فيديو إلا بعد أن تصله مواده المطلوبة' + paid + '. وإذا تأخر وصولها، يتأخر موعد تسليمه بنفس عدد أيام التأخير.',
+          'The freelancer starts a video only once its materials' + paid + ' have arrived. If they arrive late, its delivery date moves by the same number of days.')
+      : L('لا يبدأ الفريلانسر العمل إلا بعد أن تصله كل المواد المطلوبة من العميل' + paid + '. وإذا تأخر وصولها، يتأخر موعد التسليم بنفس عدد أيام التأخير.',
+          'The freelancer starts only once all the needed materials' + paid + ' have arrived. If they arrive late, the delivery date moves by the same number of days.'));
     if (s.ca.length) s2.push(L('يمكن الدفع أيضًا بالعملات التالية: ' + V(listJoin(otherCurrencies(s))) + '، ويُحوَّل المبلغ بسعر الصرف يوم الدفع، بحيث يصل للفريلانسر ما يساوي المبلغ المتفق عليه.',
                                'Payment is also accepted in: ' + V(listJoin(otherCurrencies(s))) + ', converted at the exchange rate on the payment day, so the freelancer receives the equivalent of the agreed amount.'));
     if (pays.length) s2.push(L('طريقة الدفع: ' + V(listJoin(pays)) + (s.ac ? '. بيانات الحساب: ' + refLink(s.ac) : '') + '.', 'Payment method: ' + V(listJoin(pays)) + (s.ac ? '. Account details: ' + refLink(s.ac) : '') + '.'));
@@ -568,18 +704,25 @@
 
     // 3 Delivery & review
     var s3 = [];
-    s3.push(L('يرسل الفريلانسر النسخة الأولى كاملة للمراجعة، بجودة أقل أو بعلامة مائية' + (s.dp < 100 ? '، إلى أن يُدفع باقي المبلغ' : '') + '.',
-              'The freelancer sends the first full version for review, in lower quality or with a watermark' + (s.dp < 100 ? ', until the rest is paid' : '') + '.'));
-    s3.push(L('يراجع العميل الفيديو خلال ' + V(days(s.rv)) + '، ويرسل كل ملاحظاته مكتوبة في رسالة واحدة.',
-              'The client reviews it within ' + V(days(s.rv)) + ' and sends all notes in writing, in one message.'));
+    // Said plainly: full quality, without a watermark, only once the whole amount is paid
+    s3.push(s.dp < 100
+      ? L('يرسل الفريلانسر النسخة الأولى كاملة ليراجعها العميل، لكن بجودة أقل أو بعلامة مائية. ولا يستلم العميل الفيديو بالجودة الكاملة وبدون علامة مائية إلا بعد أن يدفع المبلغ كله.',
+          'The freelancer sends the first full version for the client to review, but in lower quality or with a watermark. The client gets the video in full quality and without a watermark only after paying the whole amount.')
+      : L('يرسل الفريلانسر النسخة الأولى كاملة ليراجعها العميل، وقد تكون بجودة أقل أو بعلامة مائية إلى أن يوافق عليها.',
+          'The freelancer sends the first full version for the client to review; it may be in lower quality or watermarked until the client approves it.'));
+    s3.push(s.rh
+      ? L('يراجع العميل الفيديو خلال ' + V(hours(s.rh)) + ' من وقت وصوله إليه، ويرسل كل ملاحظاته مكتوبة في رسالة واحدة.',
+          'The client reviews it within ' + V(hours(s.rh)) + ' of receiving it and sends all notes in writing, in one message.')
+      : L('يراجع العميل الفيديو خلال ' + V(days(s.rv)) + '، ويرسل كل ملاحظاته مكتوبة في رسالة واحدة.',
+          'The client reviews it within ' + V(days(s.rv)) + ' and sends all notes in writing, in one message.'));
     s3.push(L('عدم رد العميل لا يعني أنه موافق. وإذا انتهت مدة المراجعة دون رد، يذكّره الفريلانسر برسالة، ثم يُطبَّق بند «عدم الرد» (البند 7).',
               'No reply doesn’t mean approval. If the review time ends with no reply, the freelancer reminds the client by message, then the “no reply” rule applies (section 7).'));
     s3.push(L('موافقة العميل على الفيديو تكون برسالة مكتوبة في ' + V(ch) + '، مثل: «موافق على الفيديو».',
               'The client approves the video by a written message on ' + V(ch) + ', e.g. “Approved”.'));
-    s3.push(L('يرسل الفريلانسر النسخة النهائية خلال يوم عمل واحد من ' + (s.dp < 100 ? 'وصول باقي المبلغ' : 'موافقة العميل على الفيديو') + '، بالجودة المتفق عليها وبدون علامة مائية.',
-              'The freelancer sends the final version within one work day of ' + (s.dp < 100 ? 'receiving the rest of the payment' : 'the client’s approval') + ', in the agreed quality and without a watermark.'));
-    if (s.dp < 100) s3.push(L('لا يحق للعميل نشر أي نسخة أو استخدامها قبل الدفع الكامل، وإذا نشرها يجب عليه دفع باقي المبلغ فورًا.',
-                              'The client may not publish or use any version before paying in full; if they do, the rest is due at once.'));
+    s3.push(L('يرسل الفريلانسر النسخة النهائية خلال يوم عمل واحد من ' + (s.dp === 0 ? 'وصول المبلغ' : s.dp < 100 ? 'وصول باقي المبلغ' : 'موافقة العميل على الفيديو') + '، بالجودة المتفق عليها وبدون علامة مائية.',
+              'The freelancer sends the final version within one work day of ' + (s.dp === 0 ? 'receiving the payment' : s.dp < 100 ? 'receiving the rest of the payment' : 'the client’s approval') + ', in the agreed quality and without a watermark.'));
+    if (s.dp < 100) s3.push(L('لا يحق للعميل نشر أي نسخة أو استخدامها قبل الدفع الكامل، وإذا نشرها يجب عليه دفع ' + (s.dp === 0 ? 'المبلغ كله' : 'باقي المبلغ') + ' فورًا.',
+                              'The client may not publish or use any version before paying in full; if they do, ' + (s.dp === 0 ? 'the whole amount' : 'the rest') + ' is due at once.'));
     out.push({ t: L('التسليم والمراجعة', 'Delivery & review'), items: s3 });
 
     // 4 Revisions
@@ -591,15 +734,21 @@
                 'The price includes ' + V(rounds(s.rd)) + ' per video. ' + (s.ex ? 'Each extra revision costs ' + V(s.ex + ' ' + curName(s)) + '.' : 'Any extra revision is priced in a message before it’s done.')));
     }
     // One revision = one batch of notes, so changes can't trickle in one by one as «one revision»
-    s4.push(L('مرة التعديل = دفعة واحدة من الملاحظات: يجمع العميل كل ملاحظاته على النسخة ويرسلها معًا في رسالة واحدة، فتُحسب مرة واحدة.',
-              'One revision = one batch of notes: the client gathers all notes on a version and sends them together in one message, and that counts once.'));
-    s4.push(L('أي ملاحظة تصل بعد هذه الرسالة، ولو كانت ملاحظة واحدة، تُحسب مرة تعديل جديدة. فلا تُرسَل الملاحظات متفرقة على دفعات ثم تُحسب كلها مرة واحدة.',
-              'Any note that arrives after that message, even a single one, counts as a new revision. Notes sent bit by bit can’t all be counted as one revision.'));
+    // Said plainly, with an example: every batch of notes uses up one of the agreed free revisions
+    s4.push(L('مرة التعديل الواحدة = رسالة واحدة فيها كل ملاحظات العميل على النسخة. لذلك يجمع العميل ملاحظاته كلها ويرسلها معًا دفعة واحدة.',
+              'One revision = one message with all the client’s notes on a version. So the client gathers all the notes and sends them together, in one go.'));
+    s4.push(s.rd > 0
+      ? L('إذا أرسل العميل ملاحظاته على دفعات (مرتين أو أكثر)، فكل دفعة تُحسب مرة تعديل مستقلة، وتُخصم من مرات التعديل المجانية المتفق عليها (' + V(rounds(s.rd)) + ' لكل فيديو). مثال: إذا أرسل ملاحظاته، ثم أرسل بعدها ملاحظة أخرى، فهذه مرتا تعديل، لا مرة واحدة.',
+          'If the client sends notes in batches (twice or more), each batch counts as a separate revision and is taken from the agreed free revisions (' + V(rounds(s.rd)) + ' per video). Example: notes sent, then one more note after them — that’s two revisions, not one.')
+      : L('إذا أرسل العميل ملاحظاته على دفعات (مرتين أو أكثر)، فكل دفعة تُحسب مرة تعديل مستقلة لها سعرها. مثال: إذا أرسل ملاحظاته، ثم أرسل بعدها ملاحظة أخرى، فهذه مرتا تعديل، لا مرة واحدة.',
+          'If the client sends notes in batches (twice or more), each batch counts as a separate revision with its own price. Example: notes sent, then one more note after them — that’s two revisions, not one.'));
     s4.push(L('التعديل هو تغيير داخل الفكرة والستايل المتفق عليهما، مثل: القص والتوقيت والنصوص والألوان والموسيقى.',
               'A revision is a change within the agreed idea and style — cuts, timing, text, colors, music.'));
     s4.push(L('أما تغيير الفكرة أو الستايل أو الفيديو المرجعي، أو إضافة مقاطع أو فيديوهات جديدة، فهو عمل إضافي يُتفق على سعره ومدته برسالة قبل تنفيذه.',
               'Changing the idea, style or reference, or adding new clips or videos, is extra work; its price and time are agreed in a message before it’s done.'));
-    s4.push(L('ينفّذ الفريلانسر كل مرة تعديل خلال ' + V(days(s.tn)) + ' من وصول الملاحظات.', 'The freelancer applies each revision within ' + V(days(s.tn)) + ' of receiving the notes.'));
+    s4.push(s.th
+      ? L('ينفّذ الفريلانسر كل مرة تعديل خلال ' + V(hours(s.th)) + ' من وقت وصول الملاحظات إليه.', 'The freelancer applies each revision within ' + V(hours(s.th)) + ' of receiving the notes.')
+      : L('ينفّذ الفريلانسر كل مرة تعديل خلال ' + V(days(s.tn)) + ' من وصول الملاحظات.', 'The freelancer applies each revision within ' + V(days(s.tn)) + ' of receiving the notes.'));
     s4.push(L('أخطاء الفريلانسر (أي شيء يخالف المتفق عليه) يصلحها مجانًا، ولا تُحسب من مرات التعديل.', 'The freelancer fixes their own mistakes (anything against what was agreed) for free; these don’t count as revisions.'));
     s4.push(L('بعد تسليم النسخة النهائية، أي تعديل جديد يُعتبر عملًا إضافيًا، إلا أخطاء الفريلانسر التي يُبلَّغ عنها خلال 7 أيام.',
               'After the final version is delivered, any new change is extra work — except the freelancer’s mistakes reported within 7 days.'));
@@ -618,8 +767,8 @@
               'If the client is late sending payment, materials or notes, the delivery date moves by the same number of days.'));
     s5.push(L('إذا توقّع الفريلانسر أنه سيتأخر، يخبر العميل قبل الموعد ويتفقان برسالة على موعد جديد. وإذا تأخر بدون اتفاق، يحق للعميل الإلغاء، ويُعتبر الإلغاء من الفريلانسر (البند 7).',
               'If the freelancer expects a delay, they tell the client before the deadline and agree a new date in a message. If they’re late without agreement, the client may cancel, and it counts as a cancellation by the freelancer (section 7).'));
-    s5.push(L('الظروف الطارئة (مثل المرض أو انقطاع الكهرباء أو الإنترنت): يخبر صاحب الظرف الطرف الآخر فورًا، وتتأخر المواعيد بنفس المدة. وإذا زادت عن 7 أيام، يحق للطرف الآخر الإلغاء، ويُعتبر الإلغاء من صاحب الظرف.',
-              'Emergencies (illness, power or internet outage): the affected side tells the other at once, and deadlines move by the same time. Beyond 7 days, the other side may cancel, and it counts as a cancellation by the affected side.'));
+    s5.push(L('الظروف الطارئة (مثل المرض أو انقطاع الكهرباء أو الإنترنت): يخبر صاحب الظرف الطرف الآخر فورًا، وتتأخر المواعيد بنفس المدة. وإذا زاد التأخير عن 7 أيام، يحق للطرف الآخر الإلغاء، ويُعتبر الإلغاء من صاحب الظرف، إلا إذا اتفق الطرفان اتفاقًا وديًا على غير ذلك، مثل تحديد موعد جديد.',
+              'Emergencies (illness, power or internet outage): the affected side tells the other at once, and deadlines move by the same time. If the delay goes beyond 7 days, the other side may cancel, and it counts as a cancellation by the affected side — unless both sides agree amicably on something else, such as a new date.'));
     out.push({ t: L('المواعيد والتواصل', 'Timing & communication'), items: s5 });
 
     // 6 Rights & privacy
@@ -627,8 +776,10 @@
     s6.push(L('يبقى الفيديو ملكًا للفريلانسر حتى يُدفع المبلغ كاملًا. وبعد الدفع، يحق للعميل استخدام النسخة النهائية ونشرها في أي منصة ولأي غرض.',
               'The video belongs to the freelancer until it is paid in full. After payment, the client may use and publish the final version on any platform, for any purpose.'));
     var src = s.in.indexOf('src') !== -1;
-    s6.push(L('ملفات المشروع المفتوحة (القابلة للتعديل): ' + V(src ? 'مشمولة في السعر وتُسلَّم مع النسخة النهائية' : 'غير مشمولة ولا تُسلَّم') + '.',
-              'Editable project files: ' + V(src ? 'included and delivered with the final version' : 'not included and not delivered') + '.'));
+    s6.push(src
+      ? L('ملفات المشروع المفتوحة (القابلة للتعديل): ' + V('مشمولة في السعر وتُسلَّم مع النسخة النهائية') + '.', 'Editable project files: ' + V('included in the price and delivered with the final version') + '.')
+      : L('ملفات المشروع المفتوحة (القابلة للتعديل): ' + V('غير مشمولة في السعر ولا تُسلَّم') + '، ما لم يتفق الطرفان على غير ذلك برسالة.',
+          'Editable project files: ' + V('not included in the price and not delivered') + ', unless both sides agree otherwise in a message.'));
     s6.push(L('القوالب والإعدادات الجاهزة والمؤثرات الخاصة بالفريلانسر تبقى ملكه، ويستخدمها داخل الفيديو فقط.', 'The freelancer’s own templates, presets and effects stay theirs and are used inside the video only.'));
     s6.push({
       c: L('الموسيقى والعناصر الخارجية يرسلها العميل، وهو المسؤول عنها.', 'Music and outside elements come from the client, who is responsible for them.'),
@@ -646,8 +797,8 @@
     var s7 = [];
     s7.push(L('عدم الرد: إذا توقف أحد الطرفين عن الرد وتعطّل العمل بسببه، يرسل له الآخر رسالة تنبيه ويعطيه مهلة ' + V(days(s.nt)) + '. فإذا لم يرد خلالها، يُعتبر أنه ألغى الاتفاق.',
               'No reply: if one side stops replying and the work is blocked, the other sends a warning message and gives them ' + V(days(s.nt)) + '. With no reply by then, it counts as a cancellation by them.'));
-    s7.push(L('إذا ألغى العميل قبل بدء العمل: ' + (s.dp > 0 ? 'يُرجَع له العربون كاملًا.' : 'لا يدفع شيئًا.'),
-              'If the client cancels before work starts: ' + (s.dp > 0 ? 'the upfront payment is refunded in full.' : 'nothing is owed.')));
+    s7.push(L('إذا ألغى العميل قبل بدء العمل: ' + (s.dp === 100 ? 'يُرجَع له ما دفعه كاملًا.' : s.dp > 0 ? 'يُرجَع له العربون كاملًا.' : 'لا يدفع شيئًا.'),
+              'If the client cancels before work starts: ' + (s.dp === 100 ? 'everything paid is refunded in full.' : s.dp > 0 ? 'the upfront payment is refunded in full.' : 'nothing is owed.')));
     s7.push(L('إذا ألغى العميل بعد بدء العمل، يأخذ الفريلانسر عن كل فيديو: سعره كاملًا إذا أرسل نسخته الأولى، ونصف سعره إذا بدأ العمل عليه ولم يرسل نسخة، ولا شيء إذا لم يبدأ فيه.' + (pack ? ' وفي الباقة، سعر الفيديو الواحد = سعر الباقة ÷ عدد الفيديوهات (' + V(amount(perVideo(s), s)) + ').' : ''),
               'If the client cancels after work starts, the freelancer gets, per video: the full price if its first version was sent, half if work started but no version was sent, nothing if it hadn’t started.' + (pack ? ' In a package, one video’s price = the package price ÷ the number of videos (' + V(amount(perVideo(s), s)) + ').' : '')));
     s7.push(L('إذا ألغى الفريلانسر: يُرجِع للعميل كل ما دفعه عن أي فيديو لم يسلّم نسخته النهائية.', 'If the freelancer cancels, they refund everything paid for any video whose final version wasn’t delivered.'));
@@ -660,14 +811,14 @@
     var s8 = [];
     s8.push(L('هذا اتفاق ودي إلكتروني، وليس عقدًا رسميًا أو حكوميًا. هدفه توضيح ما اتفق عليه الطرفان والرجوع إليه عند أي خلاف، ولا يحتاج طباعة أو توقيعًا.',
               'This is a friendly electronic agreement, not an official or government contract. It records what both sides agreed so they can refer to it if they disagree. No printing or signature is needed.'));
-    if (s.vm) s8.push(L('الموافقة بالبريد: يصل لكل طرف رابط على بريده المذكور في أعلى العقد، فيفتح العقد ويؤكد موافقته. وبعد تأكيد الطرفين يصير العقد «موثّقًا بالبريد» ولا يمكن تغييره، وأي تغيير يكون بنسخة جديدة يؤكدها الطرفان بالبريد من جديد.',
-                        'Approval by e-mail: each side gets a link at the e-mail shown above, opens the contract and confirms. Once both have confirmed, the contract is “confirmed by e-mail” and can’t be changed; any change is a new version both confirm by e-mail again.'));
+    if (s.vm) s8.push(L('الموافقة بالبريد: يصل لكل طرف رابط على بريده المذكور في أعلى العقد، فيفتح العقد ويؤكد موافقته. وبعد تأكيد الطرفين يصير العقد «موثّقًا بالبريد»، ولا يتغيّر بعدها إلا بتعديل يؤكده الطرفان بالبريد من جديد.',
+                        'Approval by e-mail: each side gets a link at the e-mail shown above, opens the contract and confirms. Once both have confirmed, the contract is “confirmed by e-mail”; after that it only changes through an amendment both confirm by e-mail again.'));
     else s8.push(L('الموافقة: يرسل كل طرف في ' + V(ch) + ': ' + V(approvalText(s, code)) + '. وهذه الرسالة تعني أنه موافق على كل ما في العقد.',
               'Approval: each side sends on ' + V(ch) + ': ' + V(approvalText(s, code)) + '. That message means they accept everything in it.'));
     s8.push(L('رمز العقد يتغير إذا تغير أي شيء فيه، والباركود في آخر العقد يفتح النسخة الأصلية للتأكد منها.',
               'The contract code changes if anything in it changes, and the QR code at the end opens the original version to check it.'));
-    s8.push(L('لتغيير أي شيء في العقد: تُجهَّز نسخة جديدة برقم جديد ويوافق عليها الطرفان بنفس الطريقة، ولا يحق لأي طرف تغيير الاتفاق وحده.',
-              'To change anything, a new version with a new number is made and both sides approve it the same way; neither side changes the agreement alone.'));
+    s8.push(L('لتغيير أي شيء في العقد: يُضاف تعديل في العقد نفسه برقم نسخة جديد، ويُكتب في أوله ما كان قبله وما صار بعده. ولا يُعتمد التعديل إلا إذا وافق عليه الطرفان كلاهما، حتى من وافق منهما على النسخة السابقة، ولا يحق لأي طرف تغيير الاتفاق وحده.',
+              'To change anything, an amendment is added to this same contract with a new version number, and its start shows what was there before and what is there now. An amendment only counts once both sides agree to it — even one who agreed to the previous version — and neither side changes the agreement alone.'));
     if (s.tr) s8.push(L('شروط إضافية (لها الأولوية إذا اختلفت مع البنود السابقة): ' + V(s.tr), 'Extra terms (these come first if they conflict with the clauses above): ' + V(s.tr)));
     s8.push(L('عند أي خلاف: يرجع الطرفان أولًا إلى هذا العقد، ثم إلى رسائلهما في ' + V(ch) + '، ويحاولان الحل بالتفاهم.',
               'If you disagree: first refer to this contract, then to your messages on ' + V(ch) + ', and settle it amicably.'));
@@ -694,6 +845,139 @@
     return L('أوافق على العقد، النسخة ' + s.ver + '، الرمز ' + code, 'I agree to the contract, version ' + s.ver + ', code ' + code);
   }
 
+  /* ---------- amendments: what changed, before and after ---------- */
+  // The terms as a reader sees them, [id, label, value], in the order of the maker's steps
+  function terms(s) {
+    var out = [], pk = s.md === 'p';
+    function add(id, label, val) { val = String(val == null ? '' : val).trim(); out.push([id, label, val || '—']); }
+    [['f', s.fn, s.fc, s.fx, s.fm], ['c', s.cn, s.cc, s.cx, s.cm]].forEach(function (p) {
+      var who = p[0] === 'f' ? t('fl') : t('cl');
+      add(p[0] + 'n', who + ': ' + t('name'), p[1]);
+      add(p[0] + 'c', who + ': ' + t('country'), p[2]);
+      add(p[0] + 'x', who + ': ' + L('التواصل', 'Contact'), p[3]);
+      if (s.vm) add(p[0] + 'm', who + ': ' + t('vMail'), p[4]);
+    });
+    add('ch', L('وسيلة التواصل', 'Channel'), chName(s));
+    add('ty', t('type'), s.ty === 'ot' ? (s.to || optLabel('ty', 'ot')) : optLabel('ty', s.ty));
+    add('st', t('style'), s.st);
+    add('rf', L('الفيديو المرجعي', 'Reference video'), s.rf);
+    add('sz', t('size'), s.sz === 'ot' ? (s.so || optLabel('sz', 'ot')) : optLabel('sz', s.sz));
+    add('q', t('quality'), s.q === 'ot' ? (s.qo || optLabel('q', 'ot')) : optLabel('q', s.q));
+    add('md', t('pricing'), optLabel('md', s.md));
+    add('cu', t('currency'), curName(s) + (s.ca.length ? L('، ويُقبل أيضًا: ', '; also accepted: ') + listJoin(otherCurrencies(s)) : ''));
+    if (pk) {
+      add('kn', t('kCount'), videosCount(s.kn));
+      add('kp', L('سعر الباقة', 'Package price'), amount(price(s.kp), s));
+      add('kd', t('kDesc'), s.kd);
+      add('kl', t('kLen'), s.kl);
+      add('ks', t('kSched'), s.ks);
+      add('kt', t('kLast'), s.kt ? fmtDate(s.kt) : '');
+    } else {
+      s.vd.forEach(function (v, i) {
+        var n = t('video') + ' ' + (i + 1), pr = price(v.p) == null ? '' : amount(price(v.p), s), dt = v.t ? fmtDate(v.t) : '';
+        add('v' + i, n, [v.d, v.l, pr, dt].map(function (x) { return String(x || '').trim(); }).filter(Boolean).join(' · '));
+        add('v' + i + 'd', n + ': ' + L('الوصف', 'description'), v.d);
+        add('v' + i + 'l', n + ': ' + t('vLen'), v.l);
+        add('v' + i + 'p', n + ': ' + t('vPrice'), pr);
+        add('v' + i + 't', n + ': ' + t('vDate'), dt);
+      });
+      add('sum', L('السعر الإجمالي', 'Total price'), amount(total(s), s));
+    }
+    var incl = s.in.map(function (k) { return optLabel('in', k); });
+    if (s.io) incl.push(s.io);
+    add('in', L('ما يشمله السعر', 'What the price includes'), listJoin(incl));
+    add('mu', t('music'), optLabel('mu', s.mu));
+    add('pm', t('payBy'), listJoin(s.pm.map(function (k) { return k === 'ot' ? (s.pmo || optLabel('pm', 'ot')) : optLabel('pm', k); })));
+    add('ac', t('account'), s.ac);
+    add('dp', t('deposit'), s.dp === 0 ? optLabel('dp', 0) : s.dp + '%');
+    if (videoCount(s) > 1) add('sc', L('دفع الفيديوهات', 'Paying the videos'), optLabel('sc', s.sc));
+    add('fe', L('رسوم التحويل على', 'Transfer fees paid by'), optLabel('fe', s.fe));
+    add('rd', t('rounds'), s.rd === 0 ? L('لا يوجد', 'None') : rounds(s.rd));
+    add('ex', t('extra'), s.ex ? s.ex + ' ' + curName(s) : '');
+    add('rv', t('review'), s.rh ? hours(s.rh) : days(s.rv));
+    add('tn', t('turn'), s.th ? hours(s.th) : days(s.tn));
+    add('nt', t('notice'), days(s.nt));
+    add('wd', t('workDays'), s.wd || L('أيام العمل الرسمية وتوقيت بلد الفريلانسر', 'The freelancer’s official work days and time zone'));
+    add('pf', t('portfolio'), s.pf ? L('مسموح بعد نشر الفيديو', 'Allowed once the video is published') : L('بإذن مكتوب من العميل فقط', 'Only with the client’s written permission'));
+    add('tr', t('terms'), s.tr);
+    add('vm', t('vTitle'), s.vm ? L('نعم', 'Yes') : L('لا', 'No'));
+    return out;
+  }
+  // What changed from version a to version b: [label, before, after]. A video found in both
+  // is compared field by field; a video added or removed takes one line.
+  function changes(a, b) {
+    var la = terms(a), lb = terms(b), A = {}, B = {}, ids = [], seen = {}, ia = 0;
+    la.forEach(function (x) { A[x[0]] = x; });
+    lb.forEach(function (x) { B[x[0]] = x; });
+    function take(id) { if (!seen[id]) { seen[id] = 1; ids.push(id); } }
+    lb.forEach(function (x) {   // b's order, with what only a had kept near its old place
+      if (A[x[0]]) for (; ia < la.length && la[ia][0] !== x[0]; ia++) { if (!B[la[ia][0]]) take(la[ia][0]); }
+      take(x[0]);
+    });
+    for (; ia < la.length; ia++) if (!B[la[ia][0]]) take(la[ia][0]);
+    var out = [];
+    ids.forEach(function (id) {
+      var m = id.match(/^v(\d+)([dlpt]?)$/);
+      if (m) {
+        var both = !!(A['v' + m[1]] && B['v' + m[1]]);
+        if (m[2] ? !both : both) return;
+      }
+      var x = A[id], y = B[id], before = x ? x[2] : '—', after = y ? y[2] : '—';
+      if (m && !m[2]) { if (!x) before = t('amNoVid'); if (!y) after = t('amGone'); }
+      if (before !== after) out.push([(y || x)[1], before, after]);
+    });
+    return out;
+  }
+  // The amendments, newest first, with each changed version rebuilt and checked against the
+  // code the amendment names (a link put together by hand would not match)
+  function historyOf(s) {
+    if (!s.am.length) return Promise.resolve([]);
+    var vs = versions(s), olds = vs.slice(0, -1);
+    return Promise.all(olds.map(digestOf)).then(function (dg) {
+      return Promise.all(olds.map(function (v, k) {
+        return v.vm && dg[k].length === 32 ? sha256hex(v.fm + '|' + v.cm) : '';
+      })).then(function (pairs) {
+        return olds.map(function (v, k) {
+          var code = codeFrom(dg[k]);
+          return { n: k + 1, from: v, to: vs[k + 1], code: code, ok: s.am[k].c === code, why: s.am[k].w,
+                   hash: dg[k].length === 32 ? hexOf(dg[k]) : '', pair: pairs[k], vs: null };
+        }).reverse();
+      });
+    });
+  }
+  // Where the changed version stood on the e-mail confirmation (loaded after the page shows)
+  function histStatus(a) {
+    var vs = a.vs, s = a.from;
+    if (!vs || vs.error || !s.vm) return '';
+    if (vs.state === 'locked') return t('amVsBoth', { d: esc(dayOf(vs.locked_at)) });
+    var f = vs.f && vs.f.confirmed_at, c = vs.c && vs.c.confirmed_at;
+    if (!f && !c) return t('amVsNone');
+    var who = f ? 'f' : 'c', other = f ? 'c' : 'f';
+    function nm(r) { return esc((r === 'f' ? s.fn : s.cn) || '—') + ' (' + (r === 'f' ? t('fl') : t('cl')) + ')'; }
+    return t('amVsOne', { who: nm(who), other: nm(other), d: esc(dayOf(vs[who].confirmed_at)) });
+  }
+  // «سجل التعديلات» at the top of the sheet: one block per amendment, newest first
+  function amendHTML() {
+    var hist = current.hist || [];
+    if (!hist.length) return '';
+    var h = '<div class="cm-p-block cm-am-head" data-block="am"><h3><i>' + icon('edit') + '</i>' + t('amTitle') + '</h3><p>' + t('amIntro') + '</p></div>';
+    hist.forEach(function (a, i) {
+      var rows = changes(a.from, a.to);
+      h += '<div class="cm-p-block cm-am" data-block="am">' +
+        '<div class="cm-am-top"><b>' + t('amN', { n: a.n }) + '</b>' + (i === 0 && hist.length > 1 ? '<span class="cm-am-new">' + t('amLatest') + '</span>' : '') +
+        '<span class="cm-am-meta">' + t('amFromTo', { a: a.from.ver, b: a.to.ver }) + ' · <bdi dir="ltr">' + esc(fmtDate(a.to.dt)) + '</bdi></span></div>' +
+        (a.why ? '<p class="cm-am-why"><span>' + t('amWhyShow') + '</span> ' + V(a.why) + '</p>' : '') +
+        '<div class="cm-am-rows"><div class="cm-am-row cm-am-hd"><span>' + t('amTerm') + '</span><span>' + t('amBefore') + '</span><span>' + t('amAfter') + '</span></div>' +
+        rows.map(function (r) {
+          return '<div class="cm-am-row"><span class="cm-am-k">' + esc(r[0]) + '</span><span class="cm-am-b"><small>' + t('amBefore') + '</small>' + Vw(r[1]) + '</span><span class="cm-am-a"><small>' + t('amAfter') + '</small>' + Vw(r[2]) + '</span></div>';
+        }).join('') + '</div>' +
+        '<p class="cm-am-of">' + t('amOf', { v: a.from.ver, d: '<bdi dir="ltr">' + esc(fmtDate(a.from.dt)) + '</bdi>', c: '<b class="cm-code">' + esc(a.code) + '</b>' }) +
+        ' <span data-am-vs="' + a.n + '">' + histStatus(a) + '</span>' +
+        (a.ok ? '' : '<em class="cm-am-bad">' + t('amBad') + '</em>') + '</p></div>';
+    });
+    return h;
+  }
+
   // The contract sheet. blocks: data-block marks the pieces the PDF can put on pages
   function paperHTML(s, code, url, qrImg, forFile) {
     var sum = total(s);
@@ -703,6 +987,9 @@
       '<p class="cm-p-subtitle">' + L('اتفاق ودي إلكتروني بين الفريلانسر والعميل', 'A friendly electronic agreement between the freelancer and the client') + '</p>' +
       '<div class="cm-p-meta"><span>' + t('ver') + ' <b>' + s.ver + '</b></span><span>' + fmtDate(s.dt) + '</span><span>' + t('code') + ' <b class="cm-code">' + esc(code) + '</b></span>' + stampHTML() + '</div>' +
       '</header><div class="cm-p-body">';
+
+    // An amended contract opens with what each amendment changed (before / after)
+    h += amendHTML();
 
     // Parties
     h += '<div class="cm-p-block" data-block="parties"><div class="cm-p-parties">';
@@ -791,14 +1078,25 @@
   function paperDark() { return dark === null ? document.documentElement.getAttribute('data-theme') === 'dark' : dark; }
   // hash = the contract's full fingerprint, pair = fingerprint of the two e-mails,
   // vs = what the confirmation service says (null until asked)
-  var current = { code: '', url: '', qr: '', hash: '', pair: '', vs: null };
+  var current = { code: '', url: '', qr: '', hash: '', pair: '', vs: null, hist: [] };
   var confirmToken = '';   // the secret from a confirmation e-mail (?v=…)
   var confirmInfo = null;  // what that secret belongs to, or { error }
   var vNote = '';          // last message of the confirmation box
   var fromLink = false;
+  // An amendment being made: the version it changes (base) and its code, the reason (w), and
+  // where to go back if it's cancelled (back = 'received' | 'result', link = the old #s=/#c=)
+  var amend = null;
+  var readOk = false;      // «قرأت العقد كاملًا» ticked (asked before any approval of a received contract)
 
   function saveDraft() {
-    try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ s: S, step: step })); } catch (e) {}
+    try { localStorage.setItem(DRAFT_KEY, JSON.stringify({ s: S, step: step, am: amend })); } catch (e) {}
+  }
+  // An amendment kept in a draft (never trusted, like any stored data)
+  function amendFrom(a) {
+    if (!a || typeof a !== 'object' || !a.base || !CODE_RE.test(a.code || '')) return null;
+    var link = String(a.link || '');
+    return { base: normalize(a.base), code: a.code, w: str(a.w, 140), back: a.back === 'result' ? 'result' : 'received',
+             link: /^#(s=[A-Za-z0-9]{8}\.[A-Za-z0-9_-]{22}|c=[A-Za-z0-9_-]+)$/.test(link) ? link : '' };
   }
   function loadDraft() {
     try { var d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); return d && d.s ? d : null; } catch (e) { return null; }
@@ -851,8 +1149,16 @@
   function field(label, inner, hint, opt) {
     return '<div class="cm-field"><label class="cm-label">' + label + (opt ? ' <small>(' + t('optional') + ')</small>' : '') + '</label>' + inner + (hint ? '<p class="cm-hint">' + hint + '</p>' : '') + '</div>';
   }
-  function stepper(key, unit) {
-    return '<div class="cm-stepper-row"><div class="cm-stepper"><button type="button" data-step-key="' + key + '" data-delta="-1" aria-label="−">−</button><output>' + S[key] + '</output><button type="button" data-step-key="' + key + '" data-delta="1" aria-label="+">+</button></div>' + (unit ? '<span class="cm-unit">' + unit + '</span>' : '') + '</div>';
+  function stepper(key, unit, by) {
+    by = by || 1;
+    return '<div class="cm-stepper-row"><div class="cm-stepper"><button type="button" data-step-key="' + key + '" data-delta="-' + by + '" aria-label="−">−</button><output>' + S[key] + '</output><button type="button" data-step-key="' + key + '" data-delta="' + by + '" aria-label="+">+</button></div>' + (unit ? '<span class="cm-unit">' + unit + '</span>' : '') + '</div>';
+  }
+  // «بالساعات / بأيام العمل» for the review time (rh) and the time per revision (th)
+  function unitChips(key) {
+    var on = S[key] > 0;
+    return '<div class="cm-chips" role="group">' +
+      '<button type="button" class="cm-chip" data-hunit="' + key + '" data-val="1" aria-pressed="' + on + '">' + esc(t('unitH')) + '</button>' +
+      '<button type="button" class="cm-chip" data-hunit="' + key + '" data-val="0" aria-pressed="' + !on + '">' + esc(t('unitD')) + '</button></div>';
   }
 
   function stepBody() {
@@ -887,7 +1193,8 @@
         field(t('kPrice'), '<input class="cm-input" dir="ltr" inputmode="decimal" data-set="kp" value="' + esc(S.kp) + '" placeholder="0" maxlength="14">') +
         '</div><p class="cm-each" id="cmEach">' + eachText() + '</p>' +
         field(t('kDesc'), input('kd', t('kDescPh')), '', true) +
-        '<div class="cm-grid2">' + field(t('kLen'), input('kl', t('kLenPh')), '', true) + field(t('kSched'), input('ks', t('kSchedPh')), '', true) + '</div>' +
+        field(t('kLen'), input('kl', t('kLenPh')), '', true) +
+        field(t('kSched'), input('ks', t('kSchedPh')), t('kSchedHint'), true) +
         field(t('kLast'), dateBox('data-date-key="kt"', S.kt), '', true) +
         '</div>';
       h += '<div class="cm-total"><span>' + L('سعر الباقة', 'Package price') + '</span><b id="cmTotal">' + esc(amount(total(S), S)) + '</b></div>';
@@ -916,13 +1223,14 @@
       h += field(t('payBy'), chips('pm', 'pm', true) + (S.pm.indexOf('ot') !== -1 ? '<div class="cm-gap">' + input('pmo', t('other')) + '</div>' : ''));
       h += field(t('account'), input('ac', t('accountPh')), '', true);
       h += field(t('deposit'), chips('dp', 'dp'), t('depositHint'));
-      if (videoCount(S) > 1) h += field(t('scope'), chips('sc', 'sc'));
+      if (videoCount(S) > 1) h += field(t('scope'), chips('sc', 'sc'), t('scopeHint'));
       h += field(t('fees'), chips('fe', 'fe'));
     } else if (step === 6) {
       h += field(t('rounds'), stepper('rd'));
       if (S.rd > 0) h += field(t('extra'), input('ex', curName(S) || '0', ' inputmode="decimal"'), '', true);
-      h += field(t('review'), stepper('rv', t('workDay')));
-      h += field(t('turn'), stepper('tn', t('workDay')));
+      // Hours (more precise) or work days, for the two short times
+      h += field(t('review'), unitChips('rh') + '<div class="cm-gap">' + (S.rh ? stepper('rh', t('hourU'), HOUR_STEP) : stepper('rv', t('workDay'))) + '</div>', t('rvHint'));
+      h += field(t('turn'), unitChips('th') + '<div class="cm-gap">' + (S.th ? stepper('th', t('hourU'), HOUR_STEP) : stepper('tn', t('workDay'))) + '</div>');
       h += field(t('notice'), stepper('nt', t('workDay')), t('noticeHint'));
       h += field(t('workDays'), input('wd', t('workDaysPh')), t('workDaysHint'), true);
       h += field(t('portfolio'), '<label class="cm-switch"><input type="checkbox" data-toggle="pf"' + (S.pf ? ' checked' : '') + '><span>' + t('portfolioOn') + '</span></label>');
@@ -931,8 +1239,24 @@
         h += field(t('vmTitle'), '<label class="cm-switch"><input type="checkbox" data-toggle="vm"' + (S.vm ? ' checked' : '') + '><span>' + t('vmOn') + '</span></label>' +
           (S.vm ? '<div class="cm-grid2 cm-gap">' + field(t('fMail'), mailInput('fm')) + field(t('cMail'), mailInput('cm')) + '</div>' : ''), t('vmHint'), true);
       }
+      // An amendment: what changed so far (before → after) and why, before showing the contract
+      if (amend) {
+        h += '<div class="cm-field cm-amend-box" id="cmAmendBox"><label class="cm-label">' + t('amWhat') + '</label>' + amendListHTML(changes(amend.base, normalize(S))) + '</div>';
+        h += field(t('amWhy'), '<input class="cm-input" dir="auto" data-amwhy value="' + esc(amend.w) + '" placeholder="' + esc(t('amWhyPh')) + '" maxlength="140">', '', true);
+      }
     }
     return h;
+  }
+  function amendListHTML(rows) {
+    if (!rows.length) return '<p class="cm-hint cm-amend-list">' + t('amNoneYet') + '</p>';
+    return '<ul class="cm-amend-list">' + rows.map(function (r) {
+      return '<li><b>' + esc(r[0]) + '</b><span><s>' + Vw(r[1]) + '</s><i aria-hidden="true">' + L('←', '→') + '</i>' + Vw(r[2]) + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  function refreshAmendBox() {
+    var box = amend && document.getElementById('cmAmendBox');
+    var list = box && box.querySelector('.cm-amend-list');
+    if (list) list.outerHTML = amendListHTML(changes(amend.base, normalize(S)));
   }
   function mailInput(key) {
     return '<input class="cm-input" type="email" dir="ltr" inputmode="email" autocomplete="email" data-set="' + key + '" value="' + esc(S[key]) + '" placeholder="name@example.com" maxlength="120">';
@@ -959,7 +1283,9 @@
     app.innerHTML = '<div class="cm-card cm-fade" id="cmCard">' +
       '<div class="cm-steps" aria-hidden="true">' + bars + '</div>' +
       '<div class="cm-step-head"><h2 class="cm-step-title">' + t('s' + step) + '</h2><span class="cm-step-count">' + t('stepOf', { n: step, m: STEPS }) + '</span></div>' +
-      (note ? '<div class="cm-note">' + note + ' <button type="button" class="cm-link" data-go="restart">' + t('restart') + '</button></div>' : '') +
+      (amend ? '<div class="cm-amend-note">' + icon('edit') + '<span>' + t('amBanner', { c: '<b class="cm-code">' + esc(amend.code) + '</b>', v: S.ver }) +
+        ' <button type="button" class="cm-link" data-go="amendcancel">' + t('amCancel') + '</button></span></div>' : '') +
+      (note && !amend ? '<div class="cm-note">' + note + ' <button type="button" class="cm-link" data-go="restart">' + t('restart') + '</button></div>' : '') +
       stepBody() +
       '<p class="cm-error" id="cmError" hidden></p>' +
       '<div class="cm-nav">' +
@@ -1000,7 +1326,9 @@
   function build() {
     if (!S.dt) S.dt = today();
     current.vs = null;
+    current.hist = [];
     vNote = '';
+    readOk = false;
     return encodeState(S).then(function (enc) {
       current.url = shareBase() + '#c=' + enc;
       return digestOf(S);
@@ -1011,11 +1339,27 @@
     }).then(function (pair) {
       current.pair = pair;
       return qrDataUrl(current.url);
-    }).then(function (qr) { current.qr = qr; });
+    }).then(function (qr) {
+      current.qr = qr;
+      return historyOf(S);
+    }).then(function (hist) { current.hist = hist; });
+  }
+
+  // Once someone confirmed this contract, changing it means an amendment (kept on record), never an edit in place
+  function pinned() { return !!(current.vs && (current.vs.state === 'partial' || current.vs.state === 'locked')); }
+  function editBtnHTML() {
+    var add = mode === 'received' || (!amend && pinned());
+    return '<button type="button" class="cm-btn cm-btn-soft" id="cmEditBtn" data-go="' + (add ? 'amend' : 'edit') + '">' + icon('edit') + (add ? t('amAdd') : t('edit')) + '</button>';
+  }
+  // Red, above every approval of a received contract: read it all and ask before agreeing
+  function readGateHTML(id) {
+    return '<div class="cm-readfirst' + (readOk ? ' cm-read-ok' : '') + '"' + (id ? ' id="' + id + '"' : '') + '><p class="cm-warn">' + icon('warn') + '<span>' + t('readWarn') + '</span></p>' +
+      '<label class="cm-check"><input type="checkbox" data-readok' + (readOk ? ' checked' : '') + '><span>' + t('readOk') + '</span></label>' +
+      '<p class="cm-readneed" role="alert" hidden>' + t('readNeed') + '</p></div>';
   }
 
   function renderResult() {
-    var received = mode === 'received', verify = verifying();
+    var received = mode === 'received', verify = verifying(), am = S.am.length > 0;
     var linkInBar = !!(API && !received);   // with «أرسل رابطًا» in the row, «نسخ الرابط» moves to the bar under it
     var actions =
       (!received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>' +
@@ -1024,12 +1368,15 @@
         : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
       '<button type="button" class="cm-btn cm-btn-soft" data-act="pdf">' + icon('down') + t('download') + '</button>' +
       (linkInBar ? '' : '<button type="button" class="cm-btn cm-btn-soft" data-act="copy">' + icon('link') + t('copy') + '</button>') +
-      '<button type="button" class="cm-btn cm-btn-soft" data-go="' + (received ? 'editnew' : 'edit') + '">' + icon('edit') + (received ? t('editNew') : t('edit')) + '</button>';
+      editBtnHTML();
+    var title = received ? t(am ? 'amReceived' : 'received') : t(amend ? 'amReady' : 'ready');
+    var sub = received ? (am ? t('amReceivedSub', { v: S.ver }) : t(verify ? 'receivedSubMail' : 'receivedSub')) : t(amend ? 'amReadySub' : 'readySub');
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
-      '<div class="cm-ready"><span class="cm-ok">' + icon('ok') + '</span><h2>' + (received ? t('received') : t('ready')) + '</h2><p>' + (received ? t(verify ? 'receivedSubMail' : 'receivedSub') : t('readySub')) + '</p></div>' +
+      '<div class="cm-ready"><span class="cm-ok">' + icon(am ? 'edit' : 'ok') + '</span><h2>' + title + '</h2><p>' + sub + '</p></div>' +
       // The e-mail box comes first, so each side sees where the other one stands before the contract
       (verify ? '<div class="cm-approve cm-verify cm-verify-first' + (confirmToken ? ' cm-verify-mine' : '') + '" id="cmVerify">' + verifyHTML() + '</div>' : '') +
+      (received && !verify ? readGateHTML('cmReadTop') : '') +
       '<div class="cm-actions">' + actions + '</div>' +
       '<p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>' +
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
@@ -1039,11 +1386,28 @@
       (verify
         ? '<div class="cm-approve cm-verify" id="cmVerifyEnd"' + (verifyEndHTML() ? '' : ' hidden') + '>' + verifyEndHTML() + '</div>'
         : '<div class="cm-approve"><h3>' + t('approveTitle') + '</h3><p>' + t('approveText', { ch: esc(chName(S)) }) + '</p><q dir="auto">' + esc(approvalText(S, current.code)) + '</q>' +
-          (received ? '' : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
+          (received ? readGateHTML() : '') +
+          '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>' +
           (received ? '<a class="cm-link" href="' + esc(shareBase().replace(/#.*$/, '')) + '" data-go="restart">' + t('makeOwn') + '</a>' : '') +
           '</div>') +
       '</div>';
     if (verify) loadVerify();
+    loadHistory();
+  }
+  // Where each amended version stood on the e-mail confirmation (one question per version, once)
+  function loadHistory() {
+    if (!API || !VERIFY) return;
+    var code = current.code;
+    (current.hist || []).forEach(function (a) {
+      if (a.vs || !a.from.vm || !a.hash || !a.pair) return;
+      a.vs = { loading: true };
+      api('/status?h=' + a.hash + '&p=' + a.pair).then(function (vs) {
+        if (current.code !== code) return;
+        a.vs = vs;
+        var el = app.querySelector('[data-am-vs="' + a.n + '"]');
+        if (el) el.innerHTML = histStatus(a);
+      }, function () { a.vs = null; });
+    });
   }
 
   /* ---------- short link (needs the service at API) ---------- */
@@ -1122,6 +1486,12 @@
     if (end) { var e = verifyEndHTML(); end.innerHTML = e; end.hidden = !e; }
     var meta = document.querySelector('#cmPaper .cm-p-meta');
     if (meta && !meta.querySelector('.cm-p-ok')) meta.insertAdjacentHTML('beforeend', stampHTML());
+    // Someone confirmed your contract: from now on a change is an amendment, kept on record
+    var eb = document.getElementById('cmEditBtn');
+    if (eb && mode === 'result' && !amend && pinned() && eb.getAttribute('data-go') !== 'amend') {
+      eb.setAttribute('data-go', 'amend');
+      eb.innerHTML = icon('edit') + t('amAdd');
+    }
   }
   function canConfirm() {
     var vs = current.vs;
@@ -1136,7 +1506,7 @@
     if (vs.error) return h + '<p class="cm-vmsg">' + t('vError') + '</p>';
     var me = confirmToken && confirmInfo && !confirmInfo.error ? confirmInfo.role : '';
     if (vs.state === 'locked') h += '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vLocked') + '</b><small>' + t('vLockedSub', { d: esc(dayOf(vs.locked_at)) }) + '</small></div></div>';
-    else if (me && vs[me] && vs[me].confirmed_at) h += '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vMeDone') + '</b><small>' + t('vMeWait') + '</small></div></div>';
+    else if (me && vs[me] && vs[me].confirmed_at) h += '<div class="cm-vseal">' + icon('ok') + '<div><b>' + t('vMeDone') + '</b><small>' + t('vMeWait') + ' ' + t('vSafe') + '</small></div></div>';
     else if (canConfirm()) h += '<p>' + t('vMeText', { r: '<b>' + (me === 'f' ? t('fl') : t('cl')) + '</b>' }) + '</p>';
     else h += '<p>' + t('vIntro') + '</p>';
     h += '<ul class="cm-vlist">' + ['f', 'c'].map(function (r) {
@@ -1145,8 +1515,9 @@
       return '<li' + (ok ? ' class="ok"' : '') + '><span class="cm-vdot">' + (ok ? icon('ok') : '') + '</span><span><b>' + esc((r === 'f' ? S.fn : S.cn) || '—') + '</b> <small>(' + (r === 'f' ? t('fl') : t('cl')) + ')</small><br>' + line + '</span></li>';
     }).join('') + '</ul>';
     if (confirmToken && confirmInfo && confirmInfo.error) h += '<p class="cm-vmsg">' + (confirmInfo.error === 'other_contract' ? t('vOther') : confirmInfo.error === 'bad_token' ? t('vBadLink') : t('vError')) + '</p>';
-    if (canConfirm()) h += '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
-    else if (vs.state !== 'locked') h += '<button type="button" class="cm-btn ' + (vs.state === 'none' ? 'cm-btn-primary' : 'cm-btn-soft') + '" data-act="vsend">' + (vs.state === 'none' ? t('vSend') : t('vResend')) + '</button>';
+    // Every «أوافق / أؤكد» of a received contract comes after the red «read it all» note
+    if (canConfirm()) h += readGateHTML() + '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
+    else if (vs.state !== 'locked') h += (vs.state === 'none' && mode === 'received' ? readGateHTML() : '') + '<button type="button" class="cm-btn ' + (vs.state === 'none' ? 'cm-btn-primary' : 'cm-btn-soft') + '" data-act="vsend">' + (vs.state === 'none' ? t('vSend') : t('vResend')) + '</button>';
     if (vNote) h += '<p class="cm-vmsg">' + vNote + '</p>';
     return h;
   }
@@ -1154,17 +1525,75 @@
   // At the end of the contract, for whoever reads to the bottom before confirming
   function verifyEndHTML() {
     if (!canConfirm()) return '';
-    return '<h3>' + t('vMeTitle') + '</h3><p>' + t('vEndText') + '</p>' +
+    return '<h3>' + t('vMeTitle') + '</h3><p>' + t('vEndText') + '</p>' + readGateHTML() +
       '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
+  }
+  // Approvals of a received contract wait for «قرأت العقد كاملًا»
+  function needsRead(act) {
+    if (mode !== 'received' || readOk) return false;
+    return act === 'approve' || act === 'vconfirm' || (act === 'vsend' && !(current.vs && current.vs.state && current.vs.state !== 'none'));
+  }
+  function nudgeRead(btn) {
+    var box = btn.parentNode, g = box.querySelector('.cm-readfirst');
+    if (!g && box.previousElementSibling && box.previousElementSibling.classList.contains('cm-readfirst')) g = box.previousElementSibling;
+    if (!g) return;
+    g.classList.remove('cm-need');
+    void g.offsetWidth;   // restarts the shake
+    g.classList.add('cm-need');
+    var m = g.querySelector('.cm-readneed');
+    if (m) m.hidden = false;
+    var top = g.getBoundingClientRect().top;
+    if (top < 80 || top > window.innerHeight - 160) g.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    var cb = g.querySelector('input');
+    if (cb) try { cb.focus({ preventScroll: true }); } catch (e) { cb.focus(); }
+  }
+
+  /* ---------- a short message over the page (after confirming / approving) ---------- */
+  function showDialog(html) {
+    var old = document.getElementById('cmDialog');
+    if (old) old.remove();
+    var d = document.createElement('div');
+    d.id = 'cmDialog';
+    d.className = 'cm-dialog';
+    d.innerHTML = '<div class="cm-dialog-box" role="dialog" aria-modal="true" aria-labelledby="cmDialogT">' + html +
+      '<button type="button" class="cm-btn cm-btn-primary" data-dclose>' + t('dlgOk') + '</button></div>';
+    document.body.appendChild(d);
+    function key(e) { if (e.key === 'Escape') close(); }
+    function close() {
+      document.removeEventListener('keydown', key);
+      d.classList.remove('show');
+      setTimeout(function () { d.remove(); }, 260);
+    }
+    d.addEventListener('click', function (e) { if (e.target === d || e.target.closest('[data-dclose]')) close(); });
+    document.addEventListener('keydown', key);
+    requestAnimationFrame(function () {
+      d.classList.add('show');
+      var b = d.querySelector('[data-dclose]');
+      if (b) try { b.focus({ preventScroll: true }); } catch (e) { b.focus(); }
+    });
+  }
+  // The contract can't change unless both sides agree to an amendment
+  function safeBox() {
+    return '<div class="cm-dialog-safe">' + icon('lock') + '<div><b>' + t('dlgSafeT') + '</b><span>' + t('dlgSafe') + '</span><span>' + t('dlgSafe2') + '</span></div></div>';
+  }
+  function confirmedDialog(locked) {
+    showDialog('<span class="cm-dialog-ic">' + icon('ok') + '</span><h3 id="cmDialogT">' + t(locked ? 'dlgDone' : 'dlgMine') + '</h3>' +
+      '<p>' + t(locked ? 'dlgDoneSub' : 'dlgMineSub') + '</p>' + safeBox());
+  }
+  function sentDialog() {
+    showDialog('<span class="cm-dialog-ic">' + icon('send') + '</span><h3 id="cmDialogT">' + t('dlgSent') + '</h3>' +
+      '<p>' + t('dlgSentSub', { ch: esc(chName(S)) }) + '</p>' + safeBox());
   }
 
   function vSend(btn) {
     if (!verifying()) return;
     if (btn) { btn.disabled = true; btn.innerHTML = '<span class="cm-spin"></span>' + t('vSending'); }
     vNote = '';
+    var last = S.am.length ? S.am[S.am.length - 1] : null;   // an amendment: the mails say so, with the code it changes
     api('/request', {
       hash: current.hash, code: current.code, ver: S.ver, lang: isEn() ? 'en' : 'ar', link: current.url, total: amount(total(S), S),
-      f: { name: S.fn, email: S.fm }, c: { name: S.cn, email: S.cm }
+      f: { name: S.fn, email: S.fm }, c: { name: S.cn, email: S.cm },
+      prev: last && last.c ? last.c : undefined, n: last ? S.am.length : undefined
     }).then(function (st) {
       current.vs = st;
       vNote = st.state === 'locked' ? '' : t('vSent');
@@ -1177,8 +1606,10 @@
     if (!canConfirm()) return;
     Array.prototype.forEach.call(app.querySelectorAll('[data-act="vconfirm"]'), function (b) { b.disabled = true; b.innerHTML = '<span class="cm-spin"></span>' + t('vSending'); });
     vNote = '';
+    var done = false;
     api('/confirm', { t: confirmToken, hash: current.hash, link: current.url }).then(function (st) {
       current.vs = st;
+      done = true;
       // the secret has done its job here: take it out of the address bar
       try {
         var q = new URLSearchParams(location.search);
@@ -1188,7 +1619,11 @@
     }, function (e) {
       if (e.code === 'other_contract' || e.code === 'bad_token') confirmInfo = { error: e.code };
       else vNote = t('vError');
-    }).then(updateVerify);
+    }).then(function () {
+      updateVerify();
+      // Confirmed: say so clearly, and that nothing changes now unless both agree to an amendment
+      if (done) confirmedDialog(current.vs && current.vs.state === 'locked');
+    });
   }
 
   function icon(name) {
@@ -1198,7 +1633,9 @@
       link: '<path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/>',
       edit: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
       ok: '<path d="M20 6 9 17l-5-5"/>',
-      cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>'
+      cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>',
+      warn: '<path d="M10.3 3.9 1.8 18.5a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.5h.01"/>',
+      lock: '<rect x="4.5" y="10.5" width="15" height="10.5" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/>'
     }[name];
     return '<svg class="cm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
   }
@@ -1526,6 +1963,9 @@
       S.vd[+el.getAttribute('data-vid')][el.getAttribute('data-vf')] = el.value;
       if (el.getAttribute('data-vf') === 'p') updateTotal();
       saveDraft();
+    } else if (el.hasAttribute('data-amwhy')) {
+      if (amend) { amend.w = el.value; saveDraft(); }
+      return;
     } else if (el.hasAttribute('data-date')) {
       // Typed date: Western digits only, the slashes come by themselves, a full real date is kept
       var raw = dateDigits(el);
@@ -1543,6 +1983,7 @@
       setDate(box, el.value);
       saveDraft();
     }
+    refreshAmendBox();   // an amendment's last step lists the changes as they are typed
   });
   // A date left half-written or impossible (like 31/02) is marked, and «التالي» says how to write it
   app.addEventListener('focusout', function (e) {
@@ -1558,6 +1999,17 @@
       S[tk] = el.checked ? 1 : 0;
       saveDraft();
       if (tk === 'vm') keepScroll(render);   // shows / hides the two e-mail fields
+      else refreshAmendBox();
+    } else if (el.hasAttribute('data-readok')) {
+      // «قرأت العقد كاملًا»: one tick counts for every approval button on the page
+      readOk = el.checked;
+      Array.prototype.forEach.call(app.querySelectorAll('[data-readok]'), function (c) { c.checked = readOk; });
+      Array.prototype.forEach.call(app.querySelectorAll('.cm-readfirst'), function (g) {
+        g.classList.remove('cm-need');
+        g.classList.toggle('cm-read-ok', readOk);
+        var m = g.querySelector('.cm-readneed');
+        if (m) m.hidden = true;
+      });
     }
   });
   function updateTotal() {
@@ -1592,7 +2044,14 @@
       saveDraft(); keepScroll(render);
     } else if (el.hasAttribute('data-step-key')) {
       var sk = el.getAttribute('data-step-key');
-      S[sk] = Math.min(NUMS[sk][1], Math.max(NUMS[sk][0], S[sk] + parseInt(el.getAttribute('data-delta'), 10)));
+      var lo = sk === 'rh' || sk === 'th' ? HOUR_STEP : NUMS[sk][0];   // in hours, never below 12 (0 means days)
+      S[sk] = Math.min(NUMS[sk][1], Math.max(lo, S[sk] + parseInt(el.getAttribute('data-delta'), 10)));
+      saveDraft(); keepScroll(render);
+    } else if (el.hasAttribute('data-hunit')) {
+      var hk = el.getAttribute('data-hunit');
+      // to hours: as many hours as the days were (2 work days → 48); to days: back to the days kept
+      if (el.getAttribute('data-val') === '1') { if (!S[hk]) S[hk] = Math.min(NUMS[hk][1], Math.max(HOUR_STEP, (hk === 'rh' ? S.rv : S.tn) * 24)); }
+      else S[hk] = 0;
       saveDraft(); keepScroll(render);
     } else if (el.hasAttribute('data-vadd')) {
       S.vd.push({ d: '', l: '', p: S.vd.length ? S.vd[S.vd.length - 1].p : '', t: '' });
@@ -1608,11 +2067,12 @@
       go(el.getAttribute('data-go'));
     } else if (el.hasAttribute('data-act')) {
       var act = el.getAttribute('data-act');
+      if (needsRead(act)) { nudgeRead(el); return; }   // «قرأت العقد كاملًا» first
       if (act === 'pdf') doPdf(el);
       else if (act === 'send') doSend(el);
       else if (act === 'sendlink') doSendLink(el);
       else if (act === 'copy') doCopy();
-      else if (act === 'approve') doApprove();
+      else if (act === 'approve') { doApprove(); if (mode === 'received') sentDialog(); }
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
       else if (act === 'vsend') vSend(el);
       else if (act === 'vconfirm') vConfirm();
@@ -1644,18 +2104,50 @@
       for (var s = 1; s <= STEPS; s++) { step = s; var bad = validate(); if (bad) { render(); showError(bad); scrollToCard(); return; } }
       step = STEPS;
       S = normalize(S);
+      if (amend) {
+        // The amendment keeps what the changed version said, so before / after can always be shown
+        if (!changes(amend.base, S).length) { showError(t('amNone')); return; }
+        S.am = amend.base.am.concat([{ c: amend.code, w: amend.w.trim(), p: patchOf(amend.base, S) }]);
+        S = normalize(S);
+      }
       build().then(function () {
+        if ((current.url.split('#c=')[1] || '').length > 11500) { showError(t('tooLong')); return; }   // what the service's links can carry
         mode = 'result'; saveDraft(); render(); scrollToCard();
         history.replaceState(history.state, '', location.href.split('#')[0]);
       }).catch(function (e) { console.error(e); showError(t('fileFail')); });
     } else if (where === 'edit') {
       mode = 'wizard'; step = 1; render(); scrollToCard();
-    } else if (where === 'editnew') {
-      S.ver += 1; S.dt = today(); fromLink = false;
+    } else if (where === 'amend' || where === 'editnew') {
+      // A change to a contract that was sent: an amendment on the same contract, never a new one
+      if (S.am.length >= MAX_AM) { toast(t('amMax')); return; }
+      var role = confirmInfo && !confirmInfo.error ? confirmInfo.role : '';   // opened from your confirmation e-mail
+      var back = current.short && current.shortFor === current.code ? current.short.slice(current.short.indexOf('#')) : location.hash;
+      amend = { base: clone(S), code: current.code, w: '', back: mode === 'received' ? 'received' : 'result',
+                link: /^#(s=[A-Za-z0-9]{8}\.[A-Za-z0-9_-]{22}|c=[A-Za-z0-9_-]+)$/.test(back || '') ? back : '' };
+      S = clone(S);
+      if (role) S.ro = role;
+      S.ver = Math.min(999, S.ver + 1); S.dt = today(); fromLink = false;
+      confirmToken = ''; confirmInfo = null;   // a confirmation link belongs to the old version
       mode = 'wizard'; step = 1; saveDraft(); render(); scrollToCard();
-      history.replaceState(history.state, '', location.href.split('#')[0]);
+      try {
+        var q = new URLSearchParams(location.search);
+        q.delete('v');
+        history.replaceState(history.state, '', location.pathname + (q.toString() ? '?' + q : ''));
+      } catch (e) {}
+    } else if (where === 'amendcancel') {
+      // Back to the contract as it was, nothing changed
+      if (!amend) return;
+      var a = amend;
+      amend = null;
+      S = normalize(a.base); fromLink = a.back === 'received';
+      build().then(function () {
+        mode = a.back;
+        if (mode === 'received') clearDraft(); else saveDraft();
+        render(); scrollToCard();
+        if (a.link) try { history.replaceState(history.state, '', location.pathname + location.search + a.link); } catch (e) {}
+      }).catch(function (e) { console.error(e); S = clone(DEF); mode = 'bad'; render(); });
     } else if (where === 'restart') {
-      clearDraft(); S = clone(DEF); step = 1; mode = 'wizard'; fromLink = false;
+      clearDraft(); S = fresh(); step = 1; mode = 'wizard'; fromLink = false; amend = null;
       history.replaceState(history.state, '', location.href.split('#')[0]);
       render(); scrollToCard();
     }
@@ -1691,7 +2183,7 @@
         if (!/^[A-Za-z0-9_-]+$/.test(payload)) throw new Error('bad payload');
         return decodeState(payload);
       }).then(function (s) {
-        S = s; fromLink = true; mode = 'received';
+        S = s; fromLink = true; mode = 'received'; amend = null;
         return build();
       }).then(function () {
         if (sm) { current.short = shareBase() + '#s=' + sm[1] + '.' + sm[2]; current.shortFor = current.code; }
@@ -1712,9 +2204,10 @@
     var d = loadDraft();
     if (d) {
       S = normalize(d.s); step = Math.min(STEPS, Math.max(1, d.step || 1));
+      amend = amendFrom(d.am);   // an amendment in progress picks up where it stopped
       render(t('resumed'));
     } else {
-      S = clone(DEF);
+      S = fresh(); amend = null;
       render();
     }
   }
