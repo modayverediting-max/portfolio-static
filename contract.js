@@ -24,7 +24,7 @@
   // On this PC a test copy can be set with localStorage 'modayver-cm-api' and
   // 'modayver-cm-verify' = '1' (honoured on localhost only).
   var API = 'https://modayver-contracts.modayver-contracts.workers.dev';   // his Cloudflare account (2026-11-05)
-  var VERIFY = false;
+  var VERIFY = true;   // mail service live: Resend, domain verified 2026-11-05
   try {
     if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
       if (localStorage.getItem('modayver-cm-api')) API = localStorage.getItem('modayver-cm-api');
