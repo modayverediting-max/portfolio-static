@@ -32,9 +32,6 @@
     }
   } catch (e) {}
   var MAIL_RE = /^[^\s@<>()[\]\\,;:"']{1,64}@[A-Za-z0-9.-]{1,180}\.[A-Za-z]{2,24}$/;   // same rule as the service
-  // The browser draws date boxes in ITS own language. Forcing left-to-right on an Arabic browser
-  // shows the hint «يوم/شهر/سنة» with its letters reversed, so the box follows the browser.
-  var DATE_DIR = /^(ar|fa|he|ur)\b/i.test(navigator.language || '') ? 'rtl' : 'ltr';
   var STEPS = 6;
   var MAX_VIDEOS = 20;
 
@@ -167,6 +164,9 @@
     approveTitle: ['الموافقة على العقد', 'Approving the contract'],
     approveText: ['يرسل كل طرف هذه الرسالة عبر {ch}:', 'Each side sends this message on {ch}:'],
     copied: ['تم النسخ', 'Copied'],
+    datePh: ['يوم/شهر/سنة', 'dd/mm/yyyy'],
+    datePick: ['اختر التاريخ من التقويم', 'Pick the date from the calendar'],
+    dateBad: ['اكتب التاريخ كاملًا بهذا الشكل: يوم/شهر/سنة، مثل 01/12/2026، أو اختره من التقويم.', 'Write the full date as dd/mm/yyyy, e.g. 01/12/2026, or pick it from the calendar.'],
     copyFail: ['تعذّر النسخ، اضغط «نسخ الرابط» مرة أخرى.', 'Couldn’t copy. Press “Copy link” again.'],
     msgCopied: ['نُسخت الرسالة، أرسلها عبر {ch}', 'Message copied — send it on {ch}'],
     making: ['جارٍ تجهيز الملف…', 'Preparing the file…'],
@@ -822,6 +822,32 @@
   function input(key, ph, attrs) {
     return '<input class="cm-input" dir="auto" data-set="' + key + '" value="' + esc(S[key]) + '" placeholder="' + esc(ph || '') + '" maxlength="' + (LIMITS[key] || 100) + '"' + (attrs || '') + '>';
   }
+  // A date box that always shows Western digits (dd/mm/yyyy), whatever the browser's language.
+  // The button opens the browser's own calendar (a hidden date box); the contract keeps yyyy-mm-dd.
+  function dateBox(attrs, iso) {
+    return '<div class="cm-date">' +
+      '<input class="cm-input cm-date-text" type="text" dir="ltr" inputmode="numeric" autocomplete="off" maxlength="10" placeholder="' + esc(t('datePh')) + '" value="' + esc(iso ? fmtDate(iso) : '') + '" data-date ' + attrs + '>' +
+      '<button type="button" class="cm-date-btn" data-datepick aria-label="' + esc(t('datePick')) + '" title="' + esc(t('datePick')) + '">' + icon('cal') + '</button>' +
+      '<input class="cm-date-native" type="date" tabindex="-1" aria-hidden="true" value="' + esc(iso || '') + '">' +
+      '</div>';
+  }
+  function westDigits(x) {
+    return String(x || '').replace(/[٠-٩]/g, function (c) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(c); }).replace(/[۰-۹]/g, function (c) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(c); });
+  }
+  // «ddmmyyyy» → «yyyy-mm-dd» when it is a real date, else ''
+  function isoFromDMY(raw) {
+    var d = +raw.slice(0, 2), m = +raw.slice(2, 4), y = +raw.slice(4, 8);
+    if (raw.length !== 8 || y < 2000 || y > 2100 || m < 1 || m > 12 || d < 1 || d > new Date(y, m, 0).getDate()) return '';
+    return raw.slice(4, 8) + '-' + raw.slice(2, 4) + '-' + raw.slice(0, 2);
+  }
+  function dateDigits(el) { return westDigits(el.value).replace(/\D/g, '').slice(0, 8); }
+  function setDate(el, iso) {
+    var k = el.getAttribute('data-date-key'), vid = el.getAttribute('data-date-vid');
+    if (k) S[k] = iso;
+    else if (vid !== null && S.vd[+vid]) S.vd[+vid].t = iso;
+    var nat = el.parentNode.querySelector('.cm-date-native');
+    if (nat && nat.value !== iso) nat.value = iso;
+  }
   function field(label, inner, hint, opt) {
     return '<div class="cm-field"><label class="cm-label">' + label + (opt ? ' <small>(' + t('optional') + ')</small>' : '') + '</label>' + inner + (hint ? '<p class="cm-hint">' + hint + '</p>' : '') + '</div>';
   }
@@ -862,7 +888,7 @@
         '</div><p class="cm-each" id="cmEach">' + eachText() + '</p>' +
         field(t('kDesc'), input('kd', t('kDescPh')), '', true) +
         '<div class="cm-grid2">' + field(t('kLen'), input('kl', t('kLenPh')), '', true) + field(t('kSched'), input('ks', t('kSchedPh')), '', true) + '</div>' +
-        field(t('kLast'), '<input class="cm-input" type="date" dir="' + DATE_DIR + '" data-set="kt" value="' + esc(S.kt) + '">', '', true) +
+        field(t('kLast'), dateBox('data-date-key="kt"', S.kt), '', true) +
         '</div>';
       h += '<div class="cm-total"><span>' + L('سعر الباقة', 'Package price') + '</span><b id="cmTotal">' + esc(amount(total(S), S)) + '</b></div>';
     } else if (step === 3) {
@@ -876,7 +902,7 @@
           '<div class="cm-grid3">' +
           '<label class="cm-mini"><span>' + t('vLen') + '</span><input class="cm-input" dir="auto" data-vid="' + i + '" data-vf="l" value="' + esc(v.l) + '" placeholder="' + esc(t('vLenPh')) + '" maxlength="30"></label>' +
           '<label class="cm-mini"><span>' + t('vPrice') + '</span><input class="cm-input" dir="ltr" inputmode="decimal" data-vid="' + i + '" data-vf="p" value="' + esc(v.p) + '" placeholder="0" maxlength="14"></label>' +
-          '<label class="cm-mini"><span>' + t('vDate') + '</span><input class="cm-input" type="date" dir="' + DATE_DIR + '" data-vid="' + i + '" data-vf="t" value="' + esc(v.t) + '"></label>' +
+          '<label class="cm-mini"><span>' + t('vDate') + '</span>' + dateBox('data-date-vid="' + i + '"', v.t) + '</label>' +
           '</div></div>';
       });
       if (S.vd.length < MAX_VIDEOS) h += '<button type="button" class="cm-add" data-vadd="1">' + t('add') + '</button>';
@@ -943,6 +969,7 @@
   }
 
   function validate() {
+    if (app.querySelector('.cm-date-text[aria-invalid="true"]')) return t('dateBad');
     if (step === 1 && (!S.fn.trim() || !S.cn.trim())) return t('needNames');
     if (step === 3 && total(S) == null) return S.md === 'p' ? t('needPackage') : t('needPrice');
     if (step === 6 && S.vm) {
@@ -1170,7 +1197,8 @@
       down: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
       link: '<path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"/>',
       edit: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',
-      ok: '<path d="M20 6 9 17l-5-5"/>'
+      ok: '<path d="M20 6 9 17l-5-5"/>',
+      cal: '<rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/>'
     }[name];
     return '<svg class="cm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
   }
@@ -1498,7 +1526,30 @@
       S.vd[+el.getAttribute('data-vid')][el.getAttribute('data-vf')] = el.value;
       if (el.getAttribute('data-vf') === 'p') updateTotal();
       saveDraft();
+    } else if (el.hasAttribute('data-date')) {
+      // Typed date: Western digits only, the slashes come by themselves, a full real date is kept
+      var raw = dateDigits(el);
+      var shown = raw.length > 4 ? raw.slice(0, 2) + '/' + raw.slice(2, 4) + '/' + raw.slice(4) : raw.length > 2 ? raw.slice(0, 2) + '/' + raw.slice(2) : raw;
+      if (el.value !== shown) el.value = shown;
+      var iso = isoFromDMY(raw);
+      if (!raw || iso) el.removeAttribute('aria-invalid');
+      setDate(el, iso);
+      saveDraft();
+    } else if (el.classList.contains('cm-date-native')) {
+      // Picked from the calendar: shown in the box with Western digits
+      var box = el.parentNode.querySelector('.cm-date-text');
+      box.value = el.value ? fmtDate(el.value) : '';
+      box.removeAttribute('aria-invalid');
+      setDate(box, el.value);
+      saveDraft();
     }
+  });
+  // A date left half-written or impossible (like 31/02) is marked, and «التالي» says how to write it
+  app.addEventListener('focusout', function (e) {
+    var el = e.target;
+    if (!el.hasAttribute || !el.hasAttribute('data-date')) return;
+    var raw = dateDigits(el);
+    if (raw && !isoFromDMY(raw)) el.setAttribute('aria-invalid', 'true');
   });
   app.addEventListener('change', function (e) {
     var el = e.target;
@@ -1549,6 +1600,9 @@
     } else if (el.hasAttribute('data-vrm')) {
       S.vd.splice(+el.getAttribute('data-vrm'), 1);
       saveDraft(); keepScroll(render);
+    } else if (el.hasAttribute('data-datepick')) {
+      var nat = el.parentNode.querySelector('.cm-date-native');
+      try { nat.showPicker(); } catch (err) { nat.focus(); try { nat.click(); } catch (err2) {} }
     } else if (el.hasAttribute('data-go')) {
       e.preventDefault();
       go(el.getAttribute('data-go'));

@@ -81,14 +81,25 @@
 }
 .cm-input::placeholder, .cm-textarea::placeholder { color: #9DB0C9; }
 .cm-input:focus, .cm-textarea:focus { outline: none; border-color: #3D7EE0; box-shadow: 0 0 0 4px rgba(61,126,224,.15); }
-.cm-input[type="date"] { min-height: 48px; }
-/* The browser writes the date hint («يوم/شهر/سنة») in its own language, and Chrome / Edge
-   reverse the letters of Arabic hints unless each part keeps normal text direction */
-.cm-input[type="date"]::-webkit-datetime-edit,
-.cm-input[type="date"]::-webkit-datetime-edit-fields-wrapper { unicode-bidi: normal !important; }
-.cm-input[type="date"]::-webkit-datetime-edit-day-field,
-.cm-input[type="date"]::-webkit-datetime-edit-month-field,
-.cm-input[type="date"]::-webkit-datetime-edit-year-field { unicode-bidi: plaintext !important; }
+/* Date box: our own text box, so the digits are always Western (01/12/2026) whatever the
+   browser's language, and the browser's calendar opens from the button */
+.cm-date { position: relative; }
+.cm-date-text { font-variant-numeric: tabular-nums; letter-spacing: .3px; }
+html[dir="rtl"] .cm-date-text { text-align: right; padding-left: 54px; }
+html[dir="ltr"] .cm-date-text { text-align: left; padding-right: 54px; }
+.cm-date-text[aria-invalid="true"] { border-color: #E5484D; box-shadow: 0 0 0 4px rgba(229,72,77,.12); }
+.cm-date-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 42px; height: 42px; border: 0; border-radius: 12px; background: transparent; color: #3D7EE0; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+html[dir="rtl"] .cm-date-btn { left: 5px; }
+html[dir="ltr"] .cm-date-btn { right: 5px; }
+.cm-date-btn:hover, .cm-date-btn:focus-visible { background: #EEF4FD; outline: none; }
+.cm-date-btn .cm-ic { width: 21px; height: 21px; }
+.cm-date-native { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; border: 0; padding: 0; margin: 0; }
+/* On touch screens the tap lands on the hidden date box itself, which opens the phone's picker */
+@media (pointer: coarse) {
+  .cm-date-native { pointer-events: auto; width: 54px; }
+  html[dir="rtl"] .cm-date-native { right: auto; }
+  html[dir="ltr"] .cm-date-native { left: auto; }
+}
 .cm-textarea { min-height: 100px; resize: vertical; line-height: 1.8; }
 .cm-grid2 { display: grid; grid-template-columns: 1fr; gap: 0 12px; }
 @media (min-width: 560px) { .cm-grid2 { grid-template-columns: 1fr 1fr; } }
@@ -488,7 +499,9 @@
 [data-theme="dark"] .cm-textarea::placeholder { color: #6F86A8; }
 [data-theme="dark"] .cm-input:focus,
 [data-theme="dark"] .cm-textarea:focus { border-color: #80C2FF; box-shadow: 0 0 0 4px rgba(128,194,255,0.18); }
-[data-theme="dark"] .cm-input[type="date"] { color-scheme: dark; }
+[data-theme="dark"] .cm-date-native { color-scheme: dark; }
+[data-theme="dark"] .cm-date-btn { color: #80C2FF; }
+[data-theme="dark"] .cm-date-btn:hover, [data-theme="dark"] .cm-date-btn:focus-visible { background: rgba(128,194,255,0.12); }
 [data-theme="dark"] .cm-chip { color: #DCE8F8; background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.16); }
 [data-theme="dark"] .cm-chip:hover { border-color: #80C2FF; }
 [data-theme="dark"] .cm-chip[aria-pressed="true"] { color: #fff; background: linear-gradient(135deg, #3D7EE0, #1B4B95); border-color: transparent; box-shadow: 0 8px 18px -10px rgba(0,0,0,.7); }
