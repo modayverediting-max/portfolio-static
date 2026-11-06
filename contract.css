@@ -499,7 +499,7 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 .cm-qp .cm-am-go { margin: 0; margin-inline-start: auto; }
 .cm-qp-part { margin-top: 8px; }
 .cm-qp-part + .cm-qp-part { padding-top: 8px; border-top: 1px dashed var(--p-line); }
-.cm-qp-part > span { display: block; font-size: 13px; font-weight: 700; line-height: 1.7; color: var(--p-soft); }
+.cm-qp-part > span { display: block; font-size: 14px; font-weight: 700; line-height: 1.7; color: var(--p-ink); }
 .cm-qp-part p { margin: 2px 0 0; font-size: 14.5px; line-height: 1.85; overflow-wrap: anywhere; }
 .cm-qp-part small { display: block; margin-top: 4px; font-size: 12.5px; line-height: 1.75; color: var(--p-soft); }
 .cm-qp-part small .cm-v { color: inherit; font-weight: 500; }
