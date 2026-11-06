@@ -1147,9 +1147,9 @@
   // on a contract you made looked like the button was missing)
   function askable() { return mode === 'received' || mode === 'result'; }
   function qaOpen(s) { return (s || S).qa.some(function (r) { return !r.a; }); }
-  // After both sides confirmed by e-mail, a question or an answer can no longer be changed or
+  // Once either side confirmed by e-mail, a question or an answer can no longer be changed or
   // cancelled (his rule). Without e-mail the site can't know: a change is a new version to approve again.
-  function qaLocked() { return !!(S && S.vm && current.vs && current.vs.state === 'locked'); }
+  function qaLocked() { return !!(S && S.vm && pinned()); }
   // What a version did to the questions: 'ask' (a question added or changed), 'answer' (an answer
   // added or changed), 'cancel' (a question cancelled) or ''
   function qaKindOf(from, to) {

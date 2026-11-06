@@ -710,6 +710,7 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 [data-theme="dark"] .cm-approve { background: rgba(14,33,66,0.8); box-shadow: 0 16px 40px -26px rgba(0,0,0,.7); }
 [data-theme="dark"] .cm-approve h3 { color: #fff; }
 [data-theme="dark"] .cm-approve p { color: #A9BBD6; }
+[data-theme="dark"] .cm-approve p b { color: #fff; }
 [data-theme="dark"] .cm-approve q { background: rgba(128,194,255,0.12); color: #CFE3FF; }
 [data-theme="dark"] .cm-sendnote { background: rgba(128,194,255,0.12); color: #DCEBFF; }
 [data-theme="dark"] .cm-verify > p,
