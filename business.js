@@ -151,7 +151,7 @@
       if (count === 0) {
         vids.className = 'biz-week-none';
         vids.setAttribute('data-i18n', 'biz.week_none');
-        vids.textContent = 'ما نزل شي';
+        vids.textContent = 'ولا فيديو';
       } else {
         vids.className = 'biz-week-vids';
         for (var i = 0; i < count; i++) {
