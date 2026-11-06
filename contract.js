@@ -290,14 +290,11 @@
     qaCancel: ['تراجع', 'Back'],
     qaDelBtn: ['إلغاء السؤال', 'Cancel the question'],
     qaDelLabel: ['إلغاء هذا السؤال؟', 'Cancel this question?'],
-    qaDelNote: ['يُحذف السؤال من تحت السطر، ويبقى ذكره في «سجل التعديلات». ويمكن الإلغاء ما دام لم يُجب عنه الطرف الآخر.', 'The question is removed from under the line, and “Amendments” keeps a note of it. It can be cancelled as long as the other side hasn’t answered.'],
+    qaDelNote: ['يُحذف السؤال من العقد كأنه لم يُكتب، فلا يظهر في «سجل التعديلات» ولا يراه الطرف الآخر. ويمكن الإلغاء ما دام لم يُجب عنه.', 'The question is removed as if it was never written: it won’t show in “Amendments” and the other side won’t see it. It can be cancelled as long as it has no answer.'],
     qaDelYes: ['نعم، ألغِ السؤال', 'Yes, cancel the question'],
     qaCanceled: ['أُلغي السؤال', 'Question cancelled'],
     qaCanceledT: ['أُلغي سؤالك', 'Your question is cancelled'],
-    qaCanceledSub: ['حُذف السؤال من العقد، ويبقى ذكره في «سجل التعديلات». وإن كنت أرسلته للطرف الآخر، فأرسل له هذا الرابط الجديد.', 'The question is gone from the contract, and “Amendments” keeps a note of it. If you had sent it to the other side, send them this new link.'],
-    qaCanceledR: ['أُلغي سؤال في العقد', 'A question in the contract was cancelled'],
-    qaCanceledRSub: ['ألغى الطرف الآخر سؤاله، وتجد ذلك في «سجل التعديلات». وإن كان كل شيء واضحًا، فوافق على العقد.', 'The other side cancelled their question; it’s noted in “Amendments”. If everything is clear, approve the contract.'],
-    qaMsgCancel: ['مرحبًا، ألغيت سؤالي في عقد المونتاج بيننا، وهذه النسخة الجديدة:\n{link}', 'Hi, I cancelled my question in our editing contract. Here is the new version:\n{link}'],
+    qaCanceledSub: ['رجع العقد كما كان قبل السؤال، ولا أثر للسؤال فيه. وإن كنت أرسلت الرابط السابق للطرف الآخر، فأرسل له رابط هذا العقد.', 'The contract is back as it was before the question, with no trace of it. If you had sent the earlier link to the other side, send them this contract’s link.'],
     qaTagCancel: ['إلغاء سؤال', 'Question cancelled'],
     qaEmptyEdit: ['اكتب السؤال، أو ألغِه بزر «إلغاء السؤال».', 'Write the question, or cancel it with “Cancel the question”.'],
     qaMineSub: ['كتبت هذا السؤال من هذا الجهاز، ويمكنك تعديله بزر «تعديل» بجانبه. وعندما يفتح الطرف الآخر الرابط من جهازه، يظهر له زر «أجب».', 'You wrote this question on this device, and you can change it with “Edit” beside it. When the other side opens the link on their device, they get the “Answer” button.'],
@@ -1138,8 +1135,8 @@
     return kind;
   }
   function lastQaKind() {
-    var h = current.hist && current.hist[0];
-    return h ? qaKindOf(h.from, h.to) : '';
+    var h = current.hist && current.hist[0], kind = h ? qaKindOf(h.from, h.to) : '';
+    return kind === 'cancel' ? '' : kind;   // a cancel leaves no version now; only a few old ones have it
   }
   // The questions picked by «pick», each with its answer (or who it waits for) and a line saying
   // it is written into this contract, with the versions. On the page, each side can edit its own text.
@@ -1177,6 +1174,48 @@
       try { history.replaceState(history.state, '', location.pathname); } catch (e) {}
     });
   }
+  // Cancelling takes a question out as if it had never been asked (his rule: the other side must
+  // not see a cancelled question, not even in the log). Every step that only asked or edited it
+  // goes, and any later step is chained again on what remains, so the history stays whole.
+  function dropQuestion(k) {
+    var vs = versions(S), strip = function (v) { var c = clone(v); c.qa = c.qa.filter(function (r) { return r.k !== k; }); return c; };
+    var kept = strip(vs[0]), map = {}, chain = Promise.resolve();
+    map[vs[0].ver] = kept.ver;
+    vs.slice(1).forEach(function (v, i) {
+      chain = chain.then(function () {
+        var next = strip(v);
+        if (!changes(kept, next).length) { map[v.ver] = kept.ver; return; }   // this step only touched that question
+        return codeOf(kept).then(function (code) {
+          next.ver = kept.ver + 1;
+          map[v.ver] = next.ver;
+          next.qa.forEach(function (r) { if (map[r.qv]) r.qv = map[r.qv]; if (map[r.av]) r.av = map[r.av]; });
+          next.am = kept.am.concat([{ c: code, w: S.am[i].w, p: patchOf(kept, next) }]);
+          kept = normalize(next);
+        });
+      });
+    });
+    return chain.then(function () { return kept; });
+  }
+  function cancelQuestion(k) {
+    var me = viewerRole();
+    return dropQuestion(k).then(function (s) {
+      S = normalize(s);
+      amend = null; confirmToken = ''; confirmInfo = null; qaJust = 'cancel';
+      var mine = S.ro === me;   // back to a version this side made, or to the one it received
+      fromLink = !mine;
+      return build().then(function () {
+        mode = mine ? 'result' : 'received';
+        if (mine) { rememberMine(); saveDraft(); } else clearDraft();
+        render(); scrollToCard();
+        var code = current.code;
+        try { history.replaceState(history.state, '', location.pathname + (mine ? '' : current.url.slice(current.url.indexOf('#')))); } catch (e) {}
+        if (!mine) shortLink().then(function (l) {
+          if (!l || mode !== 'received' || current.code !== code) return;
+          try { history.replaceState(history.state, '', location.pathname + l.slice(l.indexOf('#'))); } catch (e) {}
+        });
+      });
+    });
+  }
   // kind: 'q' a new question · 'a' the answer · 'eq' edit the question · 'ea' edit the answer
   // · 'cq' cancel the question (asks first)
   function openAsk(li, kind, idx) {
@@ -1211,11 +1250,10 @@
     var box = btn.closest('.cm-ask'), ta = box && box.querySelector('textarea'), text = ta ? ta.value.replace(/\s+/g, ' ').trim() : '';
     var what = btn.getAttribute('data-ask-send').split(':'), kind = what[0], me = viewerRole(), day = today();
     if (kind === 'cq') {
-      // Cancelled: gone from under its line, kept as a note in the history
       var ci = +what[1];
       if (!S.qa[ci] || S.qa[ci].a || qaLocked()) return;
       busy(btn, true, t('qaSaving'));
-      qaVersion(function (n) { n.ro = me; n.qa.splice(ci, 1); }, 'cancel');
+      cancelQuestion(S.qa[ci].k).catch(function (e) { console.error(e); busy(btn, false); toast(t('fileFail')); });
       return;
     }
     if (!text) { if (ta) ta.focus(); toast(t(kind === 'eq' ? 'qaEmptyEdit' : 'qaEmpty')); return; }
@@ -1723,11 +1761,10 @@
     var qk = received ? lastQaKind() : (qaJust || lastQaKind());
     var forMe = received && S.qa.some(canAnswer);
     var mine = received && !!mineRole(current.code);   // your own version, opened again from its link
-    if ((!received || mine) && qk === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : 'qaAskedSub'); }
+    if (qaJust === 'cancel') { qk = 'cancel'; title = t('qaCanceledT'); sub = t('qaCanceledSub'); }   // only right here: it leaves no trace
+    else if ((!received || mine) && qk === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : 'qaAskedSub'); }
     else if ((!received || mine) && qk === 'answer') { title = t('qaAnsweredT'); sub = t('qaAnsweredSub'); }
-    else if ((!received || mine) && qk === 'cancel') { title = t('qaCanceledT'); sub = t('qaCanceledSub'); }
     else if (forMe) { title = t('qaGotQT'); sub = t('qaGotQSub'); }
-    else if (received && qk === 'cancel') { title = t('qaCanceledR'); sub = t('qaCanceledRSub'); }
     else if (received && qk === 'answer') { title = t('qaGotAT'); sub = t('qaGotASub'); }
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
@@ -2273,7 +2310,7 @@
   }
   function sendLink(link, other) {
     var qk = qaKindHere();
-    var msg = qk === 'ask' ? t('qaMsgAsk', { link: link }) : qk === 'answer' ? t('qaMsgAns', { link: link }) : qk === 'cancel' ? t('qaMsgCancel', { link: link })
+    var msg = qk === 'ask' ? t('qaMsgAsk', { link: link }) : qk === 'answer' ? t('qaMsgAns', { link: link })
       : t(verifying() ? 'shortMsgMail' : 'shortMsg', { link: link, ok: approvalText(S, current.code) });
     if (isPhone() && navigator.share) {
       navigator.share({ text: msg }).catch(function (e) { if (e && e.name === 'NotAllowedError') openChat(msg, other); });
@@ -2285,7 +2322,10 @@
   }
   // This page just asked or answered something (the message then says so, and goes as a link:
   // the other side answers on the page, not in a file)
-  function qaKindHere() { return mode === 'result' ? (qaJust || lastQaKind()) : ''; }
+  function qaKindHere() {
+    var k = mode === 'result' ? (qaJust || lastQaKind()) : '';
+    return k === 'cancel' ? '' : k;   // after a cancel the contract goes out the usual way
+  }
   function sendFile(btn, other) {
     if (S.ch === 'ig' || qaKindHere()) {   // Instagram can't carry a file; a question / answer needs the page: a link goes
       (API ? shortLink() : Promise.resolve('')).then(function (l) { if (l) sendLink(l, other); else openChat(linkMessage(), other); });
