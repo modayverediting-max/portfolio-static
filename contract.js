@@ -1074,9 +1074,9 @@
     return mode === 'received' ? (S.ro === 'c' ? 'f' : 'c') : S.ro;
   }
   function canAnswer(r) { return (mode === 'received' || mode === 'result') && !r.a && viewerRole() !== r.by; }
-  // Asking belongs to a contract that reached someone: a received one, or your own version after a
-  // question or an amendment. A contract you have just made has nobody to ask yet.
-  function askable() { return mode === 'received' || (mode === 'result' && S.am.length > 0); }
+  // «اسأل» shows on every contract on the page, received or your own (his ask 2026-11-06: hiding it
+  // on a contract you made looked like the button was missing)
+  function askable() { return mode === 'received' || mode === 'result'; }
   function qaOpen(s) { return (s || S).qa.some(function (r) { return !r.a; }); }
   // The newest version only asked or answered something: 'ask' | 'answer' | ''
   function lastQaKind() {
