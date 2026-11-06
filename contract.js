@@ -211,6 +211,9 @@
     vIntro: ['عند الضغط على الزر تصل لكل طرف رسالة على بريده ليؤكد موافقته، ولا يُوثَّق العقد إلا بعد تأكيد الطرفين.', 'Press the button and each side gets an e-mail to confirm. The contract is confirmed only once both have.'],
     vSend: ['أوافق — أرسل رسائل التأكيد', 'I agree — send the confirmation e-mails'],
     vResend: ['أعد إرسال رسائل التأكيد', 'Send the e-mails again'],
+    vAgreeBtn: ['أوافق على العقد', 'I agree to the contract'],
+    vMineHow: ['موافقتك تكون من بريدك، حتى لا يوافق أحد غيرك باسمك. اضغط «أوافق على العقد» لتصلك رسالة، ثم افتحها واضغط «اقرأ العقد وأكّد موافقتك».', 'You approve from your e-mail, so nobody else can approve in your name. Press “I agree to the contract” to get an e-mail, then open it and press “Read and confirm”.'],
+    vSentMe: ['أُرسلت الرسالة إلى بريدك، وتصل خلال دقائق. افتحها واضغط «اقرأ العقد وأكّد موافقتك». وإن لم تجدها فابحث في الرسائل غير المرغوب فيها.', 'Sent to your e-mail; it arrives within minutes. Open it and press “Read and confirm”. If you can’t find it, check the spam folder.'],
     vSending: ['جارٍ الإرسال…', 'Sending…'],
     vSent: ['أُرسلت الرسائل، وتصل خلال دقيقة. وإن لم تجدها فابحث في الرسائل غير المرغوب فيها.', 'Sent — they arrive within a minute. If not, check the spam folder.'],
     vWait: ['أُرسلت رسائل قبل قليل. انتظر بضع دقائق ثم حاول مرة أخرى.', 'E-mails were just sent. Wait a few minutes and try again.'],
@@ -2056,9 +2059,16 @@
     if (confirmToken && confirmInfo && confirmInfo.error) h += '<p class="cm-vmsg">' + (confirmInfo.error === 'other_contract' ? t('vOther') : confirmInfo.error === 'bad_token' ? t('vBadLink') : t('vError')) + '</p>';
     // Every «أوافق / أؤكد» of a received contract comes after the red «read it all» note
     if (canConfirm()) h += readGateHTML() + '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
+    else if (waitsForMe()) h += '<p>' + t('vMineHow') + '</p><button type="button" class="cm-btn cm-btn-primary" data-act="vsend">' + icon('ok') + t('vAgreeBtn') + '</button>';
     else if (vs.state !== 'locked') h += (vs.state === 'none' && mode === 'received' ? readGateHTML() : '') + '<button type="button" class="cm-btn ' + (vs.state === 'none' && !qaOpen() ? 'cm-btn-primary' : 'cm-btn-soft') + '" data-act="vsend">' + (vs.state === 'none' ? t('vSend') : t('vResend')) + '</button>';
     if (vNote) h += '<p class="cm-vmsg">' + vNote + '</p>';
     return h;
+  }
+
+  // This side still has to confirm and has no confirmation link open here: its approval is in its e-mail
+  function waitsForMe() {
+    var vs = current.vs, me = viewerRole();
+    return !!(vs && !vs.error && vs.state !== 'none' && vs.state !== 'locked' && !confirmToken && !(vs[me] && vs[me].confirmed_at));
   }
 
   // At the end of the contract, for whoever reads to the bottom before confirming
@@ -2141,6 +2151,7 @@
     if (!verifying()) return;
     if (btn) { btn.disabled = true; btn.innerHTML = '<span class="cm-spin"></span>' + t('vSending'); }
     vNote = '';
+    var forMe = waitsForMe();
     var last = S.am.length ? S.am[S.am.length - 1] : null;   // an amendment: the mails say so, with the code it changes
     api('/request', {
       hash: current.hash, code: current.code, ver: S.ver, lang: isEn() ? 'en' : 'ar', link: current.url, total: amount(total(S), S),
@@ -2148,7 +2159,7 @@
       prev: last && last.c ? last.c : undefined, n: last ? S.am.length : undefined
     }).then(function (st) {
       current.vs = st;
-      vNote = st.state === 'locked' ? '' : t('vSent');
+      vNote = st.state === 'locked' ? '' : t(forMe ? 'vSentMe' : 'vSent');
     }, function (e) {
       vNote = e.code === 'wait' || e.code === 'limit' ? t('vWait') : e.code === 'bad_email' || e.code === 'same_email' ? t('vBadMail') : t('vError');
     }).then(updateVerify);
