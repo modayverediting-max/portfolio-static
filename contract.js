@@ -316,11 +316,17 @@
     qaOther: ['أسئلة عن نص تغيّر مكانه', 'Questions about text that moved'],
     qaAbout: ['عن {k}: «{x}»', 'About {k}: “{x}”'],
     qaAskedT: ['تم توثيق سؤالك في العقد', 'Your question is written into the contract'],
-    qaAskedSub: ['أرسل الرابط الآن للطرف الآخر ليجيب عنه تحت السطر نفسه. والسؤال والجواب يبقيان مكتوبين في العقد.', 'Now send the link to the other side to answer it under the same line. The question and the answer both stay written in the contract.'],
+    qaAskedSub: ['لن يعرف {who} بسؤالك حتى ترسله له. اضغط «أرسل السؤال إلى {who}» ليصله الرابط، فيفتحه ويجيب تحت السطر نفسه.', 'The {who} won’t know about your question until you send it. Press “Send the question to the {who}” so they get the link, open it and answer under the same line.'],
+    qaAskedSubMail: ['لن يعرف {who} بسؤالك حتى ترسله له. اضغط «أرسل السؤال إلى {who}» لتصله رسالة على بريده فيها الرابط، فيفتحه ويجيب تحت السطر نفسه.', 'The {who} won’t know about your question until you send it. Press “Send the question to the {who}” so they get an e-mail with the link, open it and answer under the same line.'],
+    qaTellQ: ['أرسل السؤال إلى {who}', 'Send the question to the {who}'],
+    qaTellA: ['أرسل الجواب إلى {who}', 'Send the answer to the {who}'],
+    qaGoBtn: ['أجب عن السؤال', 'Answer the question'],
+    qaMailedQ: ['وصلت إلى {who} رسالة على بريده بهذا السؤال.', 'The {who} got an e-mail about this question.'],
+    qaMailedA: ['وصلت إلى {who} رسالة على بريده بهذا الجواب.', 'The {who} got an e-mail about this answer.'],
     qaAnsweredT: ['تم توثيق السؤال والجواب في العقد', 'The question and the answer are written into the contract'],
-    qaAnsweredSub: ['أرسل الرابط الآن للطرف الآخر. وإن كان كل شيء واضحًا، فيمكنكما الموافقة على هذه النسخة.', 'Now send the link to the other side. If everything is clear, you can both approve this version.'],
+    qaAnsweredSub: ['لن يعرف {who} بجوابك حتى ترسله له. اضغط «أرسل الجواب إلى {who}». وإن كان كل شيء واضحًا، فيمكنكما الموافقة على هذه النسخة.', 'The {who} won’t see your answer until you send it: press “Send the answer to the {who}”. If everything is clear, you can both approve this version.'],
     qaGotQT: ['وصلك سؤال عن العقد', 'You received a question about the contract'],
-    qaGotQSub: ['تجد السؤال تحت السطر الذي يخصه. اضغط «أجب» واكتب جوابك، فيُوثَّق في العقد نفسه، ثم أرسله للطرف الآخر.', 'You’ll find it under its line. Press “Answer” and write yours: it is written into the contract itself; then send it back.'],
+    qaGotQSub: ['اضغط «أجب عن السؤال» لتصل إليه تحت السطر الذي يخصه، واكتب جوابك، فيُوثَّق في العقد نفسه، ثم أرسله للطرف الآخر.', 'Press “Answer the question” to reach it under its line and write your answer: it is written into the contract itself; then send it back.'],
     qaGotAT: ['وصلك جواب عن سؤالك', 'Your question was answered'],
     qaGotASub: ['تجد الجواب تحت السطر نفسه، وتم توثيق السؤال والجواب في العقد. وإن كان كل شيء واضحًا، فوافق على العقد.', 'It’s under the same line; the question and the answer are written into the contract. If everything is clear, approve the contract.'],
     qaBlock: ['في العقد سؤال بانتظار جوابه. بعد الجواب يمكن الموافقة على العقد.', 'A question in the contract is waiting for its answer. Approve once it’s answered.'],
@@ -1149,14 +1155,18 @@
       var editBtn = function (kind) { return '<button type="button" class="cm-link cm-qa-edit" data-qa-edit="' + kind + ':' + idx + '">' + t('qaEditBtn') + '</button>'; };
       // the asker may cancel the question for as long as it has no answer
       var delBtn = !r.a ? '<button type="button" class="cm-link cm-qa-edit cm-qa-del" data-qa-edit="cq:' + idx + '">' + t('qaDelBtn') + '</button>' : '';
+      // what was written here reaches the other side only when it's sent: the button is right under it
+      var tellBtn = function (key, who) { return ' <button type="button" class="cm-btn cm-btn-primary cm-qa-btn" data-tell data-act="' + (API ? 'sendlink' : 'send') + '">' + icon('send') + t(key, { who: who }) + '</button>'; };
       var h = '<div class="cm-qa">' + (withText && r.x ? '<p class="cm-qa-x">' + t('qaAbout', { k: esc(clauseName(r.k)), x: esc(r.x) }) + '</p>' : '') +
         '<div class="cm-qa-q"><b>' + t('qaQ', { who: asker }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.d)) + '</bdi></small>' + (live && viewerRole() === r.by ? editBtn('eq') + delBtn : '') + '<p>' + V(r.q) + '</p></div>';
       if (r.a) {
         h += '<div class="cm-qa-a"><b>' + t('qaA', { who: other }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.e)) + '</bdi></small>' + (live && viewerRole() !== r.by ? editBtn('ea') : '') + '<p>' + V(r.a) + '</p></div>' +
-          '<p class="cm-qa-doc">' + icon('ok') + '<span>' + t('qaDocBoth', { q: r.qv || '—', a: r.av || '—' }) + '</span></p>';
+          '<p class="cm-qa-doc">' + icon('ok') + '<span>' + t('qaDocBoth', { q: r.qv || '—', a: r.av || '—' }) + '</span>' +
+          (live && !pinned() && r.av === s.ver && viewerRole() !== r.by ? tellBtn('qaTellA', asker) : '') + '</p>';
       } else {
         h += '<p class="cm-qa-doc cm-qa-open">' + icon('ok') + '<span>' + t('qaDocQ', { q: r.qv || '—', who: other }) + '</span>' +
-          (!forFile && canAnswer(r) ? ' <button type="button" class="cm-btn cm-btn-primary cm-qa-btn" data-qa-ans="' + idx + '">' + t('qaAnswerBtn') + '</button>' : '') + '</p>';
+          (!forFile && canAnswer(r) ? ' <button type="button" class="cm-btn cm-btn-primary cm-qa-btn" data-qa-ans="' + idx + '">' + t('qaAnswerBtn') + '</button>' : '') +
+          (live && !pinned() && viewerRole() === r.by ? tellBtn('qaTellQ', other) : '') + '</p>';
       }
       return h + '</div>';
     }).join('');
@@ -1795,8 +1805,18 @@
   function renderResult() {
     var received = mode === 'received', verify = verifying(), am = S.am.length > 0;
     var linkInBar = !!(API && !received);   // with «أرسل رابطًا» in the row, «نسخ الرابط» moves to the bar under it
+    // A question or an answer just added here, or received: say so first
+    var qk = received ? lastQaKind() : (qaJust || lastQaKind());
+    var forMe = received && S.qa.some(canAnswer);
+    var mine = received && !!mineRole(current.code);   // your own version, opened again from its link
+    // What was written here reaches the other side only when it's sent, so that's the first
+    // button (a link: the other side answers on the page, not in a file)
+    var tell = (!received || mine) && !pinned() && (qk === 'ask' || qk === 'answer') ? qk : '';
+    var who = viewerRole() === 'f' ? t('cl') : t('fl');
     var actions =
-      (!received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>' +
+      (tell ? '<button type="button" class="cm-btn cm-btn-primary' + (linkInBar ? ' cm-btn-wide' : '') + '" data-tell data-act="' + (API ? 'sendlink' : 'send') + '">' + icon('send') + t(tell === 'ask' ? 'qaTellQ' : 'qaTellA', { who: who }) + '</button>'
+        : forMe ? '<button type="button" class="cm-btn cm-btn-primary" data-act="goq">' + icon('ask') + t('qaGoBtn') + '</button>'
+        : !received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>' +
           (API ? '<button type="button" class="cm-btn cm-btn-soft" data-act="sendlink">' + icon('link') + t('sendLink') + '</button>' : '')
         : verify ? ''   // the e-mail box at the top takes the approval
         : '<button type="button" class="cm-btn cm-btn-primary" data-act="approve">' + t('agree') + '</button>') +
@@ -1805,23 +1825,22 @@
       editBtnHTML();
     var title = received ? t(am ? 'amReceived' : 'received') : t(amend ? 'amReady' : 'ready');
     var sub = received ? (am ? t('amReceivedSub', { v: S.ver }) : t(verify ? 'receivedSubMail' : 'receivedSub')) : t(amend ? 'amReadySub' : 'readySub');
-    // A question or an answer just added here, or received: say so first
-    var qk = received ? lastQaKind() : (qaJust || lastQaKind());
-    var forMe = received && S.qa.some(canAnswer);
-    var mine = received && !!mineRole(current.code);   // your own version, opened again from its link
     if (qaJust === 'cancel') { qk = 'cancel'; title = t('qaCanceledT'); sub = t('qaCanceledSub'); }   // only right here: it leaves no trace
-    else if ((!received || mine) && qk === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : 'qaAskedSub'); }
-    else if ((!received || mine) && qk === 'answer') { title = t('qaAnsweredT'); sub = t('qaAnsweredSub'); }
+    else if (tell === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : verify ? 'qaAskedSubMail' : 'qaAskedSub', { who: who }); }
+    else if (tell === 'answer') { title = t('qaAnsweredT'); sub = t('qaAnsweredSub', { who: who }); }
     else if (forMe) { title = t('qaGotQT'); sub = t('qaGotQSub'); }
-    else if (received && qk === 'answer') { title = t('qaGotAT'); sub = t('qaGotASub'); }
+    var gotAnswer = received && qk === 'answer' && !lockedAt();
+    if (gotAnswer && !tell && !forMe && qaJust !== 'cancel') { title = t('qaGotAT'); sub = t('qaGotASub'); }
+    var row = '<div class="cm-actions">' + actions + '</div><p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>';
+    var next = !!(tell || forMe);   // sending the question, or answering it, comes right under the heading
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
-      '<div class="cm-ready"><span class="cm-ok">' + icon(qk || forMe ? 'ask' : am ? 'edit' : 'ok') + '</span><h2>' + title + '</h2><p>' + sub + '</p></div>' +
+      '<div class="cm-ready"' + (gotAnswer ? ' data-got' : '') + '><span class="cm-ok">' + icon(qk || forMe ? 'ask' : am ? 'edit' : 'ok') + '</span><h2>' + title + '</h2><p>' + sub + '</p></div>' +
+      (next ? row : '') +
       // The e-mail box comes first, so each side sees where the other one stands before the contract
       (verify ? '<div class="cm-approve cm-verify cm-verify-first' + (confirmToken ? ' cm-verify-mine' : '') + '" id="cmVerify">' + verifyHTML() + '</div>' : '') +
       (received && !verify ? readGateHTML('cmReadTop') : '') +
-      '<div class="cm-actions">' + actions + '</div>' +
-      '<p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>' +
+      (next ? '' : row) +
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
       '<span class="cm-toolbar-end">' + (linkInBar ? '<button type="button" class="cm-link" data-act="copy">' + t('copy') + '</button>' : '') +
       '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></span></div>' +
@@ -1941,6 +1960,8 @@
     if (meta && !meta.querySelector('.cm-p-ok')) meta.insertAdjacentHTML('beforeend', stampHTML());
     // Both sides confirmed: the questions and answers can't be changed or cancelled any more
     if (qaLocked()) Array.prototype.forEach.call(app.querySelectorAll('#cmPaper .cm-qa-edit'), function (b) { b.remove(); });
+    // Already confirmed: nothing left to send over or to agree to, the usual page comes back
+    if ((pinned() && app.querySelector('[data-tell]')) || (lockedAt() && app.querySelector('[data-got]'))) { keepScroll(render); return; }
     // Someone confirmed your contract: from now on a change is an amendment, kept on record
     var eb = document.getElementById('cmEditBtn');
     if (eb && mode === 'result' && !amend && pinned() && eb.getAttribute('data-go') !== 'amend') {
@@ -1972,7 +1993,7 @@
     if (confirmToken && confirmInfo && confirmInfo.error) h += '<p class="cm-vmsg">' + (confirmInfo.error === 'other_contract' ? t('vOther') : confirmInfo.error === 'bad_token' ? t('vBadLink') : t('vError')) + '</p>';
     // Every «أوافق / أؤكد» of a received contract comes after the red «read it all» note
     if (canConfirm()) h += readGateHTML() + '<button type="button" class="cm-btn cm-btn-primary" data-act="vconfirm">' + icon('ok') + t('vMeBtn') + '</button>';
-    else if (vs.state !== 'locked') h += (vs.state === 'none' && mode === 'received' ? readGateHTML() : '') + '<button type="button" class="cm-btn ' + (vs.state === 'none' ? 'cm-btn-primary' : 'cm-btn-soft') + '" data-act="vsend">' + (vs.state === 'none' ? t('vSend') : t('vResend')) + '</button>';
+    else if (vs.state !== 'locked') h += (vs.state === 'none' && mode === 'received' ? readGateHTML() : '') + '<button type="button" class="cm-btn ' + (vs.state === 'none' && !qaOpen() ? 'cm-btn-primary' : 'cm-btn-soft') + '" data-act="vsend">' + (vs.state === 'none' ? t('vSend') : t('vResend')) + '</button>';
     if (vNote) h += '<p class="cm-vmsg">' + vNote + '</p>';
     return h;
   }
@@ -2337,15 +2358,36 @@
   // downloads and the chat opens with the lines ready, to attach it by hand.
   function doSend(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
-    // With e-mail confirmation on, sending the contract also sends the confirmation e-mails (once),
-    // but not while a question waits for its answer (confirming comes after the answers)
-    if (verifying() && !qaOpen() && (!current.vs || current.vs.state === 'none')) vSend(null);
+    mailAlong();
     sendFile(btn, other);
+  }
+  // With e-mail confirmation on, sending also reaches the other side's inbox: the confirmation
+  // e-mails (once), but not while a question waits for its answer (confirming comes after the
+  // answers); then a question or an answer goes as a note of its own. Nothing goes before this
+  // press: until then the asker can still change or cancel the question.
+  function mailAlong() {
+    if (!verifying()) return;
+    if (!qaOpen() && (!current.vs || current.vs.state === 'none')) vSend(null);
+    else if (qaKindHere()) tellByMail(qaKindHere());
+  }
+  function tellByMail(kind) {
+    var code = current.code, by = viewerRole(), who = by === 'f' ? t('cl') : t('fl');
+    if (current.told === code) return;   // once per version on this page
+    current.told = code;
+    shortLink().then(function (link) {
+      if (!link) throw new Error('no link');
+      return api('/note', { hash: current.hash, code: code, ver: S.ver, lang: isEn() ? 'en' : 'ar', link: link, kind: kind, by: by, f: { name: S.fn, email: S.fm }, c: { name: S.cn, email: S.cm } });
+    }).then(function () {
+      toast(t(kind === 'ask' ? 'qaMailedQ' : 'qaMailedA', { who: who }));
+    }, function (e) {
+      console.error(e);   // the link still goes through the chat; another press tries the mail again
+      if (!e || e.code !== 'limit') current.told = '';
+    });
   }
   // «أرسل رابطًا» (with the service): three short lines with a one-line link to the contract
   function doSendLink(btn) {
     var other = S.ro === 'c' ? 'f' : 'c';
-    if (verifying() && !qaOpen() && (!current.vs || current.vs.state === 'none')) vSend(null);
+    mailAlong();
     var ready = current.short && current.shortFor === current.code ? current.short : '';
     if (ready) { sendLink(ready, other); return; }
     busy(btn, true, t('linkMaking'));
@@ -2380,8 +2422,8 @@
   // This page just asked or answered something (the message then says so, and goes as a link:
   // the other side answers on the page, not in a file)
   function qaKindHere() {
-    var k = mode === 'result' ? (qaJust || lastQaKind()) : '';
-    return k === 'cancel' ? '' : k;   // after a cancel the contract goes out the usual way
+    var k = mode === 'result' || (mode === 'received' && mineRole(current.code)) ? (qaJust || lastQaKind()) : '';
+    return k === 'cancel' || pinned() ? '' : k;   // after a cancel the contract goes out the usual way
   }
   function sendFile(btn, other) {
     if (S.ch === 'ig' || qaKindHere()) {   // Instagram can't carry a file; a question / answer needs the page: a link goes
@@ -2591,6 +2633,7 @@
       if (act === 'pdf') doPdf(el);
       else if (act === 'send') doSend(el);
       else if (act === 'sendlink') doSendLink(el);
+      else if (act === 'goq') { var ans = app.querySelector('#cmPaper [data-qa-ans]'); if (ans) ans.click(); }   // straight to the question, its box open
       else if (act === 'copy') doCopy();
       else if (act === 'approve') { doApprove(); if (mode === 'received') sentDialog(); }
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
