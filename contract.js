@@ -270,6 +270,14 @@
     amInPack: ['ضمن الباقة', 'Part of the package'],
     amRest: ['باقي البنود لم تتغيّر، وتبقى كما اتفق عليها الطرفان.', 'Every other term is unchanged and stays as both sides agreed.'],
     amGoLine: ['اذهب إلى البند', 'Go to the clause'],
+    qaLogTitle: ['الأسئلة والأجوبة', 'Questions and answers'],
+    qaLogIntro: ['كل سؤال وجوابه في خانة واحدة، ويبقيان مكتوبين في العقد تحت السطر نفسه.', 'Each question and its answer sit in one box, and both stay written in the contract under the same line.'],
+    qaDoneTag: ['تمت الإجابة من طرف {who}', 'Answered by the {who}'],
+    qaWaitTag: ['بانتظار جواب {who}', 'Waiting for the {who}’s answer'],
+    qaMoreQ: ['اقرأ السؤال كاملًا', 'Read the whole question'],
+    qaMoreA: ['اقرأ الجواب كاملًا', 'Read the whole answer'],
+    qaLess: ['إخفاء', 'Hide'],
+    qaWas: ['كان قبل التعديل:', 'Before it was changed:'],
     amVsBoth: ['أكّدها الطرفان بالبريد يوم {d}.', 'Both sides confirmed it by e-mail on {d}.'],
     amVsOne: ['أكّدها {who} بالبريد يوم {d}، ولم يؤكدها {other}.', '{who} confirmed it by e-mail on {d}; {other} did not.'],
     amVsNone: ['لم يؤكدها أحد بالبريد.', 'Nobody confirmed it by e-mail.'],
@@ -297,7 +305,6 @@
     qaCanceled: ['أُلغي السؤال', 'Question cancelled'],
     qaCanceledT: ['أُلغي سؤالك', 'Your question is cancelled'],
     qaCanceledSub: ['رجع العقد كما كان قبل السؤال، ولا أثر للسؤال فيه. وإن كنت أرسلت الرابط السابق للطرف الآخر، فأرسل له رابط هذا العقد.', 'The contract is back as it was before the question, with no trace of it. If you had sent the earlier link to the other side, send them this contract’s link.'],
-    qaTagCancel: ['إلغاء سؤال', 'Question cancelled'],
     qaEmptyEdit: ['اكتب السؤال، أو ألغِه بزر «إلغاء السؤال».', 'Write the question, or cancel it with “Cancel the question”.'],
     qaMineSub: ['كتبت هذا السؤال من هذا الجهاز، ويمكنك تعديله بزر «تعديل» بجانبه. وعندما يفتح الطرف الآخر الرابط من جهازه، يظهر له زر «أجب».', 'You wrote this question on this device, and you can change it with “Edit” beside it. When the other side opens the link on their device, they get the “Answer” button.'],
     qaEditBtn: ['تعديل', 'Edit'],
@@ -325,6 +332,10 @@
     qaTellAMail: ['أخطر {who}', 'Notify the {who}'],
     qaTellChat: ['أرسل الرابط أيضًا عبر {ch}', 'Also send the link on {ch}'],
     qaGoBtn: ['أجب عن السؤال', 'Answer the question'],
+    qaGoNext: ['أجب عن السؤال التالي', 'Answer the next question'],
+    qaLeft: ['عدد الأسئلة التي تنتظر جوابك: {n}.', 'Questions waiting for your answer: {n}.'],
+    qaLeftThen: ['أجب عنها، ثم أخطر {who} مرة واحدة.', 'Answer them, then notify the {who} once.'],
+    qaDone: ['تمت الإجابة', 'Answered'],
     qaMailedQ: ['أُرسل الإخطار إلى بريد {who}.', 'The {who} was notified by e-mail.'],
     qaMailedA: ['أُرسل جوابك إلى بريد {who}.', 'The {who} was told by e-mail.'],
     qaToldQT: ['أُرسل سؤالك إلى {who}', 'Your question was sent to the {who}'],
@@ -343,8 +354,6 @@
     qaMsgAsk: ['مرحبًا، كتبت سؤالًا داخل عقد المونتاج بيننا. افتح الرابط وأجب عنه تحت السطر نفسه:\n{link}', 'Hi, I wrote a question inside our editing contract. Open the link and answer it under the line:\n{link}'],
     qaMsgAns: ['مرحبًا، أجبت عن سؤالك داخل عقد المونتاج بيننا، وتجد الجواب تحت السطر نفسه:\n{link}\nإن كان كل شيء واضحًا، فوافق على العقد.', 'Hi, I answered your question inside our editing contract; it’s under the same line:\n{link}\nIf everything is clear, please approve the contract.'],
     qaClause: ['الأسئلة والأجوبة المكتوبة تحت البنود جزء من هذا الاتفاق، وتوضّح معنى السطر الذي كُتبت تحته.', 'The questions and answers written under the clauses are part of this agreement and explain the line they are under.'],
-    qaTagAsk: ['سؤال', 'Question'],
-    qaTagAns: ['جواب', 'Answer'],
     readOk: ['قرأت العقد كاملًا وفهمته، وأوافق على كل ما فيه.', 'I read the whole contract, I understand it, and I accept all of it.'],
     readNeed: ['ضع علامة على «قرأت العقد كاملًا» أولًا.', 'Tick “I read the whole contract” first.'],
     // after confirming: the contract can't change unless both sides agree to an amendment
@@ -1172,9 +1181,9 @@
       var h = '<div class="cm-qa">' + (withText && r.x ? '<p class="cm-qa-x">' + t('qaAbout', { k: esc(clauseName(r.k)), x: esc(r.x) }) + '</p>' : '') +
         '<div class="cm-qa-q"><b>' + t('qaQ', { who: asker }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.d)) + '</bdi></small>' + (live && viewerRole() === r.by && !r.a ? editBtn('eq') + delBtn : '') + '<p>' + V(r.q) + '</p></div>';   // once answered, the question stays as it was (his rule: credibility)
       if (r.a) {
-        h += '<div class="cm-qa-a"><b>' + t('qaA', { who: other }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.e)) + '</bdi></small>' + (live && viewerRole() !== r.by ? editBtn('ea') : '') + '<p>' + V(r.a) + '</p></div>' +
+        h += '<div class="cm-qa-a"><b>' + t('qaA', { who: other }) + '</b> <span class="cm-qa-done">' + icon('ok') + t('qaDone') + '</span> <small><bdi dir="ltr">' + esc(fmtDate(r.e)) + '</bdi></small>' + (live && viewerRole() !== r.by ? editBtn('ea') : '') + '<p>' + V(r.a) + '</p></div>' +
           '<p class="cm-qa-doc">' + icon('ok') + '<span>' + t('qaDocBoth', { q: r.qv || '—', a: r.av || '—' }) + '</span>' +
-          (live && !pinned() && r.av === s.ver && viewerRole() !== r.by ? tellBtn('qaTellA', asker) : '') + '</p>';
+          (live && !pinned() && r.av === s.ver && viewerRole() !== r.by && !s.qa.some(canAnswer) ? tellBtn('qaTellA', asker) : '') + '</p>';
       } else {
         h += '<p class="cm-qa-doc cm-qa-open">' + icon('ok') + '<span>' + t('qaDocQ', { q: r.qv || '—', who: other }) + '</span>' +
           (!forFile && canAnswer(r) ? ' <button type="button" class="cm-btn cm-btn-primary cm-qa-btn" data-qa-ans="' + idx + '">' + t('qaAnswerBtn') + '</button>' : '') +
@@ -1350,31 +1359,66 @@
   }
   var qaJust = '';   // this page just added a question or an answer ('ask' / 'answer')
 
-  // «سجل التعديلات» at the top of the sheet: one block per amendment, newest first
+  // «سجل التعديلات» at the top of the sheet: one block per amendment, newest first. Steps that only
+  // asked or answered don't get blocks of their own: they become one panel per question, below
   function amendHTML(forFile) {
     var hist = current.hist || [];
     if (!hist.length) return '';
-    var h = '<div class="cm-p-block cm-am-head" data-block="am"><h3><i>' + icon('edit') + '</i>' + t('amTitle') + '</h3><p>' + t('amIntro') + '</p></div>';
-    hist.forEach(function (a, i) {
-      var rows = changes(a.from, a.to);
-      // A version that only asked or answered a question says so
-      var qaOnly = rows.length && rows.every(function (r) { return /^qa\d/.test(r[3]); });
-      var tag = qaOnly ? t({ answer: 'qaTagAns', cancel: 'qaTagCancel' }[qaKindOf(a.from, a.to)] || 'qaTagAsk') : '';
+    var real = [], qa = [], h = '';
+    hist.forEach(function (a) {
+      a.rows = changes(a.from, a.to);
+      (a.rows.length && a.rows.every(function (r) { return /^qa\d/.test(r[3]); }) ? qa : real).push(a);
+    });
+    if (real.length) h += '<div class="cm-p-block cm-am-head" data-block="am"><h3><i>' + icon('edit') + '</i>' + t('amTitle') + '</h3><p>' + t('amIntro') + '</p></div>';
+    real.forEach(function (a, i) {
       h += '<div class="cm-p-block cm-am" data-block="am">' +
-        '<div class="cm-am-top"><b>' + t('amN', { n: a.n }) + '</b>' + (tag ? '<span class="cm-am-tag">' + tag + '</span>' : '') + (i === 0 && hist.length > 1 ? '<span class="cm-am-new">' + t('amLatest') + '</span>' : '') +
+        '<div class="cm-am-top"><b>' + t('amN', { n: real.length - i }) + '</b>' + (i === 0 && real.length > 1 ? '<span class="cm-am-new">' + t('amLatest') + '</span>' : '') +
         '<span class="cm-am-meta">' + t('amFromTo', { a: a.from.ver, b: a.to.ver }) + ' · <bdi dir="ltr">' + esc(fmtDate(a.to.dt)) + '</bdi></span></div>' +
         (a.why ? '<p class="cm-am-why"><span>' + t('amWhyShow') + '</span> ' + V(a.why) + '</p>' : '') +
         '<div class="cm-am-rows"><div class="cm-am-row cm-am-hd"><span>' + t('amTerm') + '</span><span>' + t('amBefore') + '</span><span>' + t('amAfter') + '</span></div>' +
-        rows.map(function (r) {
-          // a question names its line: a button goes straight there
-          var line = !forFile && r[3].match(/^qa(\d+\.\d+)-/);
-          return '<div class="cm-am-row"><span class="cm-am-k">' + esc(r[0]) + (line ? '<button type="button" class="cm-am-go" data-act="goline" data-k="' + line[1] + '">' + t('amGoLine') + '</button>' : '') + '</span><span class="cm-am-b"><small>' + t('amBefore') + '</small>' + Vw(r[1]) + '</span><span class="cm-am-a"><small>' + t('amAfter') + '</small>' + Vw(r[2]) + '</span></div>';
+        a.rows.map(function (r) {
+          return '<div class="cm-am-row"><span class="cm-am-k">' + esc(r[0]) + '</span><span class="cm-am-b"><small>' + t('amBefore') + '</small>' + Vw(r[1]) + '</span><span class="cm-am-a"><small>' + t('amAfter') + '</small>' + Vw(r[2]) + '</span></div>';
         }).join('') + '</div>' +
         '<p class="cm-am-rest">' + icon('ok') + '<span>' + t('amRest') + '</span></p>' +
-        '<p class="cm-am-of">' + t('amOf', { v: a.from.ver, d: '<bdi dir="ltr">' + esc(fmtDate(a.from.dt)) + '</bdi>', c: '<b class="cm-code">' + esc(a.code) + '</b>' }) +
-        ' <span data-am-vs="' + a.n + '">' + histStatus(a) + '</span>' +
+        '<p class="cm-am-of">' + stepOf(a) + ' <span data-am-vs="' + a.n + '">' + histStatus(a) + '</span>' +
         (a.ok ? '' : '<em class="cm-am-bad">' + t('amBad') + '</em>') + '</p></div>';
     });
+    return h + qaPanels(qa, forFile);
+  }
+  function stepOf(a) { return t('amOf', { v: a.from.ver, d: '<bdi dir="ltr">' + esc(fmtDate(a.from.dt)) + '</bdi>', c: '<b class="cm-code">' + esc(a.code) + '</b>' }); }
+  function stepConfirmed(a) { return !!(a.vs && (a.vs.state === 'partial' || a.vs.state === 'locked')); }
+  // One panel per question (his ask: fewer boxes): who asked, who answered, and a long text folded
+  // behind a button. The file keeps every word, and earlier wording stays inside the fold.
+  function qaPanels(steps, forFile) {
+    if (!S.qa.length) return '';
+    var vs = versions(S);
+    var part = function (head, text, old, more) {
+      var was = old.map(function (x) { return '<small>' + t('qaWas') + ' ' + V(x) + '</small>'; }).join('');
+      var fold = !forFile && (text.length > 110 || old.length > 0);
+      return '<div class="cm-qp-part' + (fold ? ' cm-qp-fold' : '') + '"><span>' + head + '</span><p>' + V(text) + '</p>' + was +
+        (fold ? '<button type="button" class="cm-link cm-qp-more" data-act="qpmore" data-more="' + more + '">' + t(more) + '</button>' : '') + '</div>';
+    };
+    var h = '<div class="cm-p-block cm-am-head" data-block="am"><h3><i>' + icon('ask') + '</i>' + t('qaLogTitle') + '</h3><p>' + t('qaLogIntro') + '</p></div>';
+    S.qa.slice().reverse().forEach(function (r) {
+      var asker = r.by === 'f' ? t('fl') : t('cl'), other = r.by === 'f' ? t('cl') : t('fl'), oldQ = [], oldA = [], day = function (d) { return ' · <bdi dir="ltr">' + esc(fmtDate(d)) + '</bdi>'; };
+      for (var i = vs.length - 2; i >= 0; i--) {
+        var o = vs[i].qa.filter(function (x) { return x.k === r.k; })[0];
+        if (!o) break;
+        if (o.q !== r.q && oldQ.indexOf(o.q) === -1) oldQ.unshift(o.q);
+        if (o.a && o.a !== r.a && oldA.indexOf(o.a) === -1) oldA.unshift(o.a);
+      }
+      h += '<div class="cm-p-block cm-am cm-qp" data-block="am"><div class="cm-am-top"><b>' + esc(L('سؤال عن ', 'Question about ') + clauseName(r.k)) + '</b>' +
+        '<span class="' + (r.a ? 'cm-am-new' : 'cm-am-tag') + '">' + t(r.a ? 'qaDoneTag' : 'qaWaitTag', { who: other }) + '</span>' +
+        (forFile ? '' : canAnswer(r) ? '<button type="button" class="cm-btn cm-btn-primary cm-qa-btn" data-act="goans" data-k="' + r.k + '">' + t('qaAnswerBtn') + '</button>' : '<button type="button" class="cm-am-go" data-act="goline" data-k="' + r.k + '">' + t('amGoLine') + '</button>') + '</div>' +
+        part(t('qaQ', { who: asker }) + day(r.d), r.q, oldQ, 'qaMoreQ') +
+        (r.a ? part(t('qaA', { who: other }) + day(r.e), r.a, oldA, 'qaMoreA') : '') + '</div>';
+    });
+    // A version someone confirmed before a question was added says so; the others need no line
+    steps.forEach(function (a) {
+      var on = stepConfirmed(a);
+      if (on || !forFile) h += '<div class="cm-p-block" data-block="am" data-am-vq="' + a.n + '"' + (on ? '' : ' hidden') + '>' + (on ? '<p class="cm-am-of">' + stepOf(a) + ' ' + histStatus(a) + '</p>' : '') + '</div>';
+    });
+    if (steps.some(function (a) { return !a.ok; })) h += '<div class="cm-p-block" data-block="am"><p class="cm-am-of"><em class="cm-am-bad">' + t('amBad') + '</em></p></div>';
     return h;
   }
 
@@ -1821,17 +1865,17 @@
     var linkInBar = !!(API && !received);   // with «أرسل رابطًا» in the row, «نسخ الرابط» moves to the bar under it
     // A question or an answer just added here, or received: say so first
     var qk = received ? lastQaKind() : (qaJust || lastQaKind());
-    var forMe = received && S.qa.some(canAnswer);
+    var left = S.qa.filter(canAnswer).length, forMe = left > 0 && (received || qk === 'answer');
     var mine = received && !!mineRole(current.code);   // your own version, opened again from its link
     // What was written here reaches the other side only when it's sent, so that's the first
     // button (a link: the other side answers on the page, not in a file)
-    var tell = (!received || mine) && !pinned() && (qk === 'ask' || qk === 'answer') ? qk : '';
+    var tell = (!received || mine) && !pinned() && (qk === 'ask' || (qk === 'answer' && !left)) ? qk : '';
     var told = !!tell && verify && wasTold();   // already sent to the other side's e-mail
     var who = viewerRole() === 'f' ? t('cl') : t('fl'), wide = linkInBar ? ' cm-btn-wide' : '';
     var actions =
       (told ? '<button type="button" class="cm-btn cm-btn-soft' + wide + '" data-tell data-act="sendlink">' + icon('link') + t('qaTellChat', { ch: esc(chName(S)) }) + '</button>'
         : tell ? '<button type="button" class="cm-btn cm-btn-primary' + wide + '" data-tell data-act="' + (API ? 'sendlink' : 'send') + '">' + icon('send') + t((tell === 'ask' ? 'qaTellQ' : 'qaTellA') + (verify ? 'Mail' : ''), { who: who }) + '</button>'
-        : forMe ? '<button type="button" class="cm-btn cm-btn-primary" data-act="goq">' + icon('ask') + t('qaGoBtn') + '</button>'
+        : forMe ? '<button type="button" class="cm-btn cm-btn-primary" data-act="goq">' + icon('ask') + t(received ? 'qaGoBtn' : 'qaGoNext') + '</button>'
         : !received ? '<button type="button" class="cm-btn cm-btn-primary" data-act="send">' + icon('send') + t('send') + '</button>' +
           (API ? '<button type="button" class="cm-btn cm-btn-soft" data-act="sendlink">' + icon('link') + t('sendLink') + '</button>' : '')
         : verify ? ''   // the e-mail box at the top takes the approval
@@ -1845,7 +1889,7 @@
     else if (told) { title = t(tell === 'ask' ? 'qaToldQT' : 'qaToldAT', { who: who }); sub = t(tell === 'ask' ? 'qaToldQSub' : 'qaToldASub', { who: who }); }
     else if (tell === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : verify ? 'qaAskedSubMail' : 'qaAskedSub', { who: who }); }
     else if (tell === 'answer') { title = t('qaAnsweredT'); sub = t(verify ? 'qaAnsweredSubMail' : 'qaAnsweredSub', { who: who }); }
-    else if (forMe) { title = t('qaGotQT'); sub = t('qaGotQSub'); }
+    else if (forMe) { title = t(received ? 'qaGotQT' : 'qaAnsweredT'); sub = received ? t('qaGotQSub') + (left > 1 ? ' ' + t('qaLeft', { n: left }) : '') : t('qaLeft', { n: left }) + ' ' + t('qaLeftThen', { who: who }); }
     var gotAnswer = received && qk === 'answer' && !lockedAt();
     if (gotAnswer && !tell && !forMe && qaJust !== 'cancel') { title = t('qaGotAT'); sub = t('qaGotASub'); }
     var row = '<div class="cm-actions">' + actions + '</div><p class="cm-sendnote" id="cmSendNote" role="status" hidden></p>';
@@ -1886,6 +1930,8 @@
         a.vs = vs;
         var el = app.querySelector('[data-am-vs="' + a.n + '"]');
         if (el) el.innerHTML = histStatus(a);
+        var q = app.querySelector('[data-am-vq="' + a.n + '"]');
+        if (q && stepConfirmed(a)) { q.innerHTML = '<p class="cm-am-of">' + stepOf(a) + ' ' + histStatus(a) + '</p>'; q.hidden = false; }
       }, function () { a.vs = null; });
     });
   }
@@ -2675,6 +2721,8 @@
       else if (act === 'sendlink') doSendLink(el);
       else if (act === 'goq') { var ans = app.querySelector('#cmPaper [data-qa-ans]'); if (ans) ans.click(); }   // straight to the question, its box open
       else if (act === 'goline') goToLine(el.getAttribute('data-k'));
+      else if (act === 'goans') { var qb = app.querySelector('#cmPaper .cm-li[data-k="' + el.getAttribute('data-k') + '"] [data-qa-ans]'); if (qb) qb.click(); }
+      else if (act === 'qpmore') el.textContent = t(el.parentNode.classList.toggle('cm-qp-open') ? 'qaLess' : el.getAttribute('data-more'));
       else if (act === 'copy') doCopy();
       else if (act === 'approve') { doApprove(); if (mode === 'received') sentDialog(); }
       else if (act === 'dark') { dark = !paperDark(); keepScroll(render); }
