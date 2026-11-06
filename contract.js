@@ -335,6 +335,7 @@
     qaTellAMail: ['أخطر {who}', 'Notify the {who}'],
     qaTellChat: ['أرسل الرابط أيضًا عبر {ch}', 'Also send the link on {ch}'],
     qaGoBtn: ['أجب عن السؤال', 'Answer the question'],
+    qaSentBoth: ['أُرسل إلى {who} جوابك مع رابط التأكيد، وأُرسلت إليك رسالة لتؤكد موافقتك أنت أيضًا.', 'The {who} got your answer with the confirmation link, and you got an e-mail to confirm too.'],
     qaGoNext: ['أجب عن السؤال التالي', 'Answer the next question'],
     qaLeft: ['عدد الأسئلة التي تنتظر جوابك: {n}.', 'Questions waiting for your answer: {n}.'],
     qaLeftThen: ['أجب عنها، ثم أخطر {who} مرة واحدة.', 'Answer them, then notify the {who} once.'],
@@ -1370,7 +1371,7 @@
     var real = [], qa = [], h = '';
     hist.forEach(function (a) {
       a.rows = changes(a.from, a.to);
-      (a.rows.length && a.rows.every(function (r) { return /^qa\d/.test(r[3]); }) ? qa : real).push(a);
+      (qaStep(a) ? qa : real).push(a);
     });
     if (real.length) h += '<div class="cm-p-block cm-am-head" data-block="am"><h3><i>' + icon('edit') + '</i>' + t('amTitle') + '</h3><p>' + t('amIntro') + '</p></div>';
     real.forEach(function (a, i) {
@@ -1388,6 +1389,7 @@
     });
     return h + qaPanels(qa, forFile);
   }
+  function qaStep(a) { var rows = changes(a.from, a.to); return rows.length > 0 && rows.every(function (r) { return /^qa\d/.test(r[3]); }); }
   function stepOf(a) { return t('amOf', { v: a.from.ver, d: '<bdi dir="ltr">' + esc(fmtDate(a.from.dt)) + '</bdi>', c: '<b class="cm-code">' + esc(a.code) + '</b>' }); }
   function stepConfirmed(a) { return !!(a.vs && (a.vs.state === 'partial' || a.vs.state === 'locked')); }
   // One panel per question (his ask: fewer boxes): who asked, who answered, and a long text folded
@@ -2147,17 +2149,19 @@
       '<p>' + t('dlgSentSub', { ch: esc(chName(S)) }) + '</p>' + safeBox());
   }
 
+  // What the confirmation e-mails need. A real amendment says so, with the code it changes;
+  // a question or an answer isn't one
+  function requestBody() {
+    var step = (current.hist || []).filter(function (a) { return !qaStep(a); })[0];
+    return { hash: current.hash, code: current.code, ver: S.ver, lang: isEn() ? 'en' : 'ar', link: current.url, total: amount(total(S), S),
+             f: { name: S.fn, email: S.fm }, c: { name: S.cn, email: S.cm }, prev: step ? step.code : undefined };
+  }
   function vSend(btn) {
     if (!verifying()) return;
     if (btn) { btn.disabled = true; btn.innerHTML = '<span class="cm-spin"></span>' + t('vSending'); }
     vNote = '';
     var forMe = waitsForMe();
-    var last = S.am.length ? S.am[S.am.length - 1] : null;   // an amendment: the mails say so, with the code it changes
-    api('/request', {
-      hash: current.hash, code: current.code, ver: S.ver, lang: isEn() ? 'en' : 'ar', link: current.url, total: amount(total(S), S),
-      f: { name: S.fn, email: S.fm }, c: { name: S.cn, email: S.cm },
-      prev: last && last.c ? last.c : undefined, n: last ? S.am.length : undefined
-    }).then(function (st) {
+    api('/request', requestBody()).then(function (st) {
       current.vs = st;
       vNote = st.state === 'locked' ? '' : t(forMe ? 'vSentMe' : 'vSent');
     }, function (e) {
@@ -2446,12 +2450,17 @@
   // can still change or cancel the question. If the mail can't go, the chat opens instead.
   function tellByMail(btn, other) {
     var kind = qaKindHere(), code = current.code, by = viewerRole(), who = by === 'f' ? t('cl') : t('fl');
+    // The last answer: one mail says so and carries the confirmation link, so whoever asked reads
+    // and confirms in one go (his ask 2026-11-06); the one who answered gets his confirmation mail
+    var last = kind === 'answer' && !qaOpen() && (!current.vs || current.vs.state === 'none'), body = requestBody();
+    body.answered = by;
     busy(btn, true, t('vSending'));
-    shortLink().then(function (link) {
+    (last ? api('/request', body) : shortLink().then(function (link) {
       if (!link) throw new Error('no link');
       return api('/note', { hash: current.hash, code: code, ver: S.ver, lang: isEn() ? 'en' : 'ar', link: link, kind: kind, by: by, f: { name: S.fn, email: S.fm }, c: { name: S.cn, email: S.cm } });
-    }).then(function () {
+    })).then(function (st) {
       rememberTold(code);
+      if (last) { current.vs = st; vNote = t('qaSentBoth', { who: who }); }
       if (current.code === code) keepScroll(render);
       toast(t(kind === 'ask' ? 'qaMailedQ' : 'qaMailedA', { who: who }));
     }, function (e) {
