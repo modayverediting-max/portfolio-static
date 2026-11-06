@@ -486,6 +486,11 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 .cm-am-a { background: var(--p-after); }
 .cm-am-a .cm-v { color: var(--p-val); font-weight: 700; }
 .cm-am-row small { display: none; }
+/* A question in the log: one press goes to its line, which lights up for a moment */
+.cm-am-go { display: flex; align-items: center; width: fit-content; min-height: 26px; margin-top: 6px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--p-am-line); background: var(--p-after); color: var(--p-val); font: inherit; font-size: 12.5px; font-weight: 700; line-height: 1.6; white-space: nowrap; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.cm-am-go:hover, .cm-am-go:focus-visible { background: var(--p-badge); border-color: var(--p-badge); color: #fff; outline: none; }
+.cm-result .cm-paper .cm-li.cm-li-found { margin-inline: -8px; padding-inline: 8px; border-radius: 10px; animation: cmFound 2.6s ease-out; }
+@keyframes cmFound { 0%, 55% { background: rgba(61,126,224,.24); } 100% { background: transparent; } }
 .cm-am-rest { display: flex; gap: 7px; align-items: flex-start; margin: 9px 0 0; font-size: 13.5px; line-height: 1.8; font-weight: 600; color: var(--p-ink); }
 .cm-am-rest .cm-ic { width: 16px; height: 16px; color: var(--p-badge); margin-top: 4px; }
 .cm-amend-list li.cm-amend-rest { flex-direction: row; align-items: flex-start; gap: 7px; font-weight: 600; color: #00376C; background: #EAF2FF; }
@@ -533,6 +538,8 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 .cm-qa .cm-qa-open { color: var(--p-soft); }
 .cm-qa .cm-qa-btn { flex: 0 0 auto; padding: 7px 18px; font-size: 14px; border-radius: 12px; }
 @media (max-width: 560px) { .cm-qa .cm-qa-btn[data-tell] { flex: 1 1 100%; max-width: 100%; padding: 8px 10px; } }
+.cm-qa-told { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto; max-width: 100%; color: var(--p-val); }
+.cm-qa-told .cm-ic { width: 14px; height: 14px; flex-shrink: 0; }
 .cm-qa .cm-qa-x { color: var(--p-soft); font-size: 13px; margin: 0 0 4px; }
 .cm-qa.cm-need { border-color: #E5484D; animation: cmShake .45s cubic-bezier(.36,.07,.19,.97); }
 .cm-ask { margin-top: 10px; padding: 12px; border-radius: 14px; background: var(--p-sec); border: 1.5px solid var(--p-badge); cursor: default; }
@@ -728,7 +735,7 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 
 /* ---------- Printing straight from the browser ---------- */
 @media print {
-  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst, .cm-qa-hint, .cm-ask, .cm-qa-btn, .cm-ask-btn, .cm-qa-edit { display: none !important; }
+  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst, .cm-qa-hint, .cm-ask, .cm-qa-btn, .cm-ask-btn, .cm-qa-edit, .cm-qa-told, .cm-am-go { display: none !important; }
   .cm-li-ask > div { padding-inline-end: 0 !important; }
   .cm-li-ask .cm-qa { margin-inline-end: 0 !important; }
   .contract-page { background: #fff; }
