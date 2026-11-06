@@ -522,6 +522,9 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 .cm-qa-q b, .cm-qa-a b { color: var(--p-ink); font-size: 13.5px; }
 .cm-qa small { color: var(--p-soft); font-size: 12px; margin-inline-start: 4px; }
 .cm-qa .cm-qa-edit { font-size: 12.5px; padding: 0 4px; margin-inline-start: 8px; color: var(--p-val); }
+.cm-qa .cm-qa-del { color: #D92D2D; }
+.cm-paper.dark .cm-qa .cm-qa-del { color: #FF9E9E; }
+.cm-btn-danger { flex: 1; color: #fff; background: linear-gradient(135deg, #E5484D, #B3261E); box-shadow: 0 14px 28px -14px rgba(179,38,30,.75); }
 .cm-qa p { margin: 2px 0 0; }
 .cm-qa-a { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--p-line); }
 .cm-qa .cm-qa-doc { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; margin-top: 7px; font-size: 12.5px; font-weight: 700; color: var(--p-badge); line-height: 1.7; }

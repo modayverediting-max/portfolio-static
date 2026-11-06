@@ -287,7 +287,19 @@
     qaAnsNote: ['يُكتب جوابك في العقد تحت السؤال بنسخة جديدة، ثم ترسل الرابط للطرف الآخر.', 'Your answer goes into the contract under the question, as a new version; then you send the link to the other side.'],
     qaSendQ: ['أضف السؤال إلى العقد', 'Add the question to the contract'],
     qaSendA: ['أضف الجواب إلى العقد', 'Add the answer to the contract'],
-    qaCancel: ['إلغاء', 'Cancel'],
+    qaCancel: ['تراجع', 'Back'],
+    qaDelBtn: ['إلغاء السؤال', 'Cancel the question'],
+    qaDelLabel: ['إلغاء هذا السؤال؟', 'Cancel this question?'],
+    qaDelNote: ['يُحذف السؤال من تحت السطر، ويبقى ذكره في «سجل التعديلات». ويمكن الإلغاء ما دام لم يُجب عنه الطرف الآخر.', 'The question is removed from under the line, and “Amendments” keeps a note of it. It can be cancelled as long as the other side hasn’t answered.'],
+    qaDelYes: ['نعم، ألغِ السؤال', 'Yes, cancel the question'],
+    qaCanceled: ['أُلغي السؤال', 'Question cancelled'],
+    qaCanceledT: ['أُلغي سؤالك', 'Your question is cancelled'],
+    qaCanceledSub: ['حُذف السؤال من العقد، ويبقى ذكره في «سجل التعديلات». وإن كنت أرسلته للطرف الآخر، فأرسل له هذا الرابط الجديد.', 'The question is gone from the contract, and “Amendments” keeps a note of it. If you had sent it to the other side, send them this new link.'],
+    qaCanceledR: ['أُلغي سؤال في العقد', 'A question in the contract was cancelled'],
+    qaCanceledRSub: ['ألغى الطرف الآخر سؤاله، وتجد ذلك في «سجل التعديلات». وإن كان كل شيء واضحًا، فوافق على العقد.', 'The other side cancelled their question; it’s noted in “Amendments”. If everything is clear, approve the contract.'],
+    qaMsgCancel: ['مرحبًا، ألغيت سؤالي في عقد المونتاج بيننا، وهذه النسخة الجديدة:\n{link}', 'Hi, I cancelled my question in our editing contract. Here is the new version:\n{link}'],
+    qaTagCancel: ['إلغاء سؤال', 'Question cancelled'],
+    qaEmptyEdit: ['اكتب السؤال، أو ألغِه بزر «إلغاء السؤال».', 'Write the question, or cancel it with “Cancel the question”.'],
     qaMineSub: ['كتبت هذا السؤال من هذا الجهاز، ويمكنك تعديله بزر «تعديل» بجانبه. وعندما يفتح الطرف الآخر الرابط من جهازه، يظهر له زر «أجب».', 'You wrote this question on this device, and you can change it with “Edit” beside it. When the other side opens the link on their device, they get the “Answer” button.'],
     qaEditBtn: ['تعديل', 'Edit'],
     qaEditQ: ['عدّل سؤالك', 'Edit your question'],
@@ -1012,8 +1024,11 @@
     add('pf', t('portfolio'), s.pf ? L('مسموح بعد نشر الفيديو', 'Allowed once the video is published') : L('بإذن مكتوب من العميل فقط', 'Only with the client’s written permission'));
     add('tr', t('terms'), s.tr);
     add('vm', t('vTitle'), s.vm ? L('نعم', 'Yes') : L('لا', 'No'));
-    s.qa.forEach(function (r, i) {
-      add('qa' + i, L('سؤال عن ', 'Question about ') + clauseName(r.k), L('س: ', 'Q: ') + r.q + (r.a ? L(' — ج: ', ' — A: ') + r.a : L(' (بانتظار الجواب)', ' (waiting for the answer)')));
+    // Named by their line, not by their place in the list: a cancelled question must not shift the others
+    var onLine = {};
+    s.qa.forEach(function (r) {
+      onLine[r.k] = (onLine[r.k] || 0) + 1;
+      add('qa' + r.k + '-' + onLine[r.k], L('سؤال عن ', 'Question about ') + clauseName(r.k), L('س: ', 'Q: ') + r.q + (r.a ? L(' — ج: ', ' — A: ') + r.a : L(' (بانتظار الجواب)', ' (waiting for the answer)')));
     });
     return out;
   }
@@ -1040,6 +1055,10 @@
       if (m && !m[2]) {   // a video row on one side only: added, removed, or (pricing way changed) in the package
         if (!x) before = bridge ? t('amInPack') : t('amNoVid');
         if (!y) after = bridge ? t('amInPack') : t('amGone');
+      }
+      if (/^qa\d/.test(id)) {   // a question added, or cancelled
+        if (!x) before = t('amNoVid');
+        if (!y) after = t('qaCanceled');
       }
       if (before !== after) out.push([(y || x)[1], before, after, id]);
     });
@@ -1102,10 +1121,14 @@
   // on a contract you made looked like the button was missing)
   function askable() { return mode === 'received' || mode === 'result'; }
   function qaOpen(s) { return (s || S).qa.some(function (r) { return !r.a; }); }
+  // After both sides confirmed by e-mail, a question or an answer can no longer be changed or
+  // cancelled (his rule). Without e-mail the site can't know: a change is a new version to approve again.
+  function qaLocked() { return !!(S && S.vm && current.vs && current.vs.state === 'locked'); }
   // What a version did to the questions: 'ask' (a question added or changed), 'answer' (an answer
-  // added or changed) or ''
+  // added or changed), 'cancel' (a question cancelled) or ''
   function qaKindOf(from, to) {
     var kind = '';
+    if (to.qa.length < from.qa.length) return 'cancel';
     to.qa.forEach(function (r, i) {
       var o = from.qa[i];
       if (kind) return;
@@ -1121,13 +1144,15 @@
   // The questions picked by «pick», each with its answer (or who it waits for) and a line saying
   // it is written into this contract, with the versions. On the page, each side can edit its own text.
   function qaHTML(s, pick, forFile, withText) {
-    var live = !forFile && (mode === 'received' || mode === 'result');
+    var live = !forFile && (mode === 'received' || mode === 'result') && !qaLocked();
     return s.qa.map(function (r, idx) {
       if (!pick(r)) return '';
       var asker = r.by === 'f' ? t('fl') : t('cl'), other = r.by === 'f' ? t('cl') : t('fl');
       var editBtn = function (kind) { return '<button type="button" class="cm-link cm-qa-edit" data-qa-edit="' + kind + ':' + idx + '">' + t('qaEditBtn') + '</button>'; };
+      // the asker may cancel the question for as long as it has no answer
+      var delBtn = !r.a ? '<button type="button" class="cm-link cm-qa-edit cm-qa-del" data-qa-edit="cq:' + idx + '">' + t('qaDelBtn') + '</button>' : '';
       var h = '<div class="cm-qa">' + (withText && r.x ? '<p class="cm-qa-x">' + t('qaAbout', { k: esc(clauseName(r.k)), x: esc(r.x) }) + '</p>' : '') +
-        '<div class="cm-qa-q"><b>' + t('qaQ', { who: asker }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.d)) + '</bdi></small>' + (live && viewerRole() === r.by ? editBtn('eq') : '') + '<p>' + V(r.q) + '</p></div>';
+        '<div class="cm-qa-q"><b>' + t('qaQ', { who: asker }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.d)) + '</bdi></small>' + (live && viewerRole() === r.by ? editBtn('eq') + delBtn : '') + '<p>' + V(r.q) + '</p></div>';
       if (r.a) {
         h += '<div class="cm-qa-a"><b>' + t('qaA', { who: other }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.e)) + '</bdi></small>' + (live && viewerRole() !== r.by ? editBtn('ea') : '') + '<p>' + V(r.a) + '</p></div>' +
           '<p class="cm-qa-doc">' + icon('ok') + '<span>' + t('qaDocBoth', { q: r.qv || '—', a: r.av || '—' }) + '</span></p>';
@@ -1153,27 +1178,29 @@
     });
   }
   // kind: 'q' a new question · 'a' the answer · 'eq' edit the question · 'ea' edit the answer
+  // · 'cq' cancel the question (asks first)
   function openAsk(li, kind, idx) {
     closeAsk();
     var k = li.getAttribute('data-k'), r = idx != null ? S.qa[idx] : null, box = document.createElement('div');
-    var ans = kind === 'a' || kind === 'ea', edit = kind === 'eq' || kind === 'ea';
+    var ans = kind === 'a' || kind === 'ea', edit = kind === 'eq' || kind === 'ea', del = kind === 'cq';
     if (S.am.length >= MAX_AM) { toast(t('amMax')); return; }
     if (kind === 'q' && S.qa.length >= MAX_QA) { toast(t('qaMax')); return; }
     if (kind !== 'q' && !r) return;
-    var label = kind === 'q' ? t('qaAskLabel', { k: esc(clauseName(k)) }) : t({ a: 'qaAnsLabel', eq: 'qaEditQ', ea: 'qaEditA' }[kind]);
-    var note = edit ? (kind === 'eq' && r.a ? 'qaEditNoteAns' : 'qaEditNote') : ans ? 'qaAnsNote' : 'qaAskNote';
+    if ((edit || del) && qaLocked()) return;
+    var label = kind === 'q' ? t('qaAskLabel', { k: esc(clauseName(k)) }) : t({ a: 'qaAnsLabel', eq: 'qaEditQ', ea: 'qaEditA', cq: 'qaDelLabel' }[kind]);
+    var note = del ? 'qaDelNote' : edit ? (kind === 'eq' && r.a ? 'qaEditNoteAns' : 'qaEditNote') : ans ? 'qaAnsNote' : 'qaAskNote';
     box.className = 'cm-ask';
     box.innerHTML = '<label class="cm-label">' + label + '</label>' +
-      '<textarea class="cm-textarea" dir="auto" maxlength="' + (ans ? 400 : 300) + '" placeholder="' + esc(t(ans ? 'qaAnsPh' : 'qaAskPh')) + '">' + esc(edit ? (kind === 'eq' ? r.q : r.a) : '') + '</textarea>' +
+      (del ? '' : '<textarea class="cm-textarea" dir="auto" maxlength="' + (ans ? 400 : 300) + '" placeholder="' + esc(t(ans ? 'qaAnsPh' : 'qaAskPh')) + '">' + esc(edit ? (kind === 'eq' ? r.q : r.a) : '') + '</textarea>') +
       '<p class="cm-hint">' + t(note) + '</p>' +
-      '<div class="cm-ask-row"><button type="button" class="cm-btn cm-btn-primary" data-ask-send="' + kind + ':' + (kind === 'q' ? k : idx) + '">' + t(edit ? 'qaSave' : ans ? 'qaSendA' : 'qaSendQ') + '</button>' +
+      '<div class="cm-ask-row"><button type="button" class="cm-btn ' + (del ? 'cm-btn-danger' : 'cm-btn-primary') + '" data-ask-send="' + kind + ':' + (kind === 'q' ? k : idx) + '">' + t(del ? 'qaDelYes' : edit ? 'qaSave' : ans ? 'qaSendA' : 'qaSendQ') + '</button>' +
       '<button type="button" class="cm-btn cm-btn-ghost" data-ask-close>' + t('qaCancel') + '</button></div>';
     (li.querySelector('.cm-li > div') || li).appendChild(box);
     li.classList.add('cm-li-on');
     var ta = box.querySelector('textarea');
-    try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); }
-    var r = box.getBoundingClientRect();
-    if (r.bottom > window.innerHeight - 20) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (ta) try { ta.focus({ preventScroll: true }); } catch (e) { ta.focus(); }
+    var rect = box.getBoundingClientRect();
+    if (rect.bottom > window.innerHeight - 20) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   function closeAsk() {
     var old = app.querySelector('.cm-ask');
@@ -1182,8 +1209,16 @@
   }
   function sendAsk(btn) {
     var box = btn.closest('.cm-ask'), ta = box && box.querySelector('textarea'), text = ta ? ta.value.replace(/\s+/g, ' ').trim() : '';
-    if (!text) { if (ta) ta.focus(); toast(t('qaEmpty')); return; }
     var what = btn.getAttribute('data-ask-send').split(':'), kind = what[0], me = viewerRole(), day = today();
+    if (kind === 'cq') {
+      // Cancelled: gone from under its line, kept as a note in the history
+      var ci = +what[1];
+      if (!S.qa[ci] || S.qa[ci].a || qaLocked()) return;
+      busy(btn, true, t('qaSaving'));
+      qaVersion(function (n) { n.ro = me; n.qa.splice(ci, 1); }, 'cancel');
+      return;
+    }
+    if (!text) { if (ta) ta.focus(); toast(t(kind === 'eq' ? 'qaEmptyEdit' : 'qaEmpty')); return; }
     if (kind === 'q') {
       var k = what[1], li = btn.closest('.cm-li'), body = li && li.querySelector('.cm-li > div');
       var line = '';
@@ -1215,8 +1250,8 @@
     hist.forEach(function (a, i) {
       var rows = changes(a.from, a.to);
       // A version that only asked or answered a question says so
-      var qaOnly = rows.length && rows.every(function (r) { return /^qa\d+$/.test(r[3]); });
-      var tag = qaOnly ? t(qaKindOf(a.from, a.to) === 'answer' ? 'qaTagAns' : 'qaTagAsk') : '';
+      var qaOnly = rows.length && rows.every(function (r) { return /^qa\d/.test(r[3]); });
+      var tag = qaOnly ? t({ answer: 'qaTagAns', cancel: 'qaTagCancel' }[qaKindOf(a.from, a.to)] || 'qaTagAsk') : '';
       h += '<div class="cm-p-block cm-am" data-block="am">' +
         '<div class="cm-am-top"><b>' + t('amN', { n: a.n }) + '</b>' + (tag ? '<span class="cm-am-tag">' + tag + '</span>' : '') + (i === 0 && hist.length > 1 ? '<span class="cm-am-new">' + t('amLatest') + '</span>' : '') +
         '<span class="cm-am-meta">' + t('amFromTo', { a: a.from.ver, b: a.to.ver }) + ' · <bdi dir="ltr">' + esc(fmtDate(a.to.dt)) + '</bdi></span></div>' +
@@ -1690,7 +1725,9 @@
     var mine = received && !!mineRole(current.code);   // your own version, opened again from its link
     if ((!received || mine) && qk === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : 'qaAskedSub'); }
     else if ((!received || mine) && qk === 'answer') { title = t('qaAnsweredT'); sub = t('qaAnsweredSub'); }
+    else if ((!received || mine) && qk === 'cancel') { title = t('qaCanceledT'); sub = t('qaCanceledSub'); }
     else if (forMe) { title = t('qaGotQT'); sub = t('qaGotQSub'); }
+    else if (received && qk === 'cancel') { title = t('qaCanceledR'); sub = t('qaCanceledRSub'); }
     else if (received && qk === 'answer') { title = t('qaGotAT'); sub = t('qaGotASub'); }
     app.innerHTML =
       '<div class="cm-result cm-fade">' +
@@ -1808,6 +1845,8 @@
     if (end) { var e = verifyEndHTML(); end.innerHTML = e; end.hidden = !e; }
     var meta = document.querySelector('#cmPaper .cm-p-meta');
     if (meta && !meta.querySelector('.cm-p-ok')) meta.insertAdjacentHTML('beforeend', stampHTML());
+    // Both sides confirmed: the questions and answers can't be changed or cancelled any more
+    if (qaLocked()) Array.prototype.forEach.call(app.querySelectorAll('#cmPaper .cm-qa-edit'), function (b) { b.remove(); });
     // Someone confirmed your contract: from now on a change is an amendment, kept on record
     var eb = document.getElementById('cmEditBtn');
     if (eb && mode === 'result' && !amend && pinned() && eb.getAttribute('data-go') !== 'amend') {
@@ -2234,7 +2273,7 @@
   }
   function sendLink(link, other) {
     var qk = qaKindHere();
-    var msg = qk === 'ask' ? t('qaMsgAsk', { link: link }) : qk === 'answer' ? t('qaMsgAns', { link: link })
+    var msg = qk === 'ask' ? t('qaMsgAsk', { link: link }) : qk === 'answer' ? t('qaMsgAns', { link: link }) : qk === 'cancel' ? t('qaMsgCancel', { link: link })
       : t(verifying() ? 'shortMsgMail' : 'shortMsg', { link: link, ok: approvalText(S, current.code) });
     if (isPhone() && navigator.share) {
       navigator.share({ text: msg }).catch(function (e) { if (e && e.name === 'NotAllowedError') openChat(msg, other); });
