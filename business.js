@@ -55,10 +55,15 @@
 
     'biz.change_title': 'Your month once we start',
     'biz.change_sub': 'What you need is a steady presence your customers see every week, not one video every now and then.',
-    'biz.cal1': 'A month without a system',
-    'biz.cal1_f': '3 scattered posts',
-    'biz.cal2': 'A month with me',
-    'biz.cal2_f': '8 videos, on schedule',
+    'biz.cal1': 'Without a plan',
+    'biz.cal1_f': '3 videos a month',
+    'biz.cal2': 'With me',
+    'biz.cal2_f': '8 videos a month',
+    'biz.week1': 'Week 1',
+    'biz.week2': 'Week 2',
+    'biz.week3': 'Week 3',
+    'biz.week4': 'Week 4',
+    'biz.week_none': 'None',
     'biz.cal_note': 'An illustration. We set the number of videos together.',
     'biz.gain1_t': 'A steady presence',
     'biz.gain1_d': 'An agreed number of videos every month, ready to publish on schedule.',
@@ -130,19 +135,36 @@
     'biz.cta_other': 'Other ways to reach me'
   });
 
-  // The two month calendars: 28 days, the days with a post light up one after another
+  // The two example months: four plain weeks, each with its videos
+  var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
   document.querySelectorAll('.biz-cal').forEach(function (cal) {
-    var grid = cal.querySelector('.biz-cal-grid');
-    var on = cal.getAttribute('data-on').split(',').map(Number);
-    for (var d = 1; d <= 28; d++) {
-      var day = document.createElement('i');
-      var n = on.indexOf(d);
-      if (n !== -1) {
-        day.className = 'on';
-        day.style.setProperty('--n', n);
+    var box = cal.querySelector('.biz-weeks');
+    var n = 0;
+    cal.getAttribute('data-weeks').split(',').map(Number).forEach(function (count, w) {
+      var row = document.createElement('div');
+      row.className = 'biz-week';
+      var name = document.createElement('span');
+      name.setAttribute('data-i18n', 'biz.week' + (w + 1));
+      name.textContent = 'الأسبوع ' + (w + 1);
+      row.appendChild(name);
+      var vids = document.createElement('span');
+      if (count === 0) {
+        vids.className = 'biz-week-none';
+        vids.setAttribute('data-i18n', 'biz.week_none');
+        vids.textContent = 'ما نزل شي';
+      } else {
+        vids.className = 'biz-week-vids';
+        for (var i = 0; i < count; i++) {
+          var v = document.createElement('i');
+          v.className = 'biz-vid';
+          v.style.setProperty('--n', n++);
+          v.innerHTML = PLAY;
+          vids.appendChild(v);
+        }
       }
-      grid.appendChild(day);
-    }
+      row.appendChild(vids);
+      box.appendChild(row);
+    });
   });
 
   // One answer open at a time

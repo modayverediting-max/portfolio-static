@@ -114,22 +114,45 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 @media (min-width: 640px) { .biz-cal { padding: 20px 18px; border-radius: 22px; } }
 .biz-cal-head { font-size: clamp(12.5px, 3.3vw, 16px); font-weight: 700; text-align: center; margin-bottom: 12px; }
 .biz-cal-foot { font-size: clamp(11.5px, 3vw, 14px); font-weight: 500; text-align: center; margin-top: 12px; }
-.biz-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
-@media (min-width: 640px) { .biz-cal-grid { gap: 6px; } }
-.biz-cal-grid i { aspect-ratio: 1; border-radius: 28%; background: rgba(255,255,255,0.14); }
-.biz-cal-grid i.on { background: #fff; box-shadow: 0 0 12px rgba(255,255,255,0.7); }
-.biz-cal-off .biz-cal-grid i.on { background: rgba(255,255,255,0.6); box-shadow: none; }
+.biz-weeks { display: grid; gap: 7px; }
+.biz-week > span { white-space: nowrap; }
+.biz-week {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-height: 40px;
+  padding: 6px 10px;
+  border-radius: 11px;
+  font-size: clamp(11.5px, 3vw, 15px);
+  font-weight: 600;
+  background: rgba(255,255,255,0.13);
+}
+.biz-week-vids { display: inline-flex; gap: 5px; }
+.biz-week-none { font-size: clamp(10.5px, 2.8vw, 13.5px); font-weight: 500; color: rgba(255,255,255,0.72); }
+.biz-vid {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--base2);
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,40,110,0.22);
+}
+.biz-vid svg { width: 15px; height: 15px; }
 
-/* The days light up one after another when the calendar lands */
+/* The videos appear one after another when the card lands */
 @keyframes bizDay {
   0% { transform: scale(0.3); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
-.biz-cal.revealed .biz-cal-grid i.on {
+.biz-cal.revealed .biz-vid {
   animation: bizDay 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   animation-delay: calc(var(--n) * 95ms + 350ms);
 }
-@media (prefers-reduced-motion: reduce) { .biz-cal.revealed .biz-cal-grid i.on { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .biz-cal.revealed .biz-vid { animation: none; } }
 
 .biz-cal-note {
   grid-column: 1 / -1;
@@ -158,9 +181,8 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 .biz-tick svg { width: 17px; height: 17px; }
 [data-theme="dark"] .biz-tick { color: #0A1830; background: #8EC5FF; }
 [data-theme="dark"] .biz-cal { background: rgba(255,255,255,0.06); box-shadow: 0 16px 36px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.08); }
-[data-theme="dark"] .biz-cal-grid i { background: rgba(255,255,255,0.08); }
-[data-theme="dark"] .biz-cal-grid i.on { background: #8EC5FF; box-shadow: 0 0 12px rgba(142,197,255,0.6); }
-[data-theme="dark"] .biz-cal-off .biz-cal-grid i.on { background: rgba(142,197,255,0.5); box-shadow: none; }
+[data-theme="dark"] .biz-week { background: rgba(255,255,255,0.07); }
+[data-theme="dark"] .biz-vid { color: #0A1830; background: #8EC5FF; box-shadow: none; }
 
 /* ---------- How it works ---------- */
 .biz-steps { display: grid; grid-template-columns: 1fr; gap: 16px; }
