@@ -1660,7 +1660,8 @@
   // Once someone confirmed this contract, changing it means an amendment (kept on record), never an edit in place
   function pinned() { return !!(current.vs && (current.vs.state === 'partial' || current.vs.state === 'locked')); }
   function editBtnHTML() {
-    var add = mode === 'received' || (!amend && pinned());
+    // a version with a history changes through an amendment too, or the change would skip the record
+    var add = mode === 'received' || (!amend && (pinned() || S.am.length > 0));
     return '<button type="button" class="cm-btn cm-btn-soft" id="cmEditBtn" data-go="' + (add ? 'amend' : 'edit') + '">' + icon('edit') + (add ? t('amAdd') : t('edit')) + '</button>';
   }
   // Red, above every approval of a received contract: read it all and ask before agreeing
@@ -1684,7 +1685,7 @@
     var title = received ? t(am ? 'amReceived' : 'received') : t(amend ? 'amReady' : 'ready');
     var sub = received ? (am ? t('amReceivedSub', { v: S.ver }) : t(verify ? 'receivedSubMail' : 'receivedSub')) : t(amend ? 'amReadySub' : 'readySub');
     // A question or an answer just added here, or received: say so first
-    var qk = received ? lastQaKind() : qaJust;
+    var qk = received ? lastQaKind() : (qaJust || lastQaKind());
     var forMe = received && S.qa.some(canAnswer);
     var mine = received && !!mineRole(current.code);   // your own version, opened again from its link
     if ((!received || mine) && qk === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : 'qaAskedSub'); }
@@ -2600,6 +2601,13 @@
     if (d) {
       S = normalize(d.s); step = Math.min(STEPS, Math.max(1, d.step || 1));
       amend = amendFrom(d.am);   // an amendment in progress picks up where it stopped
+      if (!amend && S.am.length) {
+        // A finished version with a history (a question, an answer): back to the contract, not to
+        // the maker's steps, where a change would skip the history and break it
+        app.innerHTML = '<div class="cm-card"><span class="cm-spin dark"></span></div>';
+        build().then(function () { mode = 'result'; render(); }).catch(function (e) { console.error(e); mode = 'wizard'; render(t('resumed')); });
+        return;
+      }
       if (!amend) S.tv = 2;      // a draft isn't agreed yet: today's wording (an amendment keeps its contract's)
       render(t('resumed'));
     } else {
