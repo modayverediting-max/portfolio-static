@@ -521,6 +521,7 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 .cm-qa { margin: 8px 0 2px; border: 1px solid var(--p-am-line); border-inline-start: 4px solid var(--p-badge); border-radius: 12px; background: var(--p-bg); padding: 8px 12px; font-size: 14px; line-height: 1.85; cursor: default; }
 .cm-qa-q b, .cm-qa-a b { color: var(--p-ink); font-size: 13.5px; }
 .cm-qa small { color: var(--p-soft); font-size: 12px; margin-inline-start: 4px; }
+.cm-qa .cm-qa-edit { font-size: 12.5px; padding: 0 4px; margin-inline-start: 8px; color: var(--p-val); }
 .cm-qa p { margin: 2px 0 0; }
 .cm-qa-a { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--p-line); }
 .cm-qa .cm-qa-doc { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; margin-top: 7px; font-size: 12.5px; font-weight: 700; color: var(--p-badge); line-height: 1.7; }
@@ -723,7 +724,7 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 
 /* ---------- Printing straight from the browser ---------- */
 @media print {
-  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst, .cm-qa-hint, .cm-ask, .cm-qa-btn, .cm-ask-btn { display: none !important; }
+  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst, .cm-qa-hint, .cm-ask, .cm-qa-btn, .cm-ask-btn, .cm-qa-edit { display: none !important; }
   .cm-li-ask > div { padding-inline-end: 0 !important; }
   .cm-li-ask .cm-qa { margin-inline-end: 0 !important; }
   .contract-page { background: #fff; }

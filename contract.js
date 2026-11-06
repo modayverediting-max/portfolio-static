@@ -288,6 +288,14 @@
     qaSendQ: ['أضف السؤال إلى العقد', 'Add the question to the contract'],
     qaSendA: ['أضف الجواب إلى العقد', 'Add the answer to the contract'],
     qaCancel: ['إلغاء', 'Cancel'],
+    qaMineSub: ['كتبت هذا السؤال من هذا الجهاز، ويمكنك تعديله بزر «تعديل» بجانبه. وعندما يفتح الطرف الآخر الرابط من جهازه، يظهر له زر «أجب».', 'You wrote this question on this device, and you can change it with “Edit” beside it. When the other side opens the link on their device, they get the “Answer” button.'],
+    qaEditBtn: ['تعديل', 'Edit'],
+    qaEditQ: ['عدّل سؤالك', 'Edit your question'],
+    qaEditA: ['عدّل جوابك', 'Edit your answer'],
+    qaSave: ['احفظ التعديل', 'Save the change'],
+    qaSaving: ['جارٍ الحفظ…', 'Saving…'],
+    qaEditNote: ['يُحفظ التعديل بنسخة جديدة، ويبقى النص السابق في «سجل التعديلات»، ثم ترسل الرابط للطرف الآخر.', 'The change is saved as a new version and the old text stays in “Amendments”; then you send the link to the other side.'],
+    qaEditNoteAns: ['بعد تعديل السؤال يُمسح جوابه، لأنه كان عن السؤال السابق، فيعود بانتظار جواب جديد. ويبقى النص السابق في «سجل التعديلات».', 'Changing the question clears its answer, which was about the old question, so it waits for a new one. The old text stays in “Amendments”.'],
     qaEmpty: ['اكتب النص أولًا.', 'Write it first.'],
     qaMax: ['وصل العقد إلى أكبر عدد من الأسئلة. اتفقا على الباقي برسالة.', 'The contract holds as many questions as it can. Settle the rest in a message.'],
     qaQ: ['سؤال من {who}', 'Question from the {who}'],
@@ -1071,32 +1079,57 @@
   // didn't make this version; your own result is yours
   function viewerRole() {
     if (confirmInfo && !confirmInfo.error && confirmInfo.role) return confirmInfo.role;
-    return mode === 'received' ? (S.ro === 'c' ? 'f' : 'c') : S.ro;
+    if (mode !== 'received') return S.ro;
+    return mineRole(current.code) || (S.ro === 'c' ? 'f' : 'c');
+  }
+  // The versions written on this device (code → side), kept only in this browser: whoever asked
+  // can come back through the link and still edit his question, and doesn't get «أجب» on it
+  var MINE_KEY = 'modayver-contract-mine';
+  function mineRole(code) {
+    try { return JSON.parse(localStorage.getItem(MINE_KEY) || '{}')[code] || ''; } catch (e) { return ''; }
+  }
+  function rememberMine() {
+    try {
+      var m = JSON.parse(localStorage.getItem(MINE_KEY) || '{}'), keys;
+      m[current.code] = S.ro;
+      keys = Object.keys(m);
+      if (keys.length > 60) delete m[keys[0]];
+      localStorage.setItem(MINE_KEY, JSON.stringify(m));
+    } catch (e) {}
   }
   function canAnswer(r) { return (mode === 'received' || mode === 'result') && !r.a && viewerRole() !== r.by; }
   // «اسأل» shows on every contract on the page, received or your own (his ask 2026-11-06: hiding it
   // on a contract you made looked like the button was missing)
   function askable() { return mode === 'received' || mode === 'result'; }
   function qaOpen(s) { return (s || S).qa.some(function (r) { return !r.a; }); }
-  // The newest version only asked or answered something: 'ask' | 'answer' | ''
+  // What a version did to the questions: 'ask' (a question added or changed), 'answer' (an answer
+  // added or changed) or ''
+  function qaKindOf(from, to) {
+    var kind = '';
+    to.qa.forEach(function (r, i) {
+      var o = from.qa[i];
+      if (kind) return;
+      if (!o || o.q !== r.q) kind = 'ask';
+      else if (o.a !== r.a && r.a) kind = 'answer';
+    });
+    return kind;
+  }
   function lastQaKind() {
     var h = current.hist && current.hist[0];
-    if (!h) return '';
-    var done = function (s) { return s.qa.filter(function (r) { return r.a; }).length; };
-    if (done(h.to) > done(h.from)) return 'answer';
-    if (h.to.qa.length > h.from.qa.length) return 'ask';
-    return '';
+    return h ? qaKindOf(h.from, h.to) : '';
   }
   // The questions picked by «pick», each with its answer (or who it waits for) and a line saying
-  // it is written into this contract, with the versions
+  // it is written into this contract, with the versions. On the page, each side can edit its own text.
   function qaHTML(s, pick, forFile, withText) {
+    var live = !forFile && (mode === 'received' || mode === 'result');
     return s.qa.map(function (r, idx) {
       if (!pick(r)) return '';
       var asker = r.by === 'f' ? t('fl') : t('cl'), other = r.by === 'f' ? t('cl') : t('fl');
+      var editBtn = function (kind) { return '<button type="button" class="cm-link cm-qa-edit" data-qa-edit="' + kind + ':' + idx + '">' + t('qaEditBtn') + '</button>'; };
       var h = '<div class="cm-qa">' + (withText && r.x ? '<p class="cm-qa-x">' + t('qaAbout', { k: esc(clauseName(r.k)), x: esc(r.x) }) + '</p>' : '') +
-        '<div class="cm-qa-q"><b>' + t('qaQ', { who: asker }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.d)) + '</bdi></small><p>' + V(r.q) + '</p></div>';
+        '<div class="cm-qa-q"><b>' + t('qaQ', { who: asker }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.d)) + '</bdi></small>' + (live && viewerRole() === r.by ? editBtn('eq') : '') + '<p>' + V(r.q) + '</p></div>';
       if (r.a) {
-        h += '<div class="cm-qa-a"><b>' + t('qaA', { who: other }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.e)) + '</bdi></small><p>' + V(r.a) + '</p></div>' +
+        h += '<div class="cm-qa-a"><b>' + t('qaA', { who: other }) + '</b> <small><bdi dir="ltr">' + esc(fmtDate(r.e)) + '</bdi></small>' + (live && viewerRole() !== r.by ? editBtn('ea') : '') + '<p>' + V(r.a) + '</p></div>' +
           '<p class="cm-qa-doc">' + icon('ok') + '<span>' + t('qaDocBoth', { q: r.qv || '—', a: r.av || '—' }) + '</span></p>';
       } else {
         h += '<p class="cm-qa-doc cm-qa-open">' + icon('ok') + '<span>' + t('qaDocQ', { q: r.qv || '—', who: other }) + '</span>' +
@@ -1115,19 +1148,25 @@
     amend = null; confirmToken = ''; confirmInfo = null; fromLink = false; qaJust = kind;
     return build().then(function () {
       if ((current.url.split('#c=')[1] || '').length > 11500) { toast(t('tooLong')); }
-      mode = 'result'; saveDraft(); render(); scrollToCard();
+      mode = 'result'; rememberMine(); saveDraft(); render(); scrollToCard();
       try { history.replaceState(history.state, '', location.pathname); } catch (e) {}
     });
   }
-  function openAsk(li, ansIdx) {
+  // kind: 'q' a new question · 'a' the answer · 'eq' edit the question · 'ea' edit the answer
+  function openAsk(li, kind, idx) {
     closeAsk();
-    var k = li.getAttribute('data-k'), ans = ansIdx != null, box = document.createElement('div');
-    if (!ans && S.qa.length >= MAX_QA) { toast(t('qaMax')); return; }
+    var k = li.getAttribute('data-k'), r = idx != null ? S.qa[idx] : null, box = document.createElement('div');
+    var ans = kind === 'a' || kind === 'ea', edit = kind === 'eq' || kind === 'ea';
+    if (S.am.length >= MAX_AM) { toast(t('amMax')); return; }
+    if (kind === 'q' && S.qa.length >= MAX_QA) { toast(t('qaMax')); return; }
+    if (kind !== 'q' && !r) return;
+    var label = kind === 'q' ? t('qaAskLabel', { k: esc(clauseName(k)) }) : t({ a: 'qaAnsLabel', eq: 'qaEditQ', ea: 'qaEditA' }[kind]);
+    var note = edit ? (kind === 'eq' && r.a ? 'qaEditNoteAns' : 'qaEditNote') : ans ? 'qaAnsNote' : 'qaAskNote';
     box.className = 'cm-ask';
-    box.innerHTML = '<label class="cm-label">' + (ans ? t('qaAnsLabel') : t('qaAskLabel', { k: esc(clauseName(k)) })) + '</label>' +
-      '<textarea class="cm-textarea" dir="auto" maxlength="' + (ans ? 400 : 300) + '" placeholder="' + esc(t(ans ? 'qaAnsPh' : 'qaAskPh')) + '"></textarea>' +
-      '<p class="cm-hint">' + t(ans ? 'qaAnsNote' : 'qaAskNote') + '</p>' +
-      '<div class="cm-ask-row"><button type="button" class="cm-btn cm-btn-primary" data-ask-send="' + (ans ? 'a' + ansIdx : 'q' + k) + '">' + t(ans ? 'qaSendA' : 'qaSendQ') + '</button>' +
+    box.innerHTML = '<label class="cm-label">' + label + '</label>' +
+      '<textarea class="cm-textarea" dir="auto" maxlength="' + (ans ? 400 : 300) + '" placeholder="' + esc(t(ans ? 'qaAnsPh' : 'qaAskPh')) + '">' + esc(edit ? (kind === 'eq' ? r.q : r.a) : '') + '</textarea>' +
+      '<p class="cm-hint">' + t(note) + '</p>' +
+      '<div class="cm-ask-row"><button type="button" class="cm-btn cm-btn-primary" data-ask-send="' + kind + ':' + (kind === 'q' ? k : idx) + '">' + t(edit ? 'qaSave' : ans ? 'qaSendA' : 'qaSendQ') + '</button>' +
       '<button type="button" class="cm-btn cm-btn-ghost" data-ask-close>' + t('qaCancel') + '</button></div>';
     (li.querySelector('.cm-li > div') || li).appendChild(box);
     li.classList.add('cm-li-on');
@@ -1144,18 +1183,27 @@
   function sendAsk(btn) {
     var box = btn.closest('.cm-ask'), ta = box && box.querySelector('textarea'), text = ta ? ta.value.replace(/\s+/g, ' ').trim() : '';
     if (!text) { if (ta) ta.focus(); toast(t('qaEmpty')); return; }
-    var what = btn.getAttribute('data-ask-send'), me = viewerRole(), day = today();
-    busy(btn, true, t('making'));
-    if (what.charAt(0) === 'q') {
-      var k = what.slice(1), li = btn.closest('.cm-li'), body = li && li.querySelector('.cm-li > div');
+    var what = btn.getAttribute('data-ask-send').split(':'), kind = what[0], me = viewerRole(), day = today();
+    if (kind === 'q') {
+      var k = what[1], li = btn.closest('.cm-li'), body = li && li.querySelector('.cm-li > div');
       var line = '';
       if (body) { var c = body.cloneNode(true); Array.prototype.forEach.call(c.querySelectorAll('.cm-qa, .cm-ask, .cm-ask-btn'), function (x) { x.remove(); }); line = c.textContent.replace(/\s+/g, ' ').trim().slice(0, 160); }
+      busy(btn, true, t('qaSaving'));
       qaVersion(function (n) { n.ro = me; n.qa.push({ k: k, x: line, q: text.slice(0, 300), by: me, d: day, qv: n.ver + 1, a: '', e: '', av: 0 }); }, 'ask');
-    } else {
-      var i = +what.slice(1);
-      if (!S.qa[i] || S.qa[i].a) { busy(btn, false); return; }
-      qaVersion(function (n) { n.ro = me; n.qa[i].a = text.slice(0, 400); n.qa[i].e = day; n.qa[i].av = n.ver + 1; }, 'answer');
+      return;
     }
+    var i = +what[1], r = S.qa[i];
+    if (!r || (kind === 'a' && r.a)) return;
+    if ((kind === 'eq' && text === r.q) || (kind === 'ea' && text === r.a)) { closeAsk(); return; }   // nothing changed
+    busy(btn, true, t('qaSaving'));
+    // An edit is a new version too, so the old text stays in the history. A changed question
+    // clears its answer: that answer was about the old question.
+    qaVersion(function (n) {
+      var x = n.qa[i], v = n.ver + 1;
+      n.ro = me;
+      if (kind === 'eq') { x.q = text.slice(0, 300); x.d = day; x.qv = v; x.a = ''; x.e = ''; x.av = 0; }
+      else { x.a = text.slice(0, 400); x.e = day; x.av = v; }
+    }, kind === 'eq' ? 'ask' : 'answer');
   }
   var qaJust = '';   // this page just added a question or an answer ('ask' / 'answer')
 
@@ -1168,8 +1216,7 @@
       var rows = changes(a.from, a.to);
       // A version that only asked or answered a question says so
       var qaOnly = rows.length && rows.every(function (r) { return /^qa\d+$/.test(r[3]); });
-      var done = function (s) { return s.qa.filter(function (r) { return r.a; }).length; };
-      var tag = qaOnly ? t(done(a.to) > done(a.from) ? 'qaTagAns' : 'qaTagAsk') : '';
+      var tag = qaOnly ? t(qaKindOf(a.from, a.to) === 'answer' ? 'qaTagAns' : 'qaTagAsk') : '';
       h += '<div class="cm-p-block cm-am" data-block="am">' +
         '<div class="cm-am-top"><b>' + t('amN', { n: a.n }) + '</b>' + (tag ? '<span class="cm-am-tag">' + tag + '</span>' : '') + (i === 0 && hist.length > 1 ? '<span class="cm-am-new">' + t('amLatest') + '</span>' : '') +
         '<span class="cm-am-meta">' + t('amFromTo', { a: a.from.ver, b: a.to.ver }) + ' · <bdi dir="ltr">' + esc(fmtDate(a.to.dt)) + '</bdi></span></div>' +
@@ -1241,7 +1288,9 @@
       sec.items.forEach(function (it, j) {
         var k = (i + 1) + '.' + (j + 1);
         seen[k] = 1;
-        h += '<div class="cm-li' + (ask ? ' cm-li-ask' : '') + '" data-k="' + k + '"><span class="cm-li-n">' + (j + 1) + '</span><div>' + it + askBtn + qaHTML(s, function (r) { return r.k === k; }, forFile) + '</div></div>';
+        // One question and its answer per line (his rule): a line with a question offers no second one
+        var free = ask && !s.qa.some(function (r) { return r.k === k; });
+        h += '<div class="cm-li' + (free ? ' cm-li-ask' : '') + '" data-k="' + k + '"><span class="cm-li-n">' + (j + 1) + '</span><div>' + it + (free ? askBtn : '') + qaHTML(s, function (r) { return r.k === k; }, forFile) + '</div></div>';
       });
       h += '</div></section>';
     });
@@ -1637,8 +1686,9 @@
     // A question or an answer just added here, or received: say so first
     var qk = received ? lastQaKind() : qaJust;
     var forMe = received && S.qa.some(canAnswer);
-    if (!received && qk === 'ask') { title = t('qaAskedT'); sub = t('qaAskedSub'); }
-    else if (!received && qk === 'answer') { title = t('qaAnsweredT'); sub = t('qaAnsweredSub'); }
+    var mine = received && !!mineRole(current.code);   // your own version, opened again from its link
+    if ((!received || mine) && qk === 'ask') { title = t('qaAskedT'); sub = t(mine ? 'qaMineSub' : 'qaAskedSub'); }
+    else if ((!received || mine) && qk === 'answer') { title = t('qaAnsweredT'); sub = t('qaAnsweredSub'); }
     else if (forMe) { title = t('qaGotQT'); sub = t('qaGotQSub'); }
     else if (received && qk === 'answer') { title = t('qaGotAT'); sub = t('qaGotASub'); }
     app.innerHTML =
@@ -1807,7 +1857,10 @@
     if (!q) return;
     q.scrollIntoView({ behavior: 'smooth', block: 'center' });
     var box = q.closest('.cm-qa');
-    if (box) { box.classList.remove('cm-need'); void box.offsetWidth; box.classList.add('cm-need'); }
+    if (box) {
+      box.classList.remove('cm-need'); void box.offsetWidth; box.classList.add('cm-need');
+      setTimeout(function () { box.classList.remove('cm-need'); }, 1800);
+    }
   }
   // Approvals of a received contract wait for «قرأت العقد كاملًا»
   function needsRead(act) {
@@ -2349,10 +2402,13 @@
       saveDraft(); keepScroll(render);
     } else if (el.hasAttribute('data-qa-ask')) {
       var ali = el.closest('.cm-li');
-      if (ali) { if (ali.classList.contains('cm-li-on')) closeAsk(); else openAsk(ali); }
+      if (ali) { if (ali.classList.contains('cm-li-on')) closeAsk(); else openAsk(ali, 'q'); }
     } else if (el.hasAttribute('data-qa-ans')) {
       var qli = el.closest('.cm-li');
-      if (qli) openAsk(qli, +el.getAttribute('data-qa-ans'));
+      if (qli) openAsk(qli, 'a', +el.getAttribute('data-qa-ans'));
+    } else if (el.hasAttribute('data-qa-edit')) {
+      var ev = el.getAttribute('data-qa-edit').split(':'), eli = el.closest('.cm-li');
+      if (eli) openAsk(eli, ev[0], +ev[1]);
     } else if (el.hasAttribute('data-ask-send')) {
       sendAsk(el);
     } else if (el.hasAttribute('data-ask-close')) {
@@ -2409,11 +2465,11 @@
   // A tap on a line of the contract opens the box to ask about it (not on links, buttons or the boxes)
   app.addEventListener('click', function (e) {
     if (!askable() || !e.target.closest) return;
-    var li = e.target.closest('#cmPaper .cm-li[data-k]');
+    var li = e.target.closest('#cmPaper .cm-li-ask');   // only a line with no question yet
     if (!li || e.target.closest('a, button, input, textarea, .cm-qa, .cm-ask')) return;
     if (window.getSelection && String(window.getSelection())) return;   // selecting text to copy, not asking
     if (li.classList.contains('cm-li-on')) { closeAsk(); return; }
-    openAsk(li);
+    openAsk(li, 'q');
   });
 
   // On a computer, start making the file as soon as the mouse reaches the send / download buttons
@@ -2451,7 +2507,7 @@
       }
       build().then(function () {
         if ((current.url.split('#c=')[1] || '').length > 11500) { showError(t('tooLong')); return; }   // what the service's links can carry
-        mode = 'result'; saveDraft(); render(); scrollToCard();
+        mode = 'result'; rememberMine(); saveDraft(); render(); scrollToCard();
         history.replaceState(history.state, '', location.href.split('#')[0]);
       }).catch(function (e) { console.error(e); showError(t('fileFail')); });
     } else if (where === 'edit') {
