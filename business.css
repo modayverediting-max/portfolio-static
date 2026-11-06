@@ -250,6 +250,17 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 }
 [data-theme="dark"] .biz-sub-title { color: var(--d-ink); }
 
+/* Every video the same size, in tidy centred rows at any screen width */
+.biz-videos { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
+.biz-videos .video-thumbnail { flex: 0 0 100%; min-width: 0; }
+@media (min-width: 640px) {
+  .biz-videos { gap: 20px; }
+  .biz-videos .video-thumbnail { flex-basis: calc(50% - 10px); }
+}
+@media (min-width: 1024px) {
+  .biz-videos .video-thumbnail { flex-basis: calc(33.333% - 14px); }
+}
+
 /* ---------- Plain sections ---------- */
 .biz-plain { background: #fff; }
 [data-theme="dark"] .biz-plain { background: var(--d-bg); }
