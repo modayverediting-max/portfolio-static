@@ -504,9 +504,20 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 }
 
 /* ---------- Questions and answers under the lines (written into the contract) ---------- */
-.cm-result .cm-paper .cm-li[data-k] { cursor: pointer; margin: 0 -8px; padding-inline: 8px; border-radius: 10px; transition: background .2s; }
-@media (hover: hover) { .cm-result .cm-paper .cm-li[data-k]:hover { background: rgba(61,126,224,.06); } }
+.cm-result .cm-paper .cm-li-ask { cursor: pointer; margin: 0 -8px; padding-inline: 8px; border-radius: 10px; transition: background .2s; }
+@media (hover: hover) { .cm-result .cm-paper .cm-li-ask:hover { background: rgba(61,126,224,.06); } }
 .cm-result .cm-paper .cm-li.cm-li-on { background: rgba(61,126,224,.09); }
+/* «اسأل» beside every line (his ask: tapping a line wasn't obvious). Phones keep it right after
+   the text, so the line stays wide; wider screens line them all up at the end of the line. */
+.cm-ask-btn { display: inline-flex; align-items: center; gap: 4px; min-height: 26px; margin-inline-start: 6px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--p-am-line); background: var(--p-after); color: var(--p-val); font: inherit; font-size: 12.5px; font-weight: 700; line-height: 1.6; white-space: nowrap; vertical-align: middle; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.cm-ask-btn .cm-ic { width: 14px; height: 14px; }
+.cm-ask-btn:hover, .cm-ask-btn:focus-visible, .cm-li-on .cm-ask-btn { background: var(--p-badge); border-color: var(--p-badge); color: #fff; outline: none; }
+@media (min-width: 640px) {
+  .cm-li-ask { position: relative; }
+  .cm-li-ask > div { padding-inline-end: 84px; }
+  .cm-li-ask .cm-ask-btn { position: absolute; top: 12px; inset-inline-end: 8px; margin: 0; }
+  .cm-li-ask .cm-qa, .cm-li-ask .cm-ask { margin-inline-end: -84px; }
+}
 .cm-qa { margin: 8px 0 2px; border: 1px solid var(--p-am-line); border-inline-start: 4px solid var(--p-badge); border-radius: 12px; background: var(--p-bg); padding: 8px 12px; font-size: 14px; line-height: 1.85; cursor: default; }
 .cm-qa-q b, .cm-qa-a b { color: var(--p-ink); font-size: 13.5px; }
 .cm-qa small { color: var(--p-soft); font-size: 12px; margin-inline-start: 4px; }
@@ -712,7 +723,9 @@ p.cm-amend-list { padding: 11px 14px; margin: 0; }
 
 /* ---------- Printing straight from the browser ---------- */
 @media print {
-  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst, .cm-qa-hint, .cm-ask, .cm-qa-btn { display: none !important; }
+  .site-header, .cm-hero, .cm-actions, .cm-toolbar, .cm-approve, .cm-ready, .cm-toast, .cm-dialog, .cm-readfirst, .cm-qa-hint, .cm-ask, .cm-qa-btn, .cm-ask-btn { display: none !important; }
+  .cm-li-ask > div { padding-inline-end: 0 !important; }
+  .cm-li-ask .cm-qa { margin-inline-end: 0 !important; }
   .contract-page { background: #fff; }
   .cm-app-wrap { padding: 0; }
   .cm-paper { box-shadow: none; border-radius: 0; }

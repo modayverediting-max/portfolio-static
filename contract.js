@@ -273,10 +273,12 @@
     amVsOne: ['أكّدها {who} بالبريد يوم {d}، ولم يؤكدها {other}.', '{who} confirmed it by e-mail on {d}; {other} did not.'],
     amVsNone: ['لم يؤكدها أحد بالبريد.', 'Nobody confirmed it by e-mail.'],
     // before agreeing: read it all, ask about anything unclear (red, with a box to tick)
-    readWarn: ['قبل أن توافق: اقرأ العقد كاملًا، بكل بنوده وشروطه، واسأل الطرف الآخر عن أي تفصيل لم تفهمه (اضغط على البند نفسه واكتب سؤالك). فموافقتك تعني أنك فهمت كل ما فيه وتوافق عليه.', 'Before you agree: read the whole contract, every clause and term, and ask the other side about any detail you don’t understand (tap the clause and write your question). Agreeing means you understood all of it and accept it.'],
+    readWarn: ['قبل أن توافق: اقرأ العقد كاملًا، بكل بنوده وشروطه، واسأل الطرف الآخر عن أي تفصيل لم تفهمه (اضغط «اسأل» بجانب السطر). فموافقتك تعني أنك فهمت كل ما فيه وتوافق عليه.', 'Before you agree: read the whole contract, every clause and term, and ask the other side about any detail you don’t understand (press “Ask” next to the line). Agreeing means you understood all of it and accept it.'],
     // questions and answers written into the contract, under the line they are about
     clause: ['البند {s}، السطر {i}', 'clause {s}, line {i}'],
-    qaHint: ['عندك سؤال عن بند؟ اضغط على السطر نفسه واكتب سؤالك، فيُكتب في العقد تحت السطر ويجيب عنه الطرف الآخر هناك.', 'A question about a clause? Tap the line and write it: it is written into the contract under that line, and the other side answers it there.'],
+    qaHint: ['عندك سؤال عن بند؟ اضغط «اسأل» بجانب السطر واكتب سؤالك، فيُكتب في العقد تحت السطر ويجيب عنه الطرف الآخر هناك.', 'A question about a clause? Press “Ask” next to the line and write it: it is written into the contract under that line, and the other side answers it there.'],
+    qaAskBtn: ['اسأل', 'Ask'],
+    qaAskTitle: ['اسأل عن هذا السطر', 'Ask about this line'],
     qaAskLabel: ['سؤالك عن {k}', 'Your question about {k}'],
     qaAnsLabel: ['جوابك عن هذا السؤال', 'Your answer to this question'],
     qaAskPh: ['مثلًا: هل تُحسب أيام العطل من مدة المراجعة؟', 'e.g. Do holidays count in the review time?'],
@@ -1072,6 +1074,9 @@
     return mode === 'received' ? (S.ro === 'c' ? 'f' : 'c') : S.ro;
   }
   function canAnswer(r) { return (mode === 'received' || mode === 'result') && !r.a && viewerRole() !== r.by; }
+  // Asking belongs to a contract that reached someone: a received one, or your own version after a
+  // question or an amendment. A contract you have just made has nobody to ask yet.
+  function askable() { return mode === 'received' || (mode === 'result' && S.am.length > 0); }
   function qaOpen(s) { return (s || S).qa.some(function (r) { return !r.a; }); }
   // The newest version only asked or answered something: 'ask' | 'answer' | ''
   function lastQaKind() {
@@ -1144,7 +1149,7 @@
     if (what.charAt(0) === 'q') {
       var k = what.slice(1), li = btn.closest('.cm-li'), body = li && li.querySelector('.cm-li > div');
       var line = '';
-      if (body) { var c = body.cloneNode(true); Array.prototype.forEach.call(c.querySelectorAll('.cm-qa, .cm-ask'), function (x) { x.remove(); }); line = c.textContent.replace(/\s+/g, ' ').trim().slice(0, 160); }
+      if (body) { var c = body.cloneNode(true); Array.prototype.forEach.call(c.querySelectorAll('.cm-qa, .cm-ask, .cm-ask-btn'), function (x) { x.remove(); }); line = c.textContent.replace(/\s+/g, ' ').trim().slice(0, 160); }
       qaVersion(function (n) { n.ro = me; n.qa.push({ k: k, x: line, q: text.slice(0, 300), by: me, d: day, qv: n.ver + 1, a: '', e: '', av: 0 }); }, 'ask');
     } else {
       var i = +what.slice(1);
@@ -1229,13 +1234,14 @@
     }
 
     // Clauses; each line carries its key (section.line) and, under it, the questions asked about it
-    var seen = {};
+    var seen = {}, ask = !forFile && askable();   // «اسأل» on the page only, never in the file
+    var askBtn = ask ? '<button type="button" class="cm-ask-btn" data-qa-ask title="' + esc(t('qaAskTitle')) + '" aria-label="' + esc(t('qaAskTitle')) + '">' + icon('ask') + t('qaAskBtn') + '</button>' : '';
     sections(s, code).forEach(function (sec, i) {
       h += '<section class="cm-p-sec" data-block="sec"><h3><i>' + (i + 1) + '</i>' + sec.t + '</h3><div class="cm-p-items">';
       sec.items.forEach(function (it, j) {
         var k = (i + 1) + '.' + (j + 1);
         seen[k] = 1;
-        h += '<div class="cm-li" data-k="' + k + '"><span class="cm-li-n">' + (j + 1) + '</span><div>' + it + qaHTML(s, function (r) { return r.k === k; }, forFile) + '</div></div>';
+        h += '<div class="cm-li' + (ask ? ' cm-li-ask' : '') + '" data-k="' + k + '"><span class="cm-li-n">' + (j + 1) + '</span><div>' + it + askBtn + qaHTML(s, function (r) { return r.k === k; }, forFile) + '</div></div>';
       });
       h += '</div></section>';
     });
@@ -1646,7 +1652,7 @@
       '<div class="cm-toolbar"><span class="cm-code-pill">' + t('code') + ' <code>' + esc(current.code) + '</code></span>' +
       '<span class="cm-toolbar-end">' + (linkInBar ? '<button type="button" class="cm-link" data-act="copy">' + t('copy') + '</button>' : '') +
       '<button type="button" class="cm-link" data-act="dark">' + (paperDark() ? t('darkOff') : t('darkOn')) + '</button></span></div>' +
-      '<p class="cm-qa-hint">' + icon('ask') + '<span>' + t('qaHint') + '</span></p>' +
+      (askable() ? '<p class="cm-qa-hint">' + icon('ask') + '<span>' + t('qaHint') + '</span></p>' : '') +
       '<article class="cm-paper' + (paperDark() ? ' dark' : '') + '" id="cmPaper">' + paperHTML(S, current.code, current.url, current.qr) + '</article>' +
       (verify
         ? '<div class="cm-approve cm-verify" id="cmVerifyEnd"' + (verifyEndHTML() ? '' : ' hidden') + '>' + verifyEndHTML() + '</div>'
@@ -2341,6 +2347,9 @@
       else S.ca.push(v);
       if (S.cu !== 'ot' && S.ca.indexOf('ot') === -1) S.cuo = '';   // his own currency taken away: its name goes too
       saveDraft(); keepScroll(render);
+    } else if (el.hasAttribute('data-qa-ask')) {
+      var ali = el.closest('.cm-li');
+      if (ali) { if (ali.classList.contains('cm-li-on')) closeAsk(); else openAsk(ali); }
     } else if (el.hasAttribute('data-qa-ans')) {
       var qli = el.closest('.cm-li');
       if (qli) openAsk(qli, +el.getAttribute('data-qa-ans'));
@@ -2399,7 +2408,7 @@
 
   // A tap on a line of the contract opens the box to ask about it (not on links, buttons or the boxes)
   app.addEventListener('click', function (e) {
-    if ((mode !== 'received' && mode !== 'result') || !e.target.closest) return;
+    if (!askable() || !e.target.closest) return;
     var li = e.target.closest('#cmPaper .cm-li[data-k]');
     if (!li || e.target.closest('a, button, input, textarea, .cm-qa, .cm-ask')) return;
     if (window.getSelection && String(window.getSelection())) return;   // selecting text to copy, not asking
