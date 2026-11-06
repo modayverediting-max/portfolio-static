@@ -9,18 +9,18 @@
 
   // What the visitor's WhatsApp message starts with
   var MSG_AR = {
-    sample: 'مرحبًا خالد، رأيت صفحة أصحاب الأعمال وأريد عيّنة مجانية. هذا رابط فيديو من مشروعي:',
-    talk: 'مرحبًا خالد، رأيت صفحة أصحاب الأعمال وأريد أن أخبرك عن مشروعي.',
-    p1: 'مرحبًا خالد، أريد أن أسأل عن باقة البداية (4 فيديوهات شهريًا).',
-    p2: 'مرحبًا خالد، أريد أن أسأل عن باقة الانتظام (8 فيديوهات شهريًا).',
-    p3: 'مرحبًا خالد، أريد أن أسأل عن باقة الحضور الكامل (12 فيديو شهريًا).'
+    sample: 'هلا خالد، شفت صفحتك وأبي تجربة مجانية. هذا رابط فيديو من مشروعي:',
+    talk: 'هلا خالد، شفت صفحتك وأبي أكلمك عن مشروعي.',
+    p1: 'هلا خالد، أبي أسأل عن باقة البداية (4 فيديوهات في الشهر).',
+    p2: 'هلا خالد، أبي أسأل عن الباقة المتوسطة (8 فيديوهات في الشهر).',
+    p3: 'هلا خالد، أبي أسأل عن الباقة الكاملة (12 فيديو في الشهر).'
   };
   var MSG_EN = {
-    sample: 'Hi Khalid, I saw your page for business owners and I would like a free sample. Here is a link to one of my videos:',
-    talk: 'Hi Khalid, I saw your page for business owners and I would like to tell you about my project.',
+    sample: 'Hi Khalid, I saw your page and I would like a free trial. Here is a link to one of my videos:',
+    talk: 'Hi Khalid, I saw your page and I would like to tell you about my project.',
     p1: 'Hi Khalid, I would like to ask about the Starter package (4 videos a month).',
-    p2: 'Hi Khalid, I would like to ask about the Steady package (8 videos a month).',
-    p3: 'Hi Khalid, I would like to ask about the Full Presence package (12 videos a month).'
+    p2: 'Hi Khalid, I would like to ask about the Medium package (8 videos a month).',
+    p3: 'Hi Khalid, I would like to ask about the Full package (12 videos a month).'
   };
 
   document.querySelectorAll('[data-wa]').forEach(function (a) {
@@ -33,10 +33,10 @@
   });
 
   Object.assign(en, {
-    'biz.badge': 'For business owners',
+    'biz.badge': 'For business owners in the UAE and the Gulf',
     'biz.title': 'You film on your phone.<br>I handle the rest.',
     'biz.desc': 'I turn your raw footage into videos ready to publish every month, so your customers keep seeing you and editing takes none of your time.',
-    'biz.btn_sample': 'Get a free sample',
+    'biz.btn_sample': 'Get a free trial',
     'biz.btn_work': 'See my work',
     'biz.proof1': 'million views',
     'biz.proof2': 'videos delivered',
@@ -62,13 +62,13 @@
     'biz.cal_note': 'An illustration. We set the number of videos together.',
     'biz.gain1_t': 'A steady presence',
     'biz.gain1_d': 'An agreed number of videos every month, ready to publish on schedule.',
-    'biz.gain2_t': 'Videos built to be watched to the end',
+    'biz.gain2_t': 'Videos that hold attention',
     'biz.gain2_d': 'An opening that stops the scroll, tight wording and a pace that holds attention.',
     'biz.gain3_t': 'Your time stays yours',
     'biz.gain3_d': 'You will not open any software. You film, then you approve the result.',
 
-    'biz.steps_title': 'Three steps, and your part takes minutes',
-    'biz.steps_sub': 'I kept it simple so editing never adds to your work.',
+    'biz.steps_title': 'Just three steps',
+    'biz.steps_sub': 'It only takes a few minutes of your time.',
     'biz.step1_t': 'You send the footage',
     'biz.step1_d': 'One link to the clips and a line about the goal of the video. No professional camera needed.',
     'biz.step2_t': 'I work on the video',
@@ -76,7 +76,7 @@
     'biz.step3_t': 'You approve and publish',
     'biz.step3_d': 'Send your notes if you have any, then receive the video ready in the size of your platform.',
 
-    'biz.proof_title': 'Experience tested in front of millions',
+    'biz.proof_title': 'I have worked with channels followed by millions',
     'biz.proof_sub': 'I have worked with big channels followed by millions of people, and I bring the same experience to your videos.',
     'biz.ch1': '900K subscribers',
     'biz.ch2': '1.81M subscribers',
@@ -91,13 +91,14 @@
     'biz.pack_title': 'Choose the number of videos that fits your business',
     'biz.pack_sub': 'Every package is monthly and includes full editing, on-screen text, sound design and getting the video ready to publish.',
     'biz.pack_unit': 'short videos a month',
+    'biz.pack_unit12': 'short videos a month',
     'biz.pack_btn': 'Ask about this package',
     'biz.p1_name': 'Starter',
     'biz.p1_d': 'One video a week, for those who want to start showing up regularly.',
-    'biz.p2_tag': 'Best balance',
-    'biz.p2_name': 'Steady',
+    'biz.p2_tag': 'My recommendation',
+    'biz.p2_name': 'Medium',
     'biz.p2_d': 'Two videos a week, to build a presence your customers remember.',
-    'biz.p3_name': 'Full Presence',
+    'biz.p3_name': 'Full',
     'biz.p3_d': 'Three videos a week, for those who rely on content to bring in customers.',
     'biz.pack_note': 'The price depends on the length and type of video. Tell me what you need and I will send a clear offer before any commitment.',
 
@@ -105,7 +106,7 @@
     'biz.try_title': 'Try before you decide',
     'biz.try_desc': 'Send me a link to a video you have already published and I will re-edit 15 seconds of it for free. If you like the result, we continue. If not, you lose nothing.',
     'biz.try_btn': 'Send the video link',
-    'biz.try1': 'A free sample, nothing to pay upfront',
+    'biz.try1': 'The trial is free, nothing to pay',
     'biz.try2': 'A written agreement before we start',
     'biz.try3': 'A set delivery date for every video',
 
