@@ -358,6 +358,9 @@
     qaMsgAsk: ['مرحبًا، كتبت سؤالًا داخل عقد المونتاج بيننا. افتح الرابط وأجب عنه تحت السطر نفسه:\n{link}', 'Hi, I wrote a question inside our editing contract. Open the link and answer it under the line:\n{link}'],
     qaMsgAns: ['مرحبًا، أجبت عن سؤالك داخل عقد المونتاج بيننا، وتجد الجواب تحت السطر نفسه:\n{link}\nإن كان كل شيء واضحًا، فوافق على العقد.', 'Hi, I answered your question inside our editing contract; it’s under the same line:\n{link}\nIf everything is clear, please approve the contract.'],
     qaClause: ['الأسئلة والأجوبة المكتوبة تحت البنود جزء من هذا الاتفاق، وتوضّح معنى السطر الذي كُتبت تحته.', 'The questions and answers written under the clauses are part of this agreement and explain the line they are under.'],
+    qaClauseNew: ['الأسئلة والأجوبة المكتوبة تحت البنود جزء من هذا الاتفاق، وتوضّح معنى السطر الذي كُتبت تحته. وإذا اختلف الجواب مع نص السطر، يُعتمد الجواب.', 'The questions and answers written under the clauses are part of this agreement and explain the line they are under. If an answer differs from the line’s text, the answer applies.'],
+    payIn: ['مدة دفع الباقي', 'Time to pay the rest'],
+    payInHint: ['تبدأ من موافقة العميل على الفيديو. وإذا تأخر، لا يستلم النسخة النهائية حتى يدفع.', 'It starts when the client approves the video. If it’s late, they don’t get the final version until they pay.'],
     readOk: ['قرأت العقد كاملًا وفهمته، وأوافق على كل ما فيه.', 'I read the whole contract, I understand it, and I accept all of it.'],
     readNeed: ['ضع علامة على «قرأت العقد كاملًا» أولًا.', 'Tick “I read the whole contract” first.'],
     // after confirming: the contract can't change unless both sides agree to an amendment
@@ -395,7 +398,8 @@
     sc: [['v', 'كل فيديو وحده', 'Video by video'], ['p', 'المشروع كله معًا', 'All together']],
     fe: [['c', 'العميل', 'The client'], ['f', 'الفريلانسر', 'The freelancer'], ['h', 'مناصفة', 'Split equally']],
     md: [['v', 'سعر لكل فيديو', 'Each video has its price'], ['p', 'باقة: عدد فيديوهات بسعر واحد', 'Package: several videos, one price']],
-    fk: [[7, '7 أيام', '7 days'], [14, '14 يومًا', '14 days'], [30, '30 يومًا', '30 days'], [60, '60 يومًا', '60 days'], [90, '90 يومًا', '90 days']]
+    fk: [[7, '7 أيام', '7 days'], [14, '14 يومًا', '14 days'], [30, '30 يومًا', '30 days'], [60, '60 يومًا', '60 days'], [90, '90 يومًا', '90 days']],
+    pd: [[1, 'يوم واحد', '1 day'], [3, '3 أيام', '3 days'], [7, '7 أيام', '7 days'], [0, 'بدون مدة', 'No time limit']]
   };
   function optLabel(group, val) {
     var o = OPT[group].filter(function (x) { return String(x[0]) === String(val); })[0];
@@ -424,6 +428,7 @@
     rh: 0, th: 0,
     // how long the freelancer keeps the project files after the final version (agreed; 30 as before)
     fk: 30,
+    pd: 0,   // days to pay what's left after approving; 0 = no limit, as in contracts made before it
     // wording version, for clauses whose MEANING changed (not just clearer words), so a contract
     // someone already agreed to never reads differently: 1 = as made before 2026-11-05 evening;
     // 2 = a video started but not sent is paid for the work done (not a flat half). fresh() → 2
@@ -446,7 +451,7 @@
   var NUMS = { rd: [0, 10], rv: [1, 14], tn: [1, 14], nt: [1, 30], kn: [1, 200], rh: [0, 168], th: [0, 168] };
   var HOUR_STEP = 12;   // the hours steppers go 12, 24, 36 … 168
   // A new contract (not one from a link or a draft): review and revision times in hours
-  function fresh() { var s = clone(DEF); s.rh = 48; s.th = 48; s.tv = 2; return s; }
+  function fresh() { var s = clone(DEF); s.rh = 48; s.th = 48; s.tv = 3; s.pd = 3; return s; }
 
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
   function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
@@ -479,7 +484,10 @@
     s.dp = OPT.dp.some(function (o) { return o[0] === dp; }) ? dp : 50;
     var fk = parseInt(src.fk, 10);
     s.fk = OPT.fk.some(function (o) { return o[0] === fk; }) ? fk : 30;
-    s.tv = parseInt(src.tv, 10) === 2 ? 2 : 1;
+    var pd = parseInt(src.pd, 10);
+    s.pd = OPT.pd.some(function (o) { return o[0] === pd; }) ? pd : 0;
+    var tv = parseInt(src.tv, 10);
+    s.tv = tv === 2 || tv === 3 ? tv : 1;
     s.pf = src.pf ? 1 : 0;
     s.vm = src.vm ? 1 : 0;
     s.fm = s.vm ? s.fm.trim().toLowerCase() : '';
@@ -800,6 +808,13 @@
         : L('باقي المبلغ (' + V((100 - s.dp) + '%') + '، أي ' + V(amount(rest, s)) + '): يدفعه العميل ' + (many ? 'دفعة واحدة بعد أن يوافق على كل الفيديوهات، وقبل أن يستلم نسخها النهائية.' : 'بعد أن يوافق على الفيديو، وقبل أن يستلم النسخة النهائية.'),
             'The rest (' + V((100 - s.dp) + '%') + ' — ' + V(amount(rest, s)) + '): the client pays it ' + (many ? 'at once, after approving all the videos and before receiving their final versions.' : 'after approving the video and before receiving the final version.')));
     }
+    // How long what's left may wait after approving (his ask 2026-11-06: with no limit a client
+    // could approve and keep putting it off)
+    if (s.pd && s.dp < 100) {
+      var whole = s.dp === 0;
+      s2.push(L('مدة الدفع: يدفع العميل ' + (each ? (whole ? 'سعر كل فيديو' : 'باقي سعر كل فيديو') : (whole ? 'المبلغ' : 'باقي المبلغ')) + ' خلال ' + V(optLabel('pd', s.pd)) + ' من موافقته على ' + (each ? 'ذلك الفيديو' : many ? 'كل الفيديوهات' : 'الفيديو') + '. وإذا تأخر، يذكّره الفريلانسر برسالة، ولا يستلم النسخة النهائية حتى يدفع، إلا إذا اتفق الطرفان على موعد آخر.',
+                'Time to pay: the client pays ' + (each ? (whole ? 'each video’s price' : 'the rest of each video’s price') : (whole ? 'the amount' : 'the rest')) + ' within ' + V(optLabel('pd', s.pd)) + ' of approving ' + (each ? 'that video' : many ? 'all the videos' : 'the video') + '. If it’s late, the freelancer reminds them by message, and they don’t get the final version until they pay, unless both sides agree on another date.'));
+    }
     // When work starts, and what a late payment or late materials do to the date
     var paid = s.dp === 0 ? '' : s.dp === 100 ? L(each ? ' وسعره' : ' والمبلغ', each ? ' and its price' : ' and the payment') : L(each ? ' وعربونه' : ' والعربون', each ? ' and its deposit' : ' and the deposit');
     s2.push(each
@@ -958,7 +973,7 @@
     s8.push(L('عند أي خلاف: يرجع الطرفان أولًا إلى هذا العقد، ثم إلى رسائلهما في ' + V(ch) + '، ويحاولان الحل بالتفاهم.',
               'If you disagree: first refer to this contract, then to your messages on ' + V(ch) + ', and settle it amicably.'));
     // Last, so the lines above keep their numbers (a question names its line by number)
-    if (s.qa.length) s8.push(t('qaClause'));
+    if (s.qa.length) s8.push(t(s.tv >= 3 ? 'qaClauseNew' : 'qaClause'));
     out.push({ t: L('الموافقة على العقد', 'Approving the agreement'), items: s8 });
     return out;
   }
@@ -1039,6 +1054,7 @@
     add('pm', t('payBy'), listJoin(s.pm.map(function (k) { return k === 'ot' ? (s.pmo || optLabel('pm', 'ot')) : optLabel('pm', k); })));
     add('ac', t('account'), s.ac);
     add('dp', t('deposit'), s.dp === 0 ? optLabel('dp', 0) : s.dp + '%');
+    add('pd', t('payIn'), s.dp === 100 ? L('لا ينطبق (الدفع كامل قبل البدء)', 'Not needed (paid in full before work)') : optLabel('pd', s.pd));
     add('sc', L('دفع الفيديوهات', 'Paying the videos'), videoCount(s) > 1 ? optLabel('sc', s.sc) : L('لا ينطبق (فيديو واحد)', 'Not needed (one video)'));
     add('fe', L('رسوم التحويل على', 'Transfer fees paid by'), optLabel('fe', s.fe));
     add('rd', t('rounds'), s.rd === 0 ? L('لا يوجد', 'None') : rounds(s.rd));
@@ -1711,6 +1727,7 @@
       h += field(t('payBy'), chips('pm', 'pm', true) + (S.pm.indexOf('ot') !== -1 ? '<div class="cm-gap">' + input('pmo', t('other')) + '</div>' : ''));
       h += field(t('account'), input('ac', t('accountPh')), '', true);
       h += field(t('deposit'), chips('dp', 'dp'), t('depositHint'));
+      if (S.dp < 100) h += field(t('payIn'), chips('pd', 'pd'), t('payInHint'));
       if (videoCount(S) > 1) h += field(t('scope'), chips('sc', 'sc'), t('scopeHint'));
       h += field(t('fees'), chips('fe', 'fe'));
     } else if (step === 6) {
@@ -2668,7 +2685,7 @@
     if (el.hasAttribute('data-chip')) {
       var key = el.getAttribute('data-chip');
       v = el.getAttribute('data-val');
-      S[key] = key === 'dp' || key === 'fk' ? parseInt(v, 10) : v;
+      S[key] = key === 'dp' || key === 'fk' || key === 'pd' ? parseInt(v, 10) : v;
       saveDraft(); keepScroll(render);
     } else if (el.hasAttribute('data-multi')) {
       var mk = el.getAttribute('data-multi');
@@ -2899,7 +2916,10 @@
         build().then(function () { mode = 'result'; return clearCancelled(); }).then(function () { render(); }).catch(function (e) { console.error(e); mode = 'wizard'; render(t('resumed')); });
         return;
       }
-      if (!amend) S.tv = 2;      // a draft isn't agreed yet: today's wording (an amendment keeps its contract's)
+      if (!amend) {              // a draft isn't agreed yet: today's wording (an amendment keeps its contract's)
+        S.tv = 3;
+        if (d.s.pd === undefined) S.pd = 3;
+      }
       render(t('resumed'));
     } else {
       S = fresh(); amend = null;
