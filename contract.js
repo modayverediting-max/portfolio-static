@@ -292,6 +292,7 @@
     qaDelLabel: ['إلغاء هذا السؤال؟', 'Cancel this question?'],
     qaDelNote: ['يُحذف السؤال من العقد كأنه لم يُكتب، فلا يظهر في «سجل التعديلات» ولا يراه الطرف الآخر. ويمكن الإلغاء ما دام لم يُجب عنه.', 'The question is removed as if it was never written: it won’t show in “Amendments” and the other side won’t see it. It can be cancelled as long as it has no answer.'],
     qaDelYes: ['نعم، ألغِ السؤال', 'Yes, cancel the question'],
+    qaDelLocked: ['هذا السؤال في نسخة مؤكدة بالبريد، لذلك لا يمكن إلغاؤه.', 'This question is in a version confirmed by e-mail, so it can’t be cancelled.'],
     qaCanceled: ['أُلغي السؤال', 'Question cancelled'],
     qaCanceledT: ['أُلغي سؤالك', 'Your question is cancelled'],
     qaCanceledSub: ['رجع العقد كما كان قبل السؤال، ولا أثر للسؤال فيه. وإن كنت أرسلت الرابط السابق للطرف الآخر، فأرسل له رابط هذا العقد.', 'The contract is back as it was before the question, with no trace of it. If you had sent the earlier link to the other side, send them this contract’s link.'],
@@ -1174,31 +1175,76 @@
       try { history.replaceState(history.state, '', location.pathname); } catch (e) {}
     });
   }
+  // Did someone confirm by e-mail any version from this one on (0 = the first)? Fails if the
+  // service can't say: nothing that may be confirmed is rewritten without knowing.
+  function confirmedSince(from) {
+    var all = (current.hist || []).slice().reverse().map(function (a) { return [a.from.vm, a.hash, a.pair]; }).concat([[S.vm, current.hash, current.pair]]);
+    return Promise.all(all.slice(from).map(function (v) {
+      return API && VERIFY && v[0] && v[1] && v[2] ? api('/status?h=' + v[1] + '&p=' + v[2]) : {};
+    })).then(function (list) {
+      return list.some(function (vs) { return vs.state === 'partial' || vs.state === 'locked'; });
+    });
+  }
   // Cancelling takes a question out as if it had never been asked (his rule: the other side must
-  // not see a cancelled question, not even in the log). Every step that only asked or edited it
-  // goes, and any later step is chained again on what remains, so the history stays whole.
-  function dropQuestion(k) {
-    var vs = versions(S), strip = function (v) { var c = clone(v); c.qa = c.qa.filter(function (r) { return r.k !== k; }); return c; };
-    var kept = strip(vs[0]), map = {}, chain = Promise.resolve();
-    map[vs[0].ver] = kept.ver;
-    vs.slice(1).forEach(function (v, i) {
-      chain = chain.then(function () {
-        var next = strip(v);
-        if (!changes(kept, next).length) { map[v.ver] = kept.ver; return; }   // this step only touched that question
-        return codeOf(kept).then(function (code) {
-          next.ver = kept.ver + 1;
-          map[v.ver] = next.ver;
-          next.qa.forEach(function (r) { if (map[r.qv]) r.qv = map[r.qv]; if (map[r.av]) r.av = map[r.av]; });
-          next.am = kept.am.concat([{ c: code, w: S.am[i].w, p: patchOf(kept, next) }]);
-          kept = normalize(next);
+  // not see a cancelled question, not even in the log). A question stays only if it lasts to the
+  // newest version: k goes from that one, and with no k only those cancelled earlier go. Every
+  // step that only asked or edited one goes too, and any later step is chained again on what
+  // remains, so the history stays whole. Gives the contract, or null when there's nothing to
+  // take out or someone confirmed a version this would change (a confirmed version never changes).
+  function dropQuestions(k) {
+    var vs = versions(S), clean = vs.map(clone), last = clean[clean.length - 1], from = -1, i;
+    last.qa = last.qa.filter(function (r) { return r.k !== k; });
+    for (i = clean.length - 2; i >= 0; i--) {
+      var alive = clean[i + 1].qa.map(function (r) { return r.k; });
+      clean[i].qa = clean[i].qa.filter(function (r) { return alive.indexOf(r.k) !== -1; });
+    }
+    vs.forEach(function (v, n) { if (from < 0 && v.qa.length !== clean[n].qa.length) from = n; });
+    if (from < 0) return Promise.resolve(null);
+    return confirmedSince(from).then(function (confirmed) {
+      if (confirmed) return null;
+      var kept = clean[0], map = {}, chain = Promise.resolve();
+      map[vs[0].ver] = kept.ver;
+      clean.slice(1).forEach(function (next, n) {
+        chain = chain.then(function () {
+          var ver = next.ver;
+          if (!changes(kept, next).length) { map[ver] = kept.ver; return; }   // this step only touched a cancelled question
+          return codeOf(kept).then(function (code) {
+            next.ver = kept.ver + 1;
+            map[ver] = next.ver;
+            next.qa.forEach(function (r) { if (map[r.qv]) r.qv = map[r.qv]; if (map[r.av]) r.av = map[r.av]; });
+            next.am = kept.am.concat([{ c: code, w: S.am[n].w, p: patchOf(kept, next) }]);
+            kept = normalize(next);
+          });
         });
       });
+      return chain.then(function () { return kept; });
     });
-    return chain.then(function () { return kept; });
+  }
+  // A contract from before that rule can still carry a cancelled question in its history: opened
+  // again, it gets the same cleaning, on every side, so nobody sees it (his ask 2026-11-06).
+  function clearCancelled() {
+    if (!S.am.length) return Promise.resolve(false);
+    var me = viewerRole(), draft = mode === 'result';
+    return dropQuestions().catch(function () { return null; }).then(function (s) {
+      if (!s) return false;
+      S = normalize(s);
+      var mine = S.ro === me;   // as when cancelling: back to a version this side made, or to the one it received
+      if (draft && !mine) { mode = 'received'; fromLink = true; }
+      return build().then(function () {
+        if (mine) rememberMine();
+        if (draft) { if (mine) saveDraft(); else clearDraft(); }
+        if (mode === 'received') {   // the old link is the one with the cancelled question
+          try { history.replaceState(history.state, '', location.pathname + location.search + current.url.slice(current.url.indexOf('#'))); } catch (e) {}
+          shortInAddress();
+        }
+        return true;
+      });
+    });
   }
   function cancelQuestion(k) {
     var me = viewerRole();
-    return dropQuestion(k).then(function (s) {
+    return dropQuestions(k).then(function (s) {
+      if (!s) return false;
       S = normalize(s);
       amend = null; confirmToken = ''; confirmInfo = null; qaJust = 'cancel';
       var mine = S.ro === me;   // back to a version this side made, or to the one it received
@@ -1253,7 +1299,9 @@
       var ci = +what[1];
       if (!S.qa[ci] || S.qa[ci].a || qaLocked()) return;
       busy(btn, true, t('qaSaving'));
-      cancelQuestion(S.qa[ci].k).catch(function (e) { console.error(e); busy(btn, false); toast(t('fileFail')); });
+      cancelQuestion(S.qa[ci].k).then(function (done) {
+        if (done === false) { closeAsk(); toast(t('qaDelLocked')); }
+      }).catch(function (e) { console.error(e); busy(btn, false); toast(t(e && e.code ? 'vError' : 'fileFail')); });
       return;
     }
     if (!text) { if (ta) ta.focus(); toast(t(kind === 'eq' ? 'qaEmptyEdit' : 'qaEmpty')); return; }
@@ -1830,6 +1878,15 @@
     }).catch(function (e) { console.error(e); shortJob = null; return ''; });
     shortJob = { code: code, p: p };
     return p;
+  }
+  // The address bar switches to the one-line link, so a link copied from the bar or the
+  // browser's share menu is short too
+  function shortInAddress() {
+    var code = current.code, at = location.hash;
+    return shortLink().then(function (l) {
+      if (!l || mode !== 'received' || current.code !== code || location.hash !== at) return;
+      try { history.replaceState(history.state, '', location.pathname + location.search + l.slice(l.indexOf('#'))); } catch (e) {}
+    });
   }
   function openShort(id, keyText) {
     return api('/s/' + id).then(function (r) {
@@ -2660,19 +2717,11 @@
       }).then(function (s) {
         S = s; fromLink = true; mode = 'received'; amend = null; qaJust = '';
         return build();
-      }).then(function () {
-        if (sm) { current.short = shareBase() + '#s=' + sm[1] + '.' + sm[2]; current.shortFor = current.code; }
+      }).then(clearCancelled).then(function (cleared) {
+        if (sm && !cleared) { current.short = shareBase() + '#s=' + sm[1] + '.' + sm[2]; current.shortFor = current.code; }
         render();
         if (confirmToken) scrollToCard();   // from a confirmation e-mail: the e-mail box is the first thing in view
-        // An older long link (#c=…): the address bar switches to the one-line link, so a link
-        // copied from the bar or the browser's share menu is short too
-        if (!sm) {
-          var c0 = current.code;
-          shortLink().then(function (l) {
-            if (!l || mode !== 'received' || current.code !== c0 || !/[#&]c=/.test(location.hash)) return;
-            try { history.replaceState(history.state, '', location.pathname + location.search + l.slice(l.indexOf('#'))); } catch (e) {}
-          });
-        }
+        if (!sm && !cleared) shortInAddress();   // an older long link (#c=…)
       }).catch(function (e) { console.error(e); S = clone(DEF); mode = 'bad'; render(); });
       return;
     }
@@ -2684,7 +2733,7 @@
         // A finished version with a history (a question, an answer): back to the contract, not to
         // the maker's steps, where a change would skip the history and break it
         app.innerHTML = '<div class="cm-card"><span class="cm-spin dark"></span></div>';
-        build().then(function () { mode = 'result'; render(); }).catch(function (e) { console.error(e); mode = 'wizard'; render(t('resumed')); });
+        build().then(function () { mode = 'result'; return clearCancelled(); }).then(function () { render(); }).catch(function (e) { console.error(e); mode = 'wizard'; render(t('resumed')); });
         return;
       }
       if (!amend) S.tv = 2;      // a draft isn't agreed yet: today's wording (an amendment keeps its contract's)
