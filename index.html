@@ -13,7 +13,7 @@
     @media (min-width: 768px) { html { background-size: 100% 435px; } }
     @media (min-width: 1024px) { html { background-size: 100% 520px; } }
     body { margin: 0; }
-    html[data-theme="dark"] { background-color: #0A1830; background-image: linear-gradient(0deg, #0A1830 0%, #1B4B95 100%); }
+    html[data-theme="dark"] { background: linear-gradient(180deg, #1B4B95 0%, #0A1830 63%) fixed #0A1830; }
   </style>
   <script>
     // modayver.com — the home page.
@@ -33,6 +33,9 @@
         // Keep the page hidden until its design (CSS) has loaded, so the raw
         // unstyled page never shows; meanwhile the backdrop shows through
         html = html.replace('<head>', '<head><style id="shell-cover">body > * { visibility: hidden; } body { background: transparent !important; }</style>');
+        // Carry the theme and the backdrop over, so no bare frame shows while the page is written
+        html = html.replace('<html ', '<html data-theme="' + (document.documentElement.getAttribute('data-theme') || 'dark') + '" ');
+        html = html.replace('<head>', '<head><style id="shell-bg">' + document.querySelector('head style').textContent + '</style>');
         document.open();
         document.write(html);
         document.close();
@@ -51,20 +54,28 @@
           if (shown) return;
           shown = true;
           if (cover) cover.remove();
+          var backdrop = document.getElementById('shell-bg');
+          if (backdrop) backdrop.remove();
           if (location.hash) {
             var target = document.getElementById(location.hash.slice(1));
             if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
           }
         }
-        var sheets = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'));
-        Promise.all(sheets.map(function(link) {
-          return new Promise(function(done) {
-            if (link.sheet) { done(); return; }
-            link.addEventListener('load', done);
-            link.addEventListener('error', done);
-          });
-        })).then(reveal);
-        setTimeout(reveal, 2500);
+        // The browser may still be reading the page here (it waits for scripts), so look for
+        // the stylesheets only once it has finished, or none are found and the raw page shows
+        function waitForDesign() {
+          var sheets = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'));
+          Promise.all(sheets.map(function(link) {
+            return new Promise(function(done) {
+              if (link.sheet) { done(); return; }
+              link.addEventListener('load', done);
+              link.addEventListener('error', done);
+            });
+          })).then(reveal);
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', waitForDesign);
+        else waitForDesign();
+        setTimeout(reveal, 6000);
       })
       .catch(function() { location.replace('home.html' + location.search + location.hash); });
   </script>

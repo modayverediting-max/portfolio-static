@@ -10,8 +10,8 @@
   <style>
     html { background: #F2F7FD; }
     body { margin: 0; min-height: 100vh; background: linear-gradient(180deg, #3D7EE0 0px, #5E96E6 300px, #D6E6FB 680px, #F2F7FD 980px) no-repeat #F2F7FD; }
-    html[data-theme="dark"] { background: #0A1830; }
-    html[data-theme="dark"] body { background: linear-gradient(180deg, #1B4B95 0px, #12305E 300px, #0A1830 720px) no-repeat #0A1830; }
+    html[data-theme="dark"] { background: linear-gradient(180deg, #1B4B95 0%, #12305E 38%, #0A1830 90%) fixed #0A1830; }
+    html[data-theme="dark"] body { background: transparent; }
   </style>
   <script>
     // modayver.com/contract — the contract maker.
@@ -31,6 +31,9 @@
       .then(function(html) {
         // Keep the page hidden until its design (CSS) is ready, so the raw page never shows
         html = html.replace('<head>', '<head><style id="shell-cover">body > * { visibility: hidden; }</style>');
+        // Carry the theme and the backdrop over, so no bare frame shows while the page is written
+        html = html.replace('<html ', '<html data-theme="' + (document.documentElement.getAttribute('data-theme') || 'dark') + '" ');
+        html = html.replace('<head>', '<head><style id="shell-bg">' + document.querySelector('head style').textContent + '</style>');
         document.open();
         document.write(html);
         document.close();
@@ -49,17 +52,25 @@
           if (shown) return;
           shown = true;
           if (cover) cover.remove();
+          var backdrop = document.getElementById('shell-bg');
+          if (backdrop) backdrop.remove();
           document.dispatchEvent(new Event('shell-revealed'));
         }
-        var sheets = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'));
-        Promise.all(sheets.map(function(link) {
-          return new Promise(function(done) {
-            if (link.sheet) { done(); return; }
-            link.addEventListener('load', done);
-            link.addEventListener('error', done);
-          });
-        })).then(reveal);
-        setTimeout(reveal, 2500);
+        // The browser may still be reading the page here (it waits for scripts), so look for
+        // the stylesheets only once it has finished, or none are found and the raw page shows
+        function waitForDesign() {
+          var sheets = Array.prototype.slice.call(document.querySelectorAll('link[rel="stylesheet"]'));
+          Promise.all(sheets.map(function(link) {
+            return new Promise(function(done) {
+              if (link.sheet) { done(); return; }
+              link.addEventListener('load', done);
+              link.addEventListener('error', done);
+            });
+          })).then(reveal);
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', waitForDesign);
+        else waitForDesign();
+        setTimeout(reveal, 6000);
       })
       .catch(function() { location.replace('contract-page.html' + location.search + location.hash); });
   </script>
