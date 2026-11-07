@@ -1,7 +1,7 @@
 /* ========================================
    Light / dark theme
-   Every first visit opens in the dark design, whatever the device uses.
-   Light only comes when the visitor presses the moon / sun button; that
+   Every first visit opens in the light (white) design, whatever the device
+   uses. Dark only comes when the visitor presses the moon / sun button; that
    choice is remembered. Loaded in <head> (not deferred) so the page paints in
    the right colours from the first frame.
    ======================================== */
@@ -21,7 +21,7 @@
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0A1830' : '#3D7EE0');
   }
 
-  apply(saved() || 'dark');
+  apply(saved() || 'light');
 
   // The moon / sun button: a soft cross-fade between the two looks
   window.toggleTheme = function () {
