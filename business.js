@@ -133,13 +133,6 @@
     'biz.lead_name_ph': 'Type your name',
     'biz.lead_phone': 'WhatsApp number',
     'biz.lead_country': 'Country',
-    'biz.c_ae': 'UAE +971',
-    'biz.c_sa': 'Saudi Arabia +966',
-    'biz.c_kw': 'Kuwait +965',
-    'biz.c_qa': 'Qatar +974',
-    'biz.c_bh': 'Bahrain +973',
-    'biz.c_om': 'Oman +968',
-    'biz.c_other': 'Another country',
     'biz.lead_btn': 'Send my number',
     'biz.lead_note': 'Only I see your number, and I never share it.',
     'biz.lead_done_t': 'I have your number',
@@ -220,6 +213,97 @@
     };
     var say = function () { return SAY[document.documentElement.lang === 'en' ? 'en' : 'ar']; };
 
+    /* Every country, the UAE first and already chosen. One line each: code|Arabic|English.
+       Some countries share a code (+1, +7, +39), so the choice is kept as the country itself. */
+    var GULF = ['971|الإمارات|UAE', '966|السعودية|Saudi Arabia', '965|الكويت|Kuwait', '974|قطر|Qatar', '973|البحرين|Bahrain', '968|عُمان|Oman'];
+    var ARAB = [
+      '964|العراق|Iraq', '962|الأردن|Jordan', '961|لبنان|Lebanon', '963|سوريا|Syria', '970|فلسطين|Palestine', '20|مصر|Egypt',
+      '249|السودان|Sudan', '218|ليبيا|Libya', '216|تونس|Tunisia', '213|الجزائر|Algeria', '212|المغرب|Morocco', '222|موريتانيا|Mauritania',
+      '967|اليمن|Yemen', '252|الصومال|Somalia', '253|جيبوتي|Djibouti', '269|جزر القمر|Comoros'
+    ];
+    var WORLD = [
+      '93|أفغانستان|Afghanistan', '355|ألبانيا|Albania', '376|أندورا|Andorra', '244|أنغولا|Angola', '1|أنتيغوا وبربودا|Antigua and Barbuda',
+      '54|الأرجنتين|Argentina', '374|أرمينيا|Armenia', '61|أستراليا|Australia', '43|النمسا|Austria', '994|أذربيجان|Azerbaijan',
+      '1|الباهاما|Bahamas', '880|بنغلاديش|Bangladesh', '1|بربادوس|Barbados', '375|بيلاروسيا|Belarus', '32|بلجيكا|Belgium',
+      '501|بليز|Belize', '229|بنين|Benin', '975|بوتان|Bhutan', '591|بوليفيا|Bolivia', '387|البوسنة والهرسك|Bosnia and Herzegovina',
+      '267|بوتسوانا|Botswana', '55|البرازيل|Brazil', '673|بروناي|Brunei', '359|بلغاريا|Bulgaria', '226|بوركينا فاسو|Burkina Faso',
+      '257|بوروندي|Burundi', '238|الرأس الأخضر|Cape Verde', '855|كمبوديا|Cambodia', '237|الكاميرون|Cameroon', '1|كندا|Canada',
+      '236|أفريقيا الوسطى|Central African Republic', '235|تشاد|Chad', '56|تشيلي|Chile', '86|الصين|China', '57|كولومبيا|Colombia',
+      '242|الكونغو|Congo', '243|الكونغو الديمقراطية|DR Congo', '506|كوستاريكا|Costa Rica', '225|ساحل العاج|Ivory Coast', '385|كرواتيا|Croatia',
+      '53|كوبا|Cuba', '357|قبرص|Cyprus', '420|التشيك|Czechia', '45|الدنمارك|Denmark', '1|دومينيكا|Dominica',
+      '1|الدومينيكان|Dominican Republic', '593|الإكوادور|Ecuador', '503|السلفادور|El Salvador', '240|غينيا الاستوائية|Equatorial Guinea', '291|إريتريا|Eritrea',
+      '372|إستونيا|Estonia', '268|إسواتيني|Eswatini', '251|إثيوبيا|Ethiopia', '679|فيجي|Fiji', '358|فنلندا|Finland',
+      '33|فرنسا|France', '241|الغابون|Gabon', '220|غامبيا|Gambia', '995|جورجيا|Georgia', '49|ألمانيا|Germany',
+      '233|غانا|Ghana', '30|اليونان|Greece', '1|غرينادا|Grenada', '502|غواتيمالا|Guatemala', '224|غينيا|Guinea',
+      '245|غينيا بيساو|Guinea-Bissau', '592|غيانا|Guyana', '509|هايتي|Haiti', '504|هندوراس|Honduras', '852|هونغ كونغ|Hong Kong',
+      '36|المجر|Hungary', '354|آيسلندا|Iceland', '91|الهند|India', '62|إندونيسيا|Indonesia', '98|إيران|Iran',
+      '353|أيرلندا|Ireland', '972|إسرائيل|Israel', '39|إيطاليا|Italy', '1|جامايكا|Jamaica', '81|اليابان|Japan',
+      '7|كازاخستان|Kazakhstan', '254|كينيا|Kenya', '686|كيريباتي|Kiribati', '383|كوسوفو|Kosovo', '996|قيرغيزستان|Kyrgyzstan',
+      '856|لاوس|Laos', '371|لاتفيا|Latvia', '266|ليسوتو|Lesotho', '231|ليبيريا|Liberia', '423|ليختنشتاين|Liechtenstein',
+      '370|ليتوانيا|Lithuania', '352|لوكسمبورغ|Luxembourg', '853|ماكاو|Macau', '261|مدغشقر|Madagascar', '265|مالاوي|Malawi',
+      '60|ماليزيا|Malaysia', '960|المالديف|Maldives', '223|مالي|Mali', '356|مالطا|Malta', '692|جزر مارشال|Marshall Islands',
+      '230|موريشيوس|Mauritius', '52|المكسيك|Mexico', '691|ميكرونيزيا|Micronesia', '373|مولدوفا|Moldova', '377|موناكو|Monaco',
+      '976|منغوليا|Mongolia', '382|الجبل الأسود|Montenegro', '258|موزمبيق|Mozambique', '95|ميانمار|Myanmar', '264|ناميبيا|Namibia',
+      '674|ناورو|Nauru', '977|نيبال|Nepal', '31|هولندا|Netherlands', '64|نيوزيلندا|New Zealand', '505|نيكاراغوا|Nicaragua',
+      '227|النيجر|Niger', '234|نيجيريا|Nigeria', '850|كوريا الشمالية|North Korea', '389|مقدونيا الشمالية|North Macedonia', '47|النرويج|Norway',
+      '92|باكستان|Pakistan', '680|بالاو|Palau', '507|بنما|Panama', '675|بابوا غينيا الجديدة|Papua New Guinea', '595|باراغواي|Paraguay',
+      '51|بيرو|Peru', '63|الفلبين|Philippines', '48|بولندا|Poland', '351|البرتغال|Portugal', '1|بورتوريكو|Puerto Rico',
+      '40|رومانيا|Romania', '7|روسيا|Russia', '250|رواندا|Rwanda', '1|سانت كيتس ونيفيس|Saint Kitts and Nevis', '1|سانت لوسيا|Saint Lucia',
+      '1|سانت فنسنت والغرينادين|Saint Vincent and the Grenadines', '685|ساموا|Samoa', '378|سان مارينو|San Marino', '239|ساو تومي وبرينسيبي|Sao Tome and Principe', '221|السنغال|Senegal',
+      '381|صربيا|Serbia', '248|سيشل|Seychelles', '232|سيراليون|Sierra Leone', '65|سنغافورة|Singapore', '421|سلوفاكيا|Slovakia',
+      '386|سلوفينيا|Slovenia', '677|جزر سليمان|Solomon Islands', '27|جنوب أفريقيا|South Africa', '82|كوريا الجنوبية|South Korea', '211|جنوب السودان|South Sudan',
+      '34|إسبانيا|Spain', '94|سريلانكا|Sri Lanka', '597|سورينام|Suriname', '46|السويد|Sweden', '41|سويسرا|Switzerland',
+      '886|تايوان|Taiwan', '992|طاجيكستان|Tajikistan', '255|تنزانيا|Tanzania', '66|تايلاند|Thailand', '670|تيمور الشرقية|Timor-Leste',
+      '228|توغو|Togo', '676|تونغا|Tonga', '1|ترينيداد وتوباغو|Trinidad and Tobago', '90|تركيا|Turkey', '993|تركمانستان|Turkmenistan',
+      '688|توفالو|Tuvalu', '256|أوغندا|Uganda', '380|أوكرانيا|Ukraine', '44|بريطانيا|United Kingdom', '1|أمريكا|United States',
+      '598|أوروغواي|Uruguay', '998|أوزبكستان|Uzbekistan', '678|فانواتو|Vanuatu', '39|الفاتيكان|Vatican', '58|فنزويلا|Venezuela',
+      '84|فيتنام|Vietnam', '260|زامبيا|Zambia', '263|زيمبابوي|Zimbabwe'
+    ];
+    var readRow = function (row) { var p = row.split('|'); return { code: p[0], ar: p[1], en: p[2] }; };
+    var groups = [
+      { ar: 'دول الخليج', en: 'Gulf countries', rows: GULF.map(readRow) },
+      { ar: 'الدول العربية', en: 'Arab countries', sorted: true, rows: ARAB.map(readRow) },
+      { ar: 'باقي دول العالم', en: 'Rest of the world', sorted: true, rows: WORLD.map(readRow) }
+    ];
+    var codeBox = document.getElementById('bizCodeBox');
+    var codeSelect = document.getElementById('bizCode');
+    var chosen = groups[0].rows[0];
+    var filledLang = '';
+    var pageLang = function () { return document.documentElement.lang === 'en' ? 'en' : 'ar'; };
+    var sortName = function (c, lang) { return lang === 'en' ? c.en : c.ar.replace(/^ال/, ''); };   // البرازيل sits under ب
+
+    var showChoice = function () {
+      document.getElementById('bizCodeName').textContent = chosen[pageLang()];
+      document.getElementById('bizCodeNum').textContent = '+' + chosen.code;
+    };
+    var fillCountries = function () {
+      var lang = pageLang();
+      if (lang === filledLang) return;
+      filledLang = lang;
+      codeBox.dir = lang === 'en' ? 'ltr' : 'rtl';
+      codeSelect.textContent = '';
+      groups.forEach(function (g) {
+        var box = document.createElement('optgroup');
+        box.label = g[lang];
+        var rows = !g.sorted ? g.rows : g.rows.slice().sort(function (a, b) {
+          return sortName(a, lang).localeCompare(sortName(b, lang), lang);
+        });
+        rows.forEach(function (c) {
+          var item = new Option(c[lang] + ' ‎+' + c.code, c.code, false, c === chosen);
+          item._country = c;
+          box.appendChild(item);
+        });
+        codeSelect.appendChild(box);
+      });
+      showChoice();
+    };
+    codeSelect.addEventListener('change', function () {
+      chosen = codeSelect.options[codeSelect.selectedIndex]._country;
+      showChoice();
+    });
+    fillCountries();
+    new MutationObserver(fillCountries).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
     // Arabic digits, spaces, a leading zero or 00: whatever is typed becomes one full number
     var fullNumber = function (code, typed) {
       var v = String(typed).replace(/[\u0660-\u0669]/g, function (d) { return d.charCodeAt(0) - 0x0660; })
@@ -227,7 +311,13 @@
       var international = /^(\+|00)/.test(v);
       var digits = v.replace(/\D/g, '');
       if (international) digits = digits.replace(/^00/, '');
-      else if (code) digits = digits.indexOf(code) === 0 && digits.length > code.length + 7 ? digits : code + digits.replace(/^0+/, '');
+      else if (code) {
+        // Already has the country code? The length decides, because many local numbers start
+        // with the same digits as their code (India 91…, Italy 39…, Kazakhstan 7…)
+        var local = digits.replace(/^0+/, '');
+        var hasCode = local.indexOf(code) === 0 && local.length - code.length >= [0, 10, 9, 7][code.length];
+        digits = hasCode ? local : code + local;
+      }
       return /^[1-9]\d{7,14}$/.test(digits) ? digits : '';
     };
 

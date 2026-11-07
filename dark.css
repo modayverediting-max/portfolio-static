@@ -2,7 +2,7 @@
    Dark theme (html[data-theme="dark"], set by theme.js)
    Same brand blues, on deep navy instead of white. Loaded after style.css.
    ======================================== */
-:root { color-scheme: light; }
+:root { color-scheme: only light; }   /* "only": phone browsers may not darken the light design by themselves */
 :root[data-theme="dark"] {
   color-scheme: dark;
   --d-bg: #0A1830;

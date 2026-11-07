@@ -465,7 +465,25 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 .biz-lead select:focus { border-color: var(--base2); box-shadow: 0 0 0 3px rgba(61,126,224,0.2); }
 .biz-lead input::placeholder { color: #7D93B0; }
 .biz-lead-phone { display: grid; grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr); gap: 8px; }
-.biz-lead-phone select { padding: 0 8px; font-size: 14.5px; }
+/* Country box: the real list sits invisibly on top and the face shows the choice, so the code is never cut off by a long name */
+.biz-lead-code { position: relative; min-width: 0; }
+.biz-lead-code select { position: absolute; inset: 0; z-index: 1; height: 100%; padding: 0 8px; opacity: 0; cursor: pointer; }
+.biz-lead-code-face {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(61,126,224,0.3);
+  background: #fff;
+  font-size: 14.5px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.biz-lead-code:focus-within .biz-lead-code-face { border-color: var(--base2); box-shadow: 0 0 0 3px rgba(61,126,224,0.2); }
+.biz-lead-code-name { flex: 1 1 auto; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.biz-lead-code-num { flex: none; }
+.biz-lead-code-face svg { flex: none; width: 12px; height: 12px; }
 .biz-lead-phone input { text-align: left; }
 .biz-lead-btn { width: 100%; padding: 13px 20px; margin-top: 4px; font-family: inherit; font-size: 16px; cursor: pointer; }
 .biz-lead-btn:disabled { opacity: 0.75; cursor: default; }
@@ -484,6 +502,7 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 }
 [data-theme="dark"] .biz-lead input,
 [data-theme="dark"] .biz-lead select { background: #0E2142; color: var(--d-ink); border-color: rgba(255,255,255,0.2); }
+[data-theme="dark"] .biz-lead-code-face { background: #0E2142; color: var(--d-ink); border-color: rgba(255,255,255,0.2); }
 [data-theme="dark"] .biz-lead input::placeholder { color: #7F93B3; }
 [data-theme="dark"] .biz-lead-note,
 [data-theme="dark"] .biz-lead-done p { color: var(--d-soft); }

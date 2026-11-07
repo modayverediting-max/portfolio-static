@@ -6,7 +6,7 @@
    the right colours from the first frame.
    ======================================== */
 (function () {
-  var KEY = 'modayver-theme';
+  var KEY = 'modayver-look';   // new name on 2026-11-07: every older saved choice starts light again
   var root = document.documentElement;
 
   function saved() {
