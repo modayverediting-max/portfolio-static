@@ -129,8 +129,24 @@
     'biz.q6': 'How do I pay?',
     'biz.a6': 'With a monthly invoice through PayPal, or another way we agree on.',
 
+    'biz.lead_name': 'Your name',
+    'biz.lead_name_ph': 'Type your name',
+    'biz.lead_phone': 'WhatsApp number',
+    'biz.lead_country': 'Country',
+    'biz.c_ae': 'UAE +971',
+    'biz.c_sa': 'Saudi Arabia +966',
+    'biz.c_kw': 'Kuwait +965',
+    'biz.c_qa': 'Qatar +974',
+    'biz.c_bh': 'Bahrain +973',
+    'biz.c_om': 'Oman +968',
+    'biz.c_other': 'Another country',
+    'biz.lead_btn': 'Send my number',
+    'biz.lead_note': 'Only I see your number, and I never share it.',
+    'biz.lead_done_t': 'I have your number',
+    'biz.lead_done_d': 'I will message you on WhatsApp soon.',
+    'biz.alt': 'Or leave your number and I will message you',
     'biz.cta_title': 'The first step is one message',
-    'biz.cta_sub': 'Tell me about your business on WhatsApp and I will reply with what fits it.',
+    'biz.cta_sub': 'Leave your number here and I will message you on WhatsApp, or message me directly.',
     'biz.cta_btn': 'Talk to me on WhatsApp',
     'biz.cta_other': 'Other ways to reach me'
   });
@@ -186,5 +202,114 @@
     var update = function () { sticky.classList.toggle('show', !heroSeen && !lastSeen); };
     new IntersectionObserver(function (e) { heroSeen = e[e.length - 1].isIntersecting; update(); }).observe(hero);
     new IntersectionObserver(function (e) { lastSeen = e[e.length - 1].isIntersecting; update(); }).observe(last);
+  }
+  /* Leave your number: if a visitor forgets to message on WhatsApp, the number still reaches Khalid.
+     It goes through the same mail service as the contact page, inside the message, with a stand-in
+     address made from the number (the service needs an address; it never receives mail). The spare
+     way is the same as on the contact page. */
+  var lead = document.getElementById('bizLead');
+  if (lead) {
+    var MAIL_API = 'https://modayver-contracts.modayver-contracts.workers.dev';
+    var WEB3FORMS_KEY = '34b0facb-8684-4bd6-839c-98284eb120de';   // public form key, safe in page code
+    var leadState = 'idle';   // idle → sending → sent: one number, sent once
+    var leadBtn = document.getElementById('bizLeadBtn');
+    var leadError = document.getElementById('bizLeadError');
+    var SAY = {
+      ar: { name: 'اكتب اسمك.', phone: 'اكتب رقم واتساب صحيح.', fail: 'ما انرسل رقمك. تأكد من النت وجرّب مرة ثانية.', busy: 'جاري الإرسال…' },
+      en: { name: 'Please type your name.', phone: 'Please type a valid WhatsApp number.', fail: 'Your number was not sent. Check your connection and try again.', busy: 'Sending…' }
+    };
+    var say = function () { return SAY[document.documentElement.lang === 'en' ? 'en' : 'ar']; };
+
+    // Arabic digits, spaces, a leading zero or 00: whatever is typed becomes one full number
+    var fullNumber = function (code, typed) {
+      var v = String(typed).replace(/[\u0660-\u0669]/g, function (d) { return d.charCodeAt(0) - 0x0660; })
+                           .replace(/[\u06F0-\u06F9]/g, function (d) { return d.charCodeAt(0) - 0x06F0; }).trim();
+      var international = /^(\+|00)/.test(v);
+      var digits = v.replace(/\D/g, '');
+      if (international) digits = digits.replace(/^00/, '');
+      else if (code) digits = digits.indexOf(code) === 0 && digits.length > code.length + 7 ? digits : code + digits.replace(/^0+/, '');
+      return /^[1-9]\d{7,14}$/.test(digits) ? digits : '';
+    };
+
+    var showLeadError = function (text) {
+      leadError.textContent = text;
+      leadError.hidden = false;
+    };
+
+    lead.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (leadState !== 'idle') return;
+      var f = lead.elements;
+      var name = f['name'].value.trim();
+      var number = fullNumber(f['code'].value, f['phone'].value);
+      if (!name) { showLeadError(say().name); f['name'].focus(); return; }
+      if (!number) { showLeadError(say().phone); f['phone'].focus(); return; }
+      if (navigator.onLine === false) { showLeadError(say().fail); return; }
+
+      leadState = 'sending';
+      leadError.hidden = true;
+      var label = leadBtn.textContent;
+      leadBtn.disabled = true;
+      leadBtn.textContent = say().busy;
+
+      var message = 'عميل من صفحة أصحاب الأعمال ترك رقمه عشان تكلمه.\n\n' +
+        'الاسم: ' + name + '\n' +
+        'رقم الواتساب: +' + number + '\n' +
+        'افتح المحادثة: https://wa.me/' + number +
+        (document.documentElement.lang === 'en' ? '\n\nكان يتصفح الصفحة بالإنجليزية.' : '');
+
+      var done = function () {
+        if (leadState === 'sent') return;
+        leadState = 'sent';
+        lead.hidden = true;
+        document.getElementById('bizLeadDone').hidden = false;
+      };
+      var failed = function (err) {
+        console.error(err);
+        if (leadState !== 'sending') return;
+        leadState = 'idle';
+        leadBtn.disabled = false;
+        leadBtn.textContent = label;
+        showLeadError(say().fail);
+      };
+      var spare = function () {
+        var data = new FormData();
+        data.append('access_key', WEB3FORMS_KEY);
+        data.append('from_name', 'موقع مودايفر');
+        data.append('subject', 'رقم عميل من صفحة أصحاب الأعمال: ' + name);
+        data.append('name', name);
+        data.append('message', message);
+        fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Accept': 'application/json' }, body: data, keepalive: true })
+          .then(function (r) { return r.json(); })
+          .then(function (r) {
+            if (!r || String(r.success) !== 'true') throw new Error(r && r.message);
+            done();
+          })
+          .catch(failed);
+      };
+
+      var stop = window.AbortController ? new AbortController() : null;
+      var wait = setTimeout(function () { if (stop) stop.abort(); }, 8000);
+      fetch(MAIL_API + '/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+        body: JSON.stringify({ name: name, email: 'wa' + number + '@lead.modayver.com', message: message, lang: 'ar', mv_check: f['mv_check'].value }),
+        signal: stop ? stop.signal : undefined,
+        keepalive: true
+      })
+        .then(function (r) {
+          clearTimeout(wait);
+          if (r.status === 429) return failed(new Error('too many messages'));
+          return r.json().then(function (out) {
+            if (!r.ok || !out || out.ok !== true) throw new Error((out && out.error) || 'status ' + r.status);
+            done();
+          });
+        })
+        .catch(function (err) {
+          clearTimeout(wait);
+          console.warn('mail service did not take it, using the spare way', err);
+          spare();
+        });
+    });
   }
 })();
