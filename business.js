@@ -217,7 +217,7 @@
        Some countries share a code (+1, +7, +39), so the choice is kept as the country itself. */
     var GULF = ['971|الإمارات|UAE', '966|السعودية|Saudi Arabia', '965|الكويت|Kuwait', '974|قطر|Qatar', '973|البحرين|Bahrain', '968|عُمان|Oman'];
     var ARAB = [
-      '964|العراق|Iraq', '962|الأردن|Jordan', '961|لبنان|Lebanon', '963|سوريا|Syria', '970|فلسطين|Palestine', '20|مصر|Egypt',
+      '964|العراق|Iraq', '962|الأردن|Jordan', '961|لبنان|Lebanon', '963|سوريا|Syria', '970|فلسطين|Palestine', '972|فلسطين|Palestine', '20|مصر|Egypt',
       '249|السودان|Sudan', '218|ليبيا|Libya', '216|تونس|Tunisia', '213|الجزائر|Algeria', '212|المغرب|Morocco', '222|موريتانيا|Mauritania',
       '967|اليمن|Yemen', '252|الصومال|Somalia', '253|جيبوتي|Djibouti', '269|جزر القمر|Comoros'
     ];
@@ -237,7 +237,7 @@
       '233|غانا|Ghana', '30|اليونان|Greece', '1|غرينادا|Grenada', '502|غواتيمالا|Guatemala', '224|غينيا|Guinea',
       '245|غينيا بيساو|Guinea-Bissau', '592|غيانا|Guyana', '509|هايتي|Haiti', '504|هندوراس|Honduras', '852|هونغ كونغ|Hong Kong',
       '36|المجر|Hungary', '354|آيسلندا|Iceland', '91|الهند|India', '62|إندونيسيا|Indonesia', '98|إيران|Iran',
-      '353|أيرلندا|Ireland', '972|إسرائيل|Israel', '39|إيطاليا|Italy', '1|جامايكا|Jamaica', '81|اليابان|Japan',
+      '353|أيرلندا|Ireland', '39|إيطاليا|Italy', '1|جامايكا|Jamaica', '81|اليابان|Japan',
       '7|كازاخستان|Kazakhstan', '254|كينيا|Kenya', '686|كيريباتي|Kiribati', '383|كوسوفو|Kosovo', '996|قيرغيزستان|Kyrgyzstan',
       '856|لاوس|Laos', '371|لاتفيا|Latvia', '266|ليسوتو|Lesotho', '231|ليبيريا|Liberia', '423|ليختنشتاين|Liechtenstein',
       '370|ليتوانيا|Lithuania', '352|لوكسمبورغ|Luxembourg', '853|ماكاو|Macau', '261|مدغشقر|Madagascar', '265|مالاوي|Malawi',
