@@ -89,6 +89,28 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 .biz-card .service-badge { margin: 0 0 16px; }
 .biz-card .service-title { color: var(--brand1); font-size: 18px; margin-bottom: 8px; }
 .biz-card .service-desc { color: #2E4A6B; font-size: 14.5px; line-height: 1.8; }
+/* Computer: icon and text in the middle of the card. Phone: icon on the left, beside the title. */
+@media (min-width: 640px) {
+  .biz-grid-4 .biz-card { text-align: center; }
+  .biz-grid-4 .biz-card .service-badge { margin-inline: auto; }
+}
+@media (max-width: 639.98px) {
+  .biz-grid-4 .biz-card .service-badge {
+    position: absolute;
+    top: 22px;
+    left: 22px;
+    width: 52px;
+    height: 52px;
+    margin: 0;
+    border-radius: 17px;
+  }
+  .biz-grid-4 .biz-card .service-title {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    padding-left: 66px;
+  }
+}
 [data-theme="dark"] .biz-card,
 [data-theme="dark"] .biz-card:hover {
   background: rgba(255,255,255,0.07);
