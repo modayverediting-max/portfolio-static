@@ -14,13 +14,14 @@ html:not([data-theme="dark"]) .biz-pack-main .btn-secondary,
 html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 
 /* ---------- Top of the page ---------- */
+/* The site's blue-to-white fade, held back until after the words so they stay readable.
+   In dark mode the site's own hero gradient applies. */
 .biz-hero {
   padding: 104px 0 56px;
-  background-image: linear-gradient(180deg, #3D7EE0 0%, #3D7EE0 100%);
+  background-image: linear-gradient(180deg, #3D7EE0 0%, #5F97E7 calc(100% - 92px), #FFFFFF 100%);
 }
-@media (min-width: 768px) { .biz-hero { padding: 128px 0 72px; } }
-@media (min-width: 1024px) { .biz-hero { padding: 148px 0 80px; } }
-[data-theme="dark"] .biz-hero { background-image: linear-gradient(180deg, #1B4B95 0%, #12305E 100%); }
+@media (min-width: 768px) { .biz-hero { padding: 128px 0 60px; } }
+@media (min-width: 1024px) { .biz-hero { padding: 148px 0 64px; } }
 
 .biz-hero .vfx-badge { margin-bottom: 22px; }
 .biz-hero .hero-title {
@@ -115,6 +116,23 @@ section .biz-proof .biz-proof-item.reveal-box { opacity: 1; transform: none; fil
 }
 [data-theme="dark"] .biz-card .service-title { color: var(--d-ink); }
 [data-theme="dark"] .biz-card .service-desc { color: var(--d-soft); }
+
+/* ---------- What each side gains: right after the first screen, from white back to the blue ---------- */
+section.biz-ben-sec { padding: 4px 0 56px; }
+.biz-ben-sec .section-title { margin-bottom: 22px; }
+.biz-bens { display: grid; grid-template-columns: 1fr; gap: 14px; max-width: 920px; margin-inline: auto; }
+@media (min-width: 720px) { .biz-bens { grid-template-columns: 1fr 1fr; gap: 20px; } }
+.biz-card.biz-ben { padding: 18px 18px 20px; }
+.biz-ben-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.biz-card.biz-ben .service-badge { width: 44px; height: 44px; border-radius: 14px; margin: 0; flex: none; }
+.biz-card.biz-ben .service-badge svg { width: 22px; height: 22px; }
+.biz-card.biz-ben .service-title { margin: 0; }
+.biz-ben-list { list-style: none; display: grid; gap: 10px; }
+.biz-ben-list li { display: flex; align-items: flex-start; gap: 9px; color: #2E4A6B; font-size: 14.5px; font-weight: 500; line-height: 1.75; }
+.biz-ben-list .biz-tick { width: 20px; height: 20px; margin-top: 3px; color: #fff; background: #3D7EE0; box-shadow: none; }
+.biz-ben-list .biz-tick svg { width: 12px; height: 12px; }
+[data-theme="dark"] .biz-ben-list li { color: var(--d-soft); }
+[data-theme="dark"] .biz-ben-list .biz-tick { color: #0A1830; background: #8EC5FF; }
 
 /* ---------- What changes: two months side by side ---------- */
 /* Right after the hero: same colour at the top, a soft fade into the next section at the bottom */
