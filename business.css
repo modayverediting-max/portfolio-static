@@ -452,6 +452,20 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
   text-decoration: underline;
   text-underline-offset: 4px;
 }
+.biz-alt-btn {
+  display: block;
+  width: fit-content;
+  margin-top: 12px;
+  padding: 12px 30px;
+  border: 1.5px solid rgba(255,255,255,0.8);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.14);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+.biz-alt-btn:hover { background: rgba(255,255,255,0.26); }
 .biz-hero .biz-alt { color: var(--brand1); }
 [data-theme="dark"] .biz-hero .biz-alt { color: #fff; }
 
