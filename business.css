@@ -55,6 +55,8 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
   background: rgba(255,255,255,0.14);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
 }
+/* The strip enters as one piece: the box carries the motion, its numbers stay inside it */
+section .biz-proof .biz-proof-item.reveal-box { opacity: 1; transform: none; filter: none; transition: none; }
 .biz-proof-item { padding: 10px 6px; color: #fff; }
 .biz-proof-item + .biz-proof-item { border-inline-start: 1px solid rgba(255,255,255,0.22); }
 .biz-proof-num { font-size: clamp(20px, 5.4vw, 30px); font-weight: 800; line-height: 1.15; }
