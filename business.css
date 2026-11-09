@@ -138,15 +138,19 @@ section.biz-ben-sec { padding: 4px 0 56px; }
 /* Right after the hero: same colour at the top, a soft fade into the next section at the bottom */
 section.biz-change-sec {
   padding: 56px 0 80px;
-  background: linear-gradient(180deg, #3D7EE0 0, #3D7EE0 calc(100% - 240px), #4A86E2 calc(100% - 170px), #689AE7 calc(100% - 80px), #9EBEF0 100%);
+  background: linear-gradient(180deg, #3D7EE0 0, #4F8AE3 calc(100% - 210px), #6E9FE8 calc(100% - 130px), #9EBEF0 100%);
 }
 [data-theme="dark"] section.biz-change-sec {
   background: linear-gradient(180deg, #12305E 0, #12305E calc(100% - 240px), #0A1830 100%);
 }
-/* A section after a slow fade: picks up the seam colour, reaches white softly, then goes back to the blue */
+/* A section after a slow fade: picks up the seam colour, rises to a soft light blue behind its dark title,
+   then slowly back to the blue. No white here: the blue leads. */
 html:not([data-theme="dark"]) section.biz-seam-sec {
-  background-image: linear-gradient(180deg, #9EBEF0 0, #FFFFFF 140px, #3D7EE0 100%);
+  background-image: linear-gradient(180deg, #9EBEF0 0, var(--biz-crest, #C6DBF7) 130px, #3D7EE0 100%);
 }
+.biz-ben-sec { --biz-crest: #B4CFF4; }
+/* Each section overlaps the one above by a pixel, so the white page never shows as a hairline between two blues */
+section.biz-seam-sec, section.biz-seam-sec + section { margin-top: -1px; }
 .biz-change { display: grid; grid-template-columns: 1fr; gap: 36px; align-items: center; }
 @media (min-width: 1024px) { .biz-change { grid-template-columns: 1.15fr 1fr; gap: 56px; } }
 
