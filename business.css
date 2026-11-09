@@ -120,6 +120,14 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 [data-theme="dark"] .biz-card .service-desc { color: var(--d-soft); }
 
 /* ---------- What changes: two months side by side ---------- */
+/* This section now sits right after the hero, so it fades in and out of the sections around it */
+section.biz-change-sec {
+  padding: 124px 0;
+  background: linear-gradient(180deg, #FFFFFF 0, #3D7EE0 104px, #3D7EE0 calc(100% - 104px), #FFFFFF 100%);
+}
+[data-theme="dark"] section.biz-change-sec {
+  background: linear-gradient(180deg, #0A1830 0, #12305E 104px, #12305E calc(100% - 104px), #0A1830 100%);
+}
 .biz-change { display: grid; grid-template-columns: 1fr; gap: 36px; align-items: center; }
 @media (min-width: 1024px) { .biz-change { grid-template-columns: 1.15fr 1fr; gap: 56px; } }
 
