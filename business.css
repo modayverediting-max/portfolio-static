@@ -467,6 +467,11 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 }
 .biz-alt-btn:hover { background: rgba(255,255,255,0.26); }
 
+/* The long headline stays on two clean lines on phones */
+@media (max-width: 639.98px) {
+  .biz-hero .hero-title { font-size: clamp(23px, 7.3vw, 30px); line-height: 1.5; }
+}
+
 /* Hero: three buttons, three different colours inside the blue and white brand */
 .biz-hero .hero-buttons { flex-wrap: wrap; }
 html .biz-hero .hero-buttons a.biz-wa {
