@@ -33,8 +33,8 @@
   });
 
   Object.assign(en, {
-    'biz.badge': 'For business owners in the UAE and the Gulf',
-    'biz.title': 'You film on your phone.<br>I handle the rest.',
+    'biz.badge': 'For business owners, especially in the UAE and the Gulf',
+    'biz.title': 'Your client must see you every week,<br>not one video every few months',
     'biz.desc': 'I help you get more messages from serious clients, and you film just once. Every month we look at how many reached you and improve.',
     'biz.btn_sample': 'Try the first two videos',
     'biz.alt_btn': 'Leave your number and I will message you',
@@ -43,10 +43,10 @@
     'biz.proof2': 'videos delivered to channels and companies',
     'biz.proof3': 'years working in video',
 
-    'biz.pain_title': 'Does this happen in your business?',
-    'biz.pain_sub': 'You know video matters. The problem is everything that comes after filming.',
+    'biz.pain_title': 'How many clients went to someone else this month?',
+    'biz.pain_sub': 'Your client looks you up before buying. If they find nothing new, they go to the one they see every day.',
     'biz.pain1_t': 'Clips waiting on your phone',
-    'biz.pain1_d': 'You film with energy, then the clips pile up because editing needs time you do not have.',
+    'biz.pain1_d': 'You film with energy, then the clips pile up because editing needs time you do not have. Every clip that never goes out is a sale you missed.',
     'biz.pain2_t': 'One week on, one month gone',
     'biz.pain2_d': 'Every gap sends you back to the start and leaves your customer to whoever they see more often.',
     'biz.pain3_t': 'A good message nobody finishes',
@@ -55,7 +55,7 @@
     'biz.pain4_d': 'Late delivery, daily follow-ups and endless changes. You wanted less work and got more.',
 
     'biz.change_title': 'Your month once we start',
-    'biz.change_sub': 'What you need is a steady presence your customers see every week, not one video every now and then.',
+    'biz.change_sub': 'The difference between an account people forget and one they see every week.',
     'biz.cal1': 'Without a plan',
     'biz.cal1_f': '3 videos a month',
     'biz.cal2': 'With me',
