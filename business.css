@@ -18,7 +18,7 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
    section carries it on to white, so there is no sharp band. Dark mode: the site's own gradient. */
 .biz-hero {
   padding: 104px 0 56px;
-  background-image: linear-gradient(180deg, #3D7EE0 0%, #4A86E2 55%, #689AE7 80%, #9EBEF0 100%);
+  background-image: linear-gradient(180deg, #3D7EE0 0, #4A86E2 calc(100% - 240px), #689AE7 calc(100% - 96px), #9EBEF0 100%);
 }
 @media (min-width: 768px) { .biz-hero { padding: 128px 0 60px; } }
 @media (min-width: 1024px) { .biz-hero { padding: 148px 0 64px; } }
@@ -30,6 +30,8 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
   letter-spacing: -0.5px;
   margin-bottom: 26px;
 }
+.biz-hero .biz-hero-sell { max-width: 860px; text-wrap: balance; margin: 0 auto 14px; color: #fff; font-size: clamp(15.5px, 4.1vw, 21px); font-weight: 600; line-height: 1.7; }
+.biz-hero .biz-hero-sell strong { font-size: 1.22em; font-weight: 800; }
 .biz-hero .hero-desc { max-width: 640px; margin-inline: auto; }
 .biz-hero .hero-desc p { font-size: clamp(15px, 3.9vw, 19px); line-height: 1.85; }
 .biz-change-sec .hero-buttons { margin-top: 24px; }

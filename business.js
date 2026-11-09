@@ -54,6 +54,7 @@
     'biz.pain4_t': 'An editor who became a new problem',
     'biz.pain4_d': 'Late delivery, daily follow-ups and endless changes. You wanted less work and got more.',
 
+    'biz.sell': '<strong>One video does not sell.</strong><br>What sells is your customers getting used to you and trusting you, so when they are ready to buy, they do not think of anyone else.',
     'biz.ben_title': 'What you gain, and what your customer gains',
     'biz.ben1_t': 'You, the company owner',
     'biz.ben1_a': 'Your customers see you on social media every day, so when they are ready to buy, your name comes to mind first. In the market, whoever shows up more sells more.',
