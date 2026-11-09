@@ -34,7 +34,7 @@
 
   Object.assign(en, {
     'biz.badge': 'For business owners, especially in the UAE and the Gulf',
-    'biz.title': 'Your client must see you every week, <br>not one video every few months',
+    'biz.title': 'Your client must see you every day, <br>not one video every few months',
     'biz.desc': 'I help you get more messages from serious clients, <br class="biz-m">and you film just once.<br>Every month we look at how many reached you and improve.',
     'biz.btn_sample': 'Try the first two videos',
     'biz.alt_btn': 'Leave your number and I will message you',
@@ -55,11 +55,13 @@
     'biz.pain4_d': 'Late delivery, daily follow-ups and endless changes. You wanted less work and got more.',
 
     'biz.change_title': 'Your month once we start',
-    'biz.change_sub': 'The difference between an account people forget and one they see every week.',
-    'biz.cal1': 'Without a plan',
+    'biz.change_sub': 'Without organization, your client will not see you every day. With it, you can be in front of them every day.',
+    'biz.cal1': 'Without organization',
     'biz.cal1_f': '3 videos a month',
-    'biz.cal2': 'With me',
+    'biz.cal1_r': 'Your client sees you less and forgets you',
+    'biz.cal2': 'With organization',
     'biz.cal2_f': '8 videos a month',
+    'biz.cal2_r': 'Your client sees you more and remembers you',
     'biz.week1': 'Week 1',
     'biz.week2': 'Week 2',
     'biz.week3': 'Week 3',
@@ -67,7 +69,7 @@
     'biz.week_none': 'None',
     'biz.cal_note': 'An illustration. We set the number of videos together.',
     'biz.gain1_t': 'Your clients do not forget you',
-    'biz.gain1_d': 'They see you every week, so when they are ready to buy, they remember you and not someone else.',
+    'biz.gain1_d': 'They keep seeing you, so when they are ready to buy, they remember you and not someone else.',
     'biz.gain2_t': 'Videos that make buyers message you',
     'biz.gain2_d': 'The first two seconds stop them, the words show why they should buy from you, and the end tells them what to do next.',
     'biz.gain3_t': 'Your time goes to selling',
@@ -96,7 +98,7 @@
     'biz.v4': 'Ad for a PC builds store',
     'biz.v5': 'Introduction video',
 
-    'biz.pack_title': 'Every week you are absent, your client buys from someone else',
+    'biz.pack_title': 'Every day you are absent, your client buys from someone else',
     'biz.pack_sub': 'Each package lasts one month. The more your clients see you, the better your chance to sell and grow your business.',
     'biz.pack_unit': 'short videos a month',
     'biz.pack_unit12': 'short videos a month',
