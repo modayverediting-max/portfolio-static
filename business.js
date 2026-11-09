@@ -87,7 +87,7 @@
     'biz.step4_d': 'Every month we look at how many serious messages reached you and adjust the next videos accordingly.',
 
     'biz.proof_title': 'I have worked with channels followed by millions',
-    'biz.proof_sub': 'I have worked with big channels followed by millions of people, and I bring the same experience to your videos.',
+    'biz.proof_sub': 'The same experience, put into your videos so they reach your customers and sell.',
     'biz.ch1': '900K subscribers',
     'biz.ch2': '1.81M subscribers',
     'biz.ch3': '1.55M subscribers',
