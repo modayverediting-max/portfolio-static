@@ -466,6 +466,40 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
   text-decoration: none;
 }
 .biz-alt-btn:hover { background: rgba(255,255,255,0.26); }
+
+/* Hero: three buttons, three different colours inside the blue and white brand */
+.biz-hero .hero-buttons { flex-wrap: wrap; }
+html .biz-hero .hero-buttons a.biz-wa {
+  background: linear-gradient(180deg, #62A8F7 0%, #3D7EE0 55%, #2B69C8 100%);
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+}
+html .biz-hero .hero-buttons a.biz-wa:hover {
+  background: linear-gradient(180deg, #74B4FA 0%, #4A8AE8 55%, #3473D2 100%);
+  color: #fff;
+}
+html .biz-hero .hero-buttons a.biz-btn-work,
+html .biz-hero .hero-buttons a.biz-btn-work:hover {
+  background: #fff;
+  border: 1px solid rgba(0,55,108,0.16);
+  color: #00376C;
+  text-shadow: none;
+  box-shadow: 0 10px 24px rgba(0,55,108,0.2);
+}
+html .biz-hero .hero-buttons a.biz-btn-number,
+html .biz-hero .hero-buttons a.biz-btn-number:hover {
+  background: linear-gradient(180deg, #0F4F94 0%, #00376C 100%);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(0,55,108,0.28);
+}
+html[data-theme="dark"] .biz-hero .hero-buttons a.biz-btn-number,
+html[data-theme="dark"] .biz-hero .hero-buttons a.biz-btn-number:hover {
+  background: #8CC8FF;
+  border: 1px solid rgba(255,255,255,0.45);
+  color: #00264F;
+  text-shadow: none;
+}
 .biz-hero .biz-alt { color: var(--brand1); }
 [data-theme="dark"] .biz-hero .biz-alt { color: #fff; }
 

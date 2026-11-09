@@ -37,6 +37,7 @@
     'biz.title': 'You film on your phone.<br>I handle the rest.',
     'biz.desc': 'I help you get more messages from serious clients, and you film just once. Every month we look at how many reached you and improve.',
     'biz.btn_sample': 'Try the first two videos',
+    'biz.alt_btn': 'Leave your number and I will message you',
     'biz.btn_work': 'See my work',
     'biz.proof1': 'million views on videos I made',
     'biz.proof2': 'videos delivered to channels and companies',
