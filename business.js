@@ -9,14 +9,14 @@
 
   // What the visitor's WhatsApp message starts with
   var MSG_AR = {
-    sample: 'هلا خالد، شفت صفحتك وأبي تجربة مجانية. هذا رابط فيديو من مشروعي:',
+    sample: 'هلا خالد، شفت صفحتك وأبي أجرّب أول فيديوهين.',
     talk: 'هلا خالد، شفت صفحتك وأبي أكلمك عن مشروعي.',
     p1: 'هلا خالد، أبي أسأل عن باقة البداية (4 فيديوهات في الشهر).',
     p2: 'هلا خالد، أبي أسأل عن الباقة المتوسطة (8 فيديوهات في الشهر).',
     p3: 'هلا خالد، أبي أسأل عن الباقة الكاملة (12 فيديو في الشهر).'
   };
   var MSG_EN = {
-    sample: 'Hi Khalid, I saw your page and I would like a free trial. Here is a link to one of my videos:',
+    sample: 'Hi Khalid, I saw your page and I would like to try the first two videos.',
     talk: 'Hi Khalid, I saw your page and I would like to tell you about my project.',
     p1: 'Hi Khalid, I would like to ask about the Starter package (4 videos a month).',
     p2: 'Hi Khalid, I would like to ask about the Medium package (8 videos a month).',
@@ -36,7 +36,7 @@
     'biz.badge': 'For business owners in the UAE and the Gulf',
     'biz.title': 'You film on your phone.<br>I handle the rest.',
     'biz.desc': 'I turn your raw footage into videos ready to publish every month, so your customers keep seeing you and editing takes none of your time.',
-    'biz.btn_sample': 'Get a free trial',
+    'biz.btn_sample': 'Try the first two videos',
     'biz.btn_work': 'See my work',
     'biz.proof1': 'million views',
     'biz.proof2': 'videos delivered',
@@ -109,10 +109,10 @@
 
     'biz.try_tag': 'No commitment',
     'biz.try_title': 'Try before you decide',
-    'biz.try_desc': 'Send me a link to a video you have already published and I will re-edit 15 seconds of it for free. If you like the result, we continue. If not, you lose nothing.',
-    'biz.try_btn': 'Send the video link',
-    'biz.try1': 'The trial is free, nothing to pay',
-    'biz.try2': 'A written agreement before we start',
+    'biz.try_desc': 'The first two videos are a trial, with no talk of price or contracts. If you like the work, we continue and agree on a price that includes those two videos. If not, you owe nothing.',
+    'biz.try_btn': 'Start the trial',
+    'biz.try1': 'If you do not like the work, you pay nothing',
+    'biz.try2': 'No talk of price or contracts before the two videos',
     'biz.try3': 'A set delivery date for every video',
 
     'biz.faq_title': 'Questions before we start',
@@ -123,7 +123,7 @@
     'biz.q3': 'How do I send the clips?',
     'biz.a3': 'With a link, such as Google Drive. You do not need any special software.',
     'biz.q4': 'How many changes can I ask for?',
-    'biz.a4': 'We set the number of revisions in the agreement before we start, so there are no surprises for either side.',
+    'biz.a4': 'We set the number of revisions together before we start, so there are no surprises for either side.',
     'biz.q5': 'How much does it cost?',
     'biz.a5': 'It depends on the type and number of videos. Tell me what you need and I will send a clear offer before any commitment.',
     'biz.q6': 'How do I pay?',
