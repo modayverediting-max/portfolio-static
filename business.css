@@ -186,7 +186,8 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 
 /* ---------- How it works ---------- */
 .biz-steps { display: grid; grid-template-columns: 1fr; gap: 16px; }
-@media (min-width: 900px) { .biz-steps { grid-template-columns: repeat(3, 1fr); gap: 24px; } }
+@media (min-width: 700px) { .biz-steps { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
+@media (min-width: 1200px) { .biz-steps { grid-template-columns: repeat(4, 1fr); } }
 .biz-step {
   padding: 24px 22px;
   border-radius: 20px;
