@@ -16,11 +16,11 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 /* ---------- Top of the page ---------- */
 .biz-hero {
   padding: 104px 0 56px;
-  background-image: linear-gradient(180deg, #3D7EE0 0%, #3D7EE0 52%, #A7CCF6 82%, #FFFFFF 100%);
+  background-image: linear-gradient(180deg, #3D7EE0 0%, #3D7EE0 100%);
 }
 @media (min-width: 768px) { .biz-hero { padding: 128px 0 72px; } }
 @media (min-width: 1024px) { .biz-hero { padding: 148px 0 80px; } }
-[data-theme="dark"] .biz-hero { background-image: linear-gradient(180deg, #1B4B95 0%, #17407F 52%, #0A1830 100%); }
+[data-theme="dark"] .biz-hero { background-image: linear-gradient(180deg, #1B4B95 0%, #12305E 100%); }
 
 .biz-hero .vfx-badge { margin-bottom: 22px; }
 .biz-hero .hero-title {
@@ -121,13 +121,13 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 [data-theme="dark"] .biz-card .service-desc { color: var(--d-soft); }
 
 /* ---------- What changes: two months side by side ---------- */
-/* This section now sits right after the hero, so it fades in and out of the sections around it */
+/* Right after the hero: same colour at the top, a soft fade into the next section at the bottom */
 section.biz-change-sec {
-  padding: 124px 0;
-  background: linear-gradient(180deg, #FFFFFF 0, #3D7EE0 104px, #3D7EE0 calc(100% - 104px), #FFFFFF 100%);
+  padding: 56px 0 124px;
+  background: linear-gradient(180deg, #3D7EE0 0, #3D7EE0 calc(100% - 104px), #FFFFFF 100%);
 }
 [data-theme="dark"] section.biz-change-sec {
-  background: linear-gradient(180deg, #0A1830 0, #12305E 104px, #12305E calc(100% - 104px), #0A1830 100%);
+  background: linear-gradient(180deg, #12305E 0, #12305E calc(100% - 104px), #0A1830 100%);
 }
 .biz-change { display: grid; grid-template-columns: 1fr; gap: 36px; align-items: center; }
 @media (min-width: 1024px) { .biz-change { grid-template-columns: 1.15fr 1fr; gap: 56px; } }
@@ -476,44 +476,60 @@ section.biz-change-sec {
 }
 .biz-alt-btn:hover { background: rgba(255,255,255,0.26); }
 
-/* The long headline stays on two clean lines on phones */
+/* The Arabic headline is always two even lines; its size follows the screen */
+html[lang="ar"] .biz-hero .hero-title {
+  font-size: min(calc((100vw - 34px) / 15), 72px);
+  line-height: 1.5;
+  white-space: nowrap;
+}
+br.biz-m { display: none; }
 @media (max-width: 639.98px) {
-  .biz-hero .hero-title { font-size: clamp(23px, 7.3vw, 30px); line-height: 1.5; }
+  br.biz-m { display: inline; }
+  html[lang="en"] .biz-hero .hero-title { font-size: clamp(23px, 6.6vw, 28px); line-height: 1.4; text-wrap: balance; }
+  html[lang="en"] .biz-hero .hero-title br { display: none; }
+  .biz-hero .vfx-badge { font-size: clamp(10.5px, 3.05vw, 13px); }
+  .biz-hero .hero-desc p { font-size: clamp(12.5px, 3.9vw, 16px); line-height: 1.9; }
 }
 
-/* Hero: three buttons, three different colours inside the blue and white brand */
-.biz-hero .hero-buttons { flex-wrap: wrap; }
-html .biz-hero .hero-buttons a.biz-wa {
-  background: linear-gradient(180deg, #62A8F7 0%, #3D7EE0 55%, #2B69C8 100%);
-  border: 1px solid rgba(255,255,255,0.4);
-  color: #fff;
+/* Hero buttons, by importance: try and number side by side in the same cold blue, work under them */
+.biz-hero .hero-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  max-width: 430px;
+  margin-inline: auto;
 }
-html .biz-hero .hero-buttons a.biz-wa:hover {
-  background: linear-gradient(180deg, #74B4FA 0%, #4A8AE8 55%, #3473D2 100%);
-  color: #fff;
+.biz-hero .hero-buttons a.biz-btn-number { order: 2; }
+.biz-hero .hero-buttons a.biz-btn-work {
+  order: 3;
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: calc(50% - 4px);
 }
-html .biz-hero .hero-buttons a.biz-btn-work,
-html .biz-hero .hero-buttons a.biz-btn-work:hover {
-  background: #fff;
-  border: 1px solid rgba(0,55,108,0.16);
-  color: #00376C;
+html .biz-hero .hero-buttons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 14px;
+  font-size: clamp(12.5px, 3.5vw, 15px);
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
   text-shadow: none;
-  box-shadow: 0 10px 24px rgba(0,55,108,0.2);
+  box-shadow: 0 4px 12px rgba(0,30,80,0.14);
 }
+html .biz-hero .hero-buttons a::before,
+html .biz-hero .hero-buttons a::after { display: none; }
+html .biz-hero .hero-buttons a.biz-wa,
+html .biz-hero .hero-buttons a.biz-wa:hover,
 html .biz-hero .hero-buttons a.biz-btn-number,
-html .biz-hero .hero-buttons a.biz-btn-number:hover {
-  background: linear-gradient(180deg, #0F4F94 0%, #00376C 100%);
-  border: 1px solid rgba(255,255,255,0.25);
-  color: #fff;
-  box-shadow: 0 10px 24px rgba(0,55,108,0.28);
-}
-html[data-theme="dark"] .biz-hero .hero-buttons a.biz-btn-number,
-html[data-theme="dark"] .biz-hero .hero-buttons a.biz-btn-number:hover {
-  background: #8CC8FF;
-  border: 1px solid rgba(255,255,255,0.45);
-  color: #00264F;
-  text-shadow: none;
-}
+html .biz-hero .hero-buttons a.biz-btn-number:hover { background: #8CC8FF; color: #00264F; }
+html .biz-hero .hero-buttons a.biz-btn-work,
+html .biz-hero .hero-buttons a.biz-btn-work:hover { background: #fff; color: #00376C; }
 .biz-hero .biz-alt { color: var(--brand1); }
 [data-theme="dark"] .biz-hero .biz-alt { color: #fff; }
 

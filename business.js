@@ -34,12 +34,12 @@
 
   Object.assign(en, {
     'biz.badge': 'For business owners, especially in the UAE and the Gulf',
-    'biz.title': 'Your client must see you every week,<br>not one video every few months',
-    'biz.desc': 'I help you get more messages from serious clients, and you film just once. Every month we look at how many reached you and improve.',
+    'biz.title': 'Your client must see you every week, <br>not one video every few months',
+    'biz.desc': 'I help you get more messages from serious clients, <br class="biz-m">and you film just once.<br>Every month we look at how many reached you and improve.',
     'biz.btn_sample': 'Try the first two videos',
     'biz.alt_btn': 'Leave your number and I will message you',
     'biz.btn_work': 'See my work',
-    'biz.proof1': 'million views on videos I made',
+    'biz.proof1': 'million views on my videos',
     'biz.proof2': 'videos delivered to channels and companies',
     'biz.proof3': 'years working in video',
 
@@ -74,7 +74,7 @@
     'biz.gain3_d': 'You sell and close your deals. My job is that you benefit first, and if you do not, you do not continue with me.',
 
     'biz.steps_title': 'How we work together',
-    'biz.steps_sub': 'It only takes a few minutes of your time.',
+    'biz.steps_sub': 'Your time goes to selling, not to editing.',
     'biz.step1_t': 'We define the result you want',
     'biz.step1_d': 'Before we start, I learn how many messages you want and from which clients, and together we choose the type of video that gets you there.',
     'biz.step2_t': 'You film once',
