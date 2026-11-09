@@ -31,7 +31,7 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 }
 .biz-hero .hero-desc { max-width: 640px; margin-inline: auto; }
 .biz-hero .hero-desc p { font-size: clamp(15px, 3.9vw, 19px); line-height: 1.85; }
-.biz-hero .hero-buttons { margin-top: 30px; }
+.biz-change-sec .hero-buttons { margin-top: 24px; }
 
 /* WhatsApp buttons carry a small icon next to their words */
 .biz-wa {
@@ -504,21 +504,21 @@ br.biz-m { display: none; }
 }
 
 /* Hero buttons, by importance: try and number side by side in the same cold blue, work under them */
-.biz-hero .hero-buttons {
+.biz-change-sec .hero-buttons {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   max-width: 430px;
   margin-inline: auto;
 }
-.biz-hero .hero-buttons a.biz-btn-number { order: 2; }
-.biz-hero .hero-buttons a.biz-btn-work {
+.biz-change-sec .hero-buttons a.biz-btn-number { order: 2; }
+.biz-change-sec .hero-buttons a.biz-btn-work {
   order: 3;
   grid-column: 1 / -1;
   justify-self: center;
   width: calc(50% - 4px);
 }
-html .biz-hero .hero-buttons a {
+html .biz-change-sec .hero-buttons a {
   min-width: 0;
   display: flex;
   align-items: center;
@@ -537,21 +537,21 @@ html .biz-hero .hero-buttons a {
   box-shadow: 0 8px 20px rgba(0,30,80,0.22), inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -2px 6px rgba(0,40,90,0.14);
 }
 /* Arabic words stay on one line, so the two blue buttons keep the same height */
-html[lang="ar"] .biz-hero .hero-buttons a { white-space: nowrap; }
+html[lang="ar"] .biz-change-sec .hero-buttons a { white-space: nowrap; }
 @media (max-width: 411.98px) {
-  html .biz-hero .hero-buttons a { padding: 8px 6px; gap: 4px; }
-  html .biz-hero .hero-buttons a svg { width: 16px; height: 16px; }
+  html .biz-change-sec .hero-buttons a { padding: 8px 6px; gap: 4px; }
+  html .biz-change-sec .hero-buttons a svg { width: 16px; height: 16px; }
 }
 @media (max-width: 345px) {
-  html .biz-hero .hero-buttons a svg { display: none; }
+  html .biz-change-sec .hero-buttons a svg { display: none; }
 }
 /* Same glossy pill as the site's other buttons */
-html .biz-hero .hero-buttons a.biz-wa,
-html .biz-hero .hero-buttons a.biz-wa:hover,
-html .biz-hero .hero-buttons a.biz-btn-number,
-html .biz-hero .hero-buttons a.biz-btn-number:hover { background: linear-gradient(180deg, #B4DCFF 0%, #8CC8FF 48%, #6FB4F6 100%); color: #00264F; }
-html .biz-hero .hero-buttons a.biz-btn-work,
-html .biz-hero .hero-buttons a.biz-btn-work:hover { background: linear-gradient(180deg, #FFFFFF 0%, #EAF3FF 100%); color: #00376C; }
+html .biz-change-sec .hero-buttons a.biz-wa,
+html .biz-change-sec .hero-buttons a.biz-wa:hover,
+html .biz-change-sec .hero-buttons a.biz-btn-number,
+html .biz-change-sec .hero-buttons a.biz-btn-number:hover { background: linear-gradient(180deg, #B4DCFF 0%, #8CC8FF 48%, #6FB4F6 100%); color: #00264F; }
+html .biz-change-sec .hero-buttons a.biz-btn-work,
+html .biz-change-sec .hero-buttons a.biz-btn-work:hover { background: linear-gradient(180deg, #FFFFFF 0%, #EAF3FF 100%); color: #00376C; }
 .biz-hero .biz-alt { color: var(--brand1); }
 [data-theme="dark"] .biz-hero .biz-alt { color: #fff; }
 

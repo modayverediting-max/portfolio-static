@@ -40,7 +40,7 @@
     'biz.alt_btn': 'Leave your number and I will message you',
     'biz.btn_work': 'See my work',
     'biz.proof1': 'million views on my videos',
-    'biz.proof2': 'videos delivered to channels and companies',
+    'biz.proof2': 'videos delivered to channels',
     'biz.proof3': 'years working in video',
 
     'biz.pain_title': 'How many clients went to someone else this month?',
@@ -192,16 +192,19 @@
     });
   });
 
-  // Phone button: appears after the top of the page, steps aside at the last call
+  // Phone button: appears after the top of the page, steps aside at the main buttons and the last call
   var sticky = document.getElementById('bizSticky');
   var hero = document.getElementById('hero');
   var last = document.getElementById('last');
+  var mainButtons = document.querySelector('.biz-change-sec .hero-buttons');
   if (sticky && hero && last && 'IntersectionObserver' in window) {
     var heroSeen = true;
     var lastSeen = false;
-    var update = function () { sticky.classList.toggle('show', !heroSeen && !lastSeen); };
+    var buttonsSeen = false;
+    var update = function () { sticky.classList.toggle('show', !heroSeen && !lastSeen && !buttonsSeen); };
     new IntersectionObserver(function (e) { heroSeen = e[e.length - 1].isIntersecting; update(); }).observe(hero);
     new IntersectionObserver(function (e) { lastSeen = e[e.length - 1].isIntersecting; update(); }).observe(last);
+    if (mainButtons) new IntersectionObserver(function (e) { buttonsSeen = e[e.length - 1].isIntersecting; update(); }).observe(mainButtons);
   }
   /* Leave your number: if a visitor forgets to message on WhatsApp, the number still reaches Khalid.
      It goes through the same mail service as the contact page, inside the message, with a stand-in
