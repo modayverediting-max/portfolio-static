@@ -44,13 +44,14 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
 }
 .biz-wa svg { width: 20px; height: 20px; flex: none; }
 
-/* The three numbers right under the buttons */
+/* The three numbers, at the end of the comparison section */
 .biz-proof {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  max-width: 620px;
-  margin: 40px auto 0;
+  max-width: 760px;
+  margin: 56px auto 0;
+  text-align: center;
 }
 .biz-proof-item {
   padding: 14px 6px 12px;
