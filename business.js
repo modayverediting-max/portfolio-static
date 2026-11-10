@@ -222,7 +222,9 @@
     'biz.ba_together': 'Together',
     'biz.ba_seek': 'Video position',
     'biz.ba_toggle': 'Play or pause',
-    'biz.ba_hint': 'Tap to hear the raw clip',
+    'biz.ba_hint': 'Tap “Before” to see the raw video',
+    'biz.me_name': 'Khalid',
+    'biz.me_line': 'Talk to me directly. I am the one who works on your videos.',
     'biz.ba_mute': 'Mute',
     'biz.ba_vol': 'Volume',
     'biz.ba_full': 'Enlarge video'
@@ -304,12 +306,43 @@
         if (!calm) target.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.16)' }, { transform: 'scale(1)' }], { duration: 560, iterations: 2, easing: 'ease-in-out' });
       };
       var pill = ba.querySelector('.biz-ba-pill');
+      var guided = false;
+      var GUIDE = {
+        ar: 'الأزرار فوق تبدّل بين النسخ:<br>«قبل» الخام، «بعد» بعد المونتاج، «معا» الاثنين',
+        en: 'The buttons above switch versions:<br>“Before” raw, “After” edited, “Together” both'
+      };
+      var showGuide = function () {
+        if (pressedAny || video.paused || !flash.animate) return;
+        flash.innerHTML = GUIDE[document.documentElement.lang === 'en' ? 'en' : 'ar'];
+        flash.classList.add('is-guide');
+        var shown = flash.animate([
+          { opacity: 0, transform: 'translate(-50%, -50%) scale(.9)' },
+          { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.1 },
+          { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.88 },
+          { opacity: 0, transform: 'translate(-50%, -50%) scale(1)' }
+        ], { duration: 4200, easing: 'ease-out' });
+        shown.onfinish = function () { flash.classList.remove('is-guide'); };
+        if (!calm) ba.querySelector('.biz-ba-tabs').animate([
+          { boxShadow: '0 6px 20px rgba(30, 80, 160, .14)' },
+          { boxShadow: '0 0 0 7px rgba(61, 126, 224, .5)' },
+          { boxShadow: '0 6px 20px rgba(30, 80, 160, .14)' }
+        ], { duration: 900, iterations: 2, easing: 'ease-in-out' });
+      };
       var placePill = function () {
         var on = ba.querySelector('.biz-ba-tab.is-on');
         if (!on || !on.offsetWidth) return;
         pill.style.width = on.offsetWidth + 'px';
         pill.style.transform = 'translateX(' + on.offsetLeft + 'px)';
+        // The nudge points at the "before" button, and never leaves the screen
+        var before = ba.querySelector('[data-ba="before"]');
+        hint.style.left = (before.offsetLeft + before.offsetWidth / 2) + 'px';
+        var box = hint.getBoundingClientRect();
+        var room = document.documentElement.clientWidth;
+        if (box.width && box.left < 8) hint.style.left = (parseFloat(hint.style.left) + 8 - box.left) + 'px';
+        else if (box.width && box.right > room - 8) hint.style.left = (parseFloat(hint.style.left) - (box.right - room + 8)) + 'px';
+        hint.style.setProperty('--tip', 'calc(50% - ' + (parseFloat(hint.style.left) - (before.offsetLeft + before.offsetWidth / 2)) + 'px)');
       };
+      if (!pressedAny) ba.classList.add('needs-hint');
       placePill();
       requestAnimationFrame(function () { requestAnimationFrame(function () { pill.classList.add('is-ready'); }); });
       window.addEventListener('resize', placePill);
@@ -433,6 +466,7 @@
           if (next === mode) return;
           pressedAny = true;
           stopHint();
+          document.querySelectorAll('.biz-ba').forEach(function (other) { other.classList.remove('needs-hint'); });
           mode = next;
           tabs.forEach(function (t) {
             var on = t === tab;
@@ -444,6 +478,7 @@
           cover.style.transform = video.style.transform;
           if (!calm && stage.animate) {
             stage.animate([{ filter: 'blur(16px) brightness(1.3)' }, { filter: 'blur(0) brightness(1)' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
+            flash.classList.remove('is-guide');
             flash.textContent = tab.textContent;
             flash.animate([
               { opacity: 0, transform: 'translate(-50%, -50%) scale(.8)' },
@@ -467,7 +502,7 @@
         if (!wanted) { video.pause(); video.currentTime = 0; return; }     // it was only warming up
         ba.classList.remove('is-loading');
         ba.classList.add('is-playing', 'is-started');
-        if (!hinted && !pressedAny) { clearTimeout(hintTimer); hintTimer = setTimeout(showHint, 4000); }
+        if (!guided && !pressedAny) { guided = true; setTimeout(showGuide, 500); }
         sound();
       });
       video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); clearTimeout(hintTimer); });

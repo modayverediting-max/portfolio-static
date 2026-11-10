@@ -408,7 +408,7 @@ html.biz-ba-lock #bizSticky { display: none !important; }
 .biz-ba.is-full .biz-ba-shrink { display: inline; }
 
 .biz-ba-hint { position: absolute; top: calc(100% + 9px); left: 50%; z-index: 4; padding: 6px 13px; border-radius: 10px; background: #fff; color: #0A1830; font-size: 13.5px; font-weight: 700; line-height: 1.4; white-space: nowrap; pointer-events: none; opacity: 0; transform: translateX(-50%); box-shadow: 0 6px 18px rgba(10, 24, 48, .32); }
-.biz-ba-hint::before { content: ''; position: absolute; top: -6px; left: 50%; margin-left: -6px; border-right: 6px solid transparent; border-bottom: 6px solid #fff; border-left: 6px solid transparent; }
+.biz-ba-hint::before { content: ''; position: absolute; top: -6px; left: var(--tip, 50%); margin-left: -6px; border-right: 6px solid transparent; border-bottom: 6px solid #fff; border-left: 6px solid transparent; }
 
 [data-theme="dark"] .biz-ba-frame { box-shadow: 0 0 0 1px rgba(255, 255, 255, .4), 0 0 0 8px rgba(255, 255, 255, .08), 0 0 0 9px rgba(142, 197, 255, .4), 0 18px 44px rgba(0, 0, 0, .5); }
 [data-theme="dark"] .biz-ba.is-full .biz-ba-frame, .biz-ba.is-full .biz-ba-frame { box-shadow: none; }
@@ -781,3 +781,20 @@ html .biz-change-sec .hero-buttons a.biz-btn-work:hover { background: linear-gra
   .biz-step-num, .biz-chan img, .biz-pack-num, .biz-tick, .service-badge { transition: none !important; }
   .reveal-box:not(.revealed) .biz-tick, .reveal-box:not(.revealed) .biz-step-num, .reveal-box:not(.revealed) .service-badge { transform: none; }
 }
+
+/* ---------- The person behind the button ---------- */
+.biz-me { display: flex; align-items: center; justify-content: center; gap: 12px; width: fit-content; max-width: 100%; margin: 26px auto 14px; text-align: start; }
+.biz-me img { flex: none; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 2px rgba(255, 255, 255, .92), 0 8px 20px rgba(0, 30, 80, .35); transition: transform .7s cubic-bezier(.34, 1.56, .64, 1); }
+.biz-me:hover img { transform: scale(1.08) rotate(-4deg); }
+.biz-me strong { display: block; color: #fff; font-size: 17px; font-weight: 800; line-height: 1.35; }
+.biz-me small { display: block; color: rgba(255, 255, 255, .86); font-size: 13.5px; line-height: 1.55; }
+
+/* The nudge stays until the first press: a gentle bob, and the "before" button pulses now and then */
+.biz-ba.needs-hint .biz-ba-hint { opacity: 1; animation: bizHintBob 2.4s ease-in-out infinite; }
+@keyframes bizHintBob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(4px); } }
+.biz-ba.needs-hint .biz-ba-tab[data-ba="before"] { animation: bizTabNudge 3.2s ease-in-out infinite; }
+@keyframes bizTabNudge { 0%, 64%, 100% { transform: scale(1); } 72% { transform: scale(1.14); } 80% { transform: scale(1); } 88% { transform: scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .biz-ba.needs-hint .biz-ba-hint, .biz-ba.needs-hint .biz-ba-tab[data-ba="before"] { animation: none; } }
+
+/* First play: the message that explains the three buttons */
+.biz-ba-flash.is-guide { width: max-content; max-width: 86%; padding: 12px 18px; border-radius: 16px; font-size: 15px; font-weight: 700; line-height: 1.75; text-align: center; white-space: normal; }
