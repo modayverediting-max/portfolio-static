@@ -31,7 +31,7 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
   margin-bottom: 26px;
 }
 .biz-hero .biz-hero-sell { max-width: 860px; text-wrap: balance; margin: 0 auto 14px; color: #fff; font-size: clamp(15.5px, 4.1vw, 21px); font-weight: 600; line-height: 1.7; }
-.biz-hero .biz-hero-sell strong { font-size: 1.22em; font-weight: 800; }
+.biz-hero .biz-hero-sell strong { font-size: 1.1em; font-weight: 800; }
 .biz-hero .hero-desc { max-width: 640px; margin-inline: auto; }
 .biz-hero .hero-desc p { font-size: clamp(15px, 3.9vw, 19px); line-height: 1.85; }
 .biz-change-sec .hero-buttons { margin-top: 24px; }
