@@ -243,20 +243,25 @@
         </a>
       </div>
 
-      <!-- Before and after: one player, three videos (business.js) -->
+      <!-- Before and after: one video file holds all three versions (business.js) -->
       <div id="bizBaBlock">
         <h3 class="biz-sub-title reveal-box reveal-up" data-i18n="biz.ba_title">شوف الفرق بنفسك</h3>
         <p class="biz-ba-sub reveal-box reveal-up" data-i18n="biz.ba_sub">نفس المقطع، قبل وبعد. بدّل بينهم واسمع الفرق.</p>
-        <div class="biz-ba reveal-box reveal-up" id="bizBa" data-mode="together">
-          <div class="biz-ba-tabs">
-            <button type="button" class="biz-ba-tab" data-ba="before" aria-pressed="false" data-i18n="biz.ba_before">قبل</button>
-            <button type="button" class="biz-ba-tab" data-ba="after" aria-pressed="false" data-i18n="biz.ba_after">بعد</button>
-            <button type="button" class="biz-ba-tab is-on" data-ba="together" aria-pressed="true" data-i18n="biz.ba_together">معا</button>
-          </div>
-          <div class="biz-ba-frame">
-            <div id="bizBaPlayer"></div>
-            <img class="biz-ba-poster" src="./assets/images/ba-together.webp" alt="" loading="lazy">
-            <div class="biz-ba-play" aria-hidden="true"></div>
+        <div class="biz-ba-grid">
+          <div class="biz-ba reveal-box reveal-up" data-set="talk">
+            <div class="biz-ba-tabs">
+              <button type="button" class="biz-ba-tab" data-ba="before" aria-pressed="false" data-i18n="biz.ba_before">قبل</button>
+              <button type="button" class="biz-ba-tab" data-ba="after" aria-pressed="false" data-i18n="biz.ba_after">بعد</button>
+              <button type="button" class="biz-ba-tab is-on" data-ba="together" aria-pressed="true" data-i18n="biz.ba_together">معا</button>
+            </div>
+            <div class="biz-ba-frame">
+              <video class="biz-ba-video" muted playsinline preload="none"></video>
+              <div class="biz-ba-play" aria-hidden="true"></div>
+              <div class="biz-ba-bar">
+                <input class="biz-ba-seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+                <span class="biz-ba-time">0:00</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

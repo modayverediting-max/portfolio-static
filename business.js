@@ -222,76 +222,151 @@
     'biz.ba_together': 'Together'
   });
 
-  // Before and after: one YouTube player and three videos. A button swaps the video and keeps the
-  // same moment. One player, because phones will not reliably play two YouTube videos with sound.
-  // The visitor's first tap lands on YouTube's own player (the picture above it lets taps through),
-  // which is what phones need before they allow sound.
+  // Before and after, as one merge: each set is ONE silent video holding the three versions side by side,
+  // and three sound files. A button moves the picture and swaps the sound, so the time never changes and
+  // nothing reloads. The three versions of a set must have the same cuts and length.
   (function () {
-    // YouTube ids; while any is empty the whole block stays off the page. sameMoment: the videos have the
-    // same cuts and length, so a button keeps the moment; otherwise a button starts its video from the top.
-    var VIDEOS = REAL_ESTATE
-      ? { before: 'Y5JkujHPr4Q', after: 'KSBtnV8pWO4', together: '8PyGPukZr68', sameMoment: false }
-      : { before: 'JFqrZzrzGNk', after: 'nv_kT_wFlvc', together: 'dZLuZeQU2Ww', sameMoment: true };
-    var block = document.getElementById('bizBaBlock');
-    var ba = document.getElementById('bizBa');
-    if (!block || !ba) return;
-    if (!VIDEOS.before || !VIDEOS.after || !VIDEOS.together) { block.remove(); return; }
+    var first = document.querySelector('.biz-ba');
+    if (!first) return;
+    var PANE = { before: 0, after: 1, together: 2 };
+    var MODES = ['before', 'after', 'together'];
 
-    var poster = ba.querySelector('.biz-ba-poster');
-    var tabs = ba.querySelectorAll('.biz-ba-tab');
-    var player = null;
-    var picture = function (mode) { return './assets/images/ba-' + (REAL_ESTATE ? 're-' : '') + mode + '.webp'; };
-    var mode = function () { return ba.getAttribute('data-mode'); };
-    if (REAL_ESTATE) poster.src = picture(mode());
+    var second = first.cloneNode(true);
+    second.setAttribute('data-set', 'realty');
+    // Each page leads with its own video
+    if (REAL_ESTATE) first.parentNode.insertBefore(second, first); else first.parentNode.appendChild(second);
 
-    tabs.forEach(function (tab) {
-      tab.addEventListener('click', function () {
-        var next = tab.getAttribute('data-ba');
-        if (next === mode()) return;
-        ba.setAttribute('data-mode', next);
-        tabs.forEach(function (t) {
-          var on = t === tab;
-          t.classList.toggle('is-on', on);
-          t.setAttribute('aria-pressed', on ? 'true' : 'false');
-        });
-        poster.src = picture(next);
-        if (!player || !player.getPlayerState) return;
-        var state = player.getPlayerState();
-        var same = { videoId: VIDEOS[next], startSeconds: VIDEOS.sameMoment ? (player.getCurrentTime() || 0) : 0 };
-        if (state === 1 || state === 3) player.loadVideoById(same);
-        else player.cueVideoById(same);
-      });
-    });
-
-    var make = function () {
-      player = new YT.Player('bizBaPlayer', {
-        videoId: VIDEOS[mode()],
-        width: '100%',
-        height: '100%',
-        playerVars: { playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, origin: location.origin },
-        events: {
-          onStateChange: function (e) {
-            if (e.data === 1) ba.classList.add('is-playing');
-            else if (e.data === 5) ba.classList.remove('is-playing');
-            else if (e.data === 0) player.cueVideoById(VIDEOS[mode()]);   // at the end: our picture, not YouTube's suggestions
-          }
-        }
-      });
-      ba._player = player;
+    var players = [];
+    var ctx = null;
+    // iPhones silence web sound when the ring switch is off, unless a normal audio element is playing
+    var keepAwake = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYzLjEuMTAyAAAAAAAAAAAAAAD/83DAAAAAAAAAAAAASW5mbwAAAA8AAAAWAAAHcgAiIiIiLS0tLS04ODg4QkJCQkJNTU1NV1dXV1diYmJibGxsbGx3d3d3gYGBgYGMjIyMlpaWlpahoaGhoaurq6u2tra2tsDAwMDLy8vLy9XV1dXg4ODg4Orq6ur19fX19f////8AAAAATGF2YzYzLjEuAAAAAAAAAAAAAAAAJAQvAAAAAAAAB3I/0pgYAAAAAAAAAAAAAAAAAP/zMMQAAAADSAAAAABMQU1FVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsRBAAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEgwAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
+    keepAwake.loop = true;
+    var audioContext = function () {
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state !== 'running') ctx.resume();
+      return ctx;
+    };
+    var clock = function (s) {
+      s = Math.max(0, Math.floor(s || 0));
+      return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
     };
 
-    // YouTube and the other two pictures load only when the visitor gets near this part
-    new IntersectionObserver(function (seen, watcher) {
-      if (!seen[0].isIntersecting) return;
-      watcher.disconnect();
-      ['before', 'after', 'together'].forEach(function (m) { new Image().src = picture(m); });
-      if (window.YT && YT.Player) return make();
-      var earlier = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = function () { if (earlier) earlier(); make(); };
-      var api = document.createElement('script');
-      api.src = 'https://www.youtube.com/iframe_api';
-      document.head.appendChild(api);
-    }, { rootMargin: '700px 0px' }).observe(ba);
+    [first, second].forEach(function (ba) {
+      var set = ba.getAttribute('data-set');
+      var base = './assets/compare/' + set;
+      var frame = ba.querySelector('.biz-ba-frame');
+      var video = ba.querySelector('.biz-ba-video');
+      var seek = ba.querySelector('.biz-ba-seek');
+      var time = ba.querySelector('.biz-ba-time');
+      var tabs = ba.querySelectorAll('.biz-ba-tab');
+      var mode = 'together';
+      var buffers = null, gains = null, sources = [], loading = null, began = 0;
+
+      video.poster = base + '.webp';
+      video.src = base + '.mp4';
+
+      var fetchSound = function (m) {
+        return fetch(base + '-' + m + '.m4a')
+          .then(function (r) { return r.arrayBuffer(); })
+          .then(function (data) { return new Promise(function (ok, no) { ctx.decodeAudioData(data, ok, no); }); });
+      };
+      var load = function () {
+        if (loading) return loading;
+        loading = Promise.all(MODES.map(fetchSound)).then(function (list) {
+          buffers = {}; gains = {};
+          MODES.forEach(function (m, i) {
+            buffers[m] = list[i];
+            gains[m] = ctx.createGain();
+            gains[m].gain.value = m === mode ? 1 : 0;
+            gains[m].connect(ctx.destination);
+          });
+        }).catch(function (err) { console.warn('sound did not load', err); });
+        return loading;
+      };
+      var silence = function () {
+        sources.forEach(function (s) { try { s.stop(); } catch (e) {} });
+        sources = [];
+      };
+      var sound = function () {
+        silence();
+        if (!buffers || video.paused) return;
+        var at = video.currentTime;
+        began = ctx.currentTime - at;
+        MODES.forEach(function (m) {
+          if (at >= buffers[m].duration) return;
+          var s = ctx.createBufferSource();
+          s.buffer = buffers[m];
+          s.connect(gains[m]);
+          s.start(0, at);
+          sources.push(s);
+        });
+      };
+
+      var player = {
+        pause: function () { video.pause(); }
+      };
+      players.push(player);
+
+      var start = function () {
+        audioContext();
+        keepAwake.play().catch(function () {});
+        players.forEach(function (p) { if (p !== player) p.pause(); });
+        ba.classList.add('is-loading');
+        load().then(function () {
+          ba.classList.remove('is-loading');
+          if (video.ended) video.currentTime = 0;
+          video.play().catch(function (err) { console.warn(err); });
+        });
+      };
+
+      frame.addEventListener('click', function (e) {
+        if (e.target.closest('.biz-ba-bar')) return;
+        if (video.paused) start(); else video.pause();
+      });
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          var next = tab.getAttribute('data-ba');
+          if (next === mode) return;
+          mode = next;
+          tabs.forEach(function (t) {
+            var on = t === tab;
+            t.classList.toggle('is-on', on);
+            t.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          video.style.transform = 'translateX(-' + (PANE[mode] * 100 / 3).toFixed(4) + '%)';
+          if (!gains) return;
+          var now = ctx.currentTime;
+          MODES.forEach(function (m) {
+            var g = gains[m].gain;
+            g.cancelScheduledValues(now);
+            g.setValueAtTime(g.value, now);
+            g.linearRampToValueAtTime(m === mode ? 1 : 0, now + 0.03);
+          });
+        });
+      });
+
+      video.addEventListener('playing', function () {
+        ba.classList.add('is-playing', 'is-started');
+        sound();
+      });
+      video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); });
+      video.addEventListener('waiting', silence);
+      video.addEventListener('seeking', silence);
+      video.addEventListener('seeked', sound);
+      video.addEventListener('ended', function () { ba.classList.remove('is-playing'); silence(); });
+      video.addEventListener('timeupdate', function () {
+        if (video.duration) seek.value = Math.round(video.currentTime / video.duration * 1000);
+        time.textContent = clock(video.currentTime);
+        // The two clocks can slowly part; bring the sound back when they do
+        if (sources.length && Math.abs(ctx.currentTime - began - video.currentTime) > 0.18) sound();
+      });
+      seek.addEventListener('input', function () {
+        if (video.duration) video.currentTime = seek.value / 1000 * video.duration;
+      });
+      ba._video = video;
+      ba._state = function () { return { mode: mode, sources: sources.length, ctx: ctx && ctx.state, drift: sources.length ? Math.round((ctx.currentTime - began - video.currentTime) * 1000) : null }; };
+    });
   })();
 
   // The two example months: four plain weeks, each with its videos
