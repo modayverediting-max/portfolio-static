@@ -2489,3 +2489,70 @@ html .glass-card.revealed {
     transform: translateX(58px);
   }
 }
+
+/* ===== Pages section on the home page: business owners / real-estate owners (2026-11-10) ===== */
+.pages-grid {
+  max-width: 860px;
+  margin-inline: auto;
+}
+a.service-card.page-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.page-card .service-desc {
+  flex: 1;
+}
+.page-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 11px 24px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #3D7EE0 0%, #00376C 100%);
+  box-shadow: 0 8px 20px rgba(0,55,108,0.25), inset 0 1px 0 rgba(255,255,255,0.35);
+  transition: box-shadow 0.45s var(--ease-calm), transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+.page-card-cta svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1);
+}
+.page-card:hover .page-card-cta {
+  transform: scale(1.04);
+  box-shadow: 0 12px 28px rgba(0,55,108,0.35), inset 0 1px 0 rgba(255,255,255,0.45);
+}
+.page-card:hover .page-card-cta svg {
+  transform: translateX(-4px);
+}
+[dir="ltr"] .page-card-cta svg {
+  transform: scaleX(-1);
+}
+[dir="ltr"] .page-card:hover .page-card-cta svg {
+  transform: scaleX(-1) translateX(-4px);
+}
+.page-card:focus-visible {
+  outline: 3px solid #80C2FF;
+  outline-offset: 4px;
+}
+/* The section sits where the ads gradient is already white, so its title is navy (light blue in dark mode) */
+#pages .section-title {
+  color: #00376C;
+}
+#pages .section-subtitle {
+  color: rgba(0,55,108,0.72);
+}
+[data-theme="dark"] #pages .section-title {
+  color: #8EC5FF;
+}
+[data-theme="dark"] #pages .section-subtitle {
+  color: #A9BBD6;
+}

@@ -91,6 +91,14 @@ window.TRANSLATIONS_EN = {
   'ads.v4': 'Ad for a gaming PC build store',
   'ads.v5': 'Intro video',
 
+  'pages.title': 'For business and real-estate owners',
+  'pages.sub': 'Choose the page that fits your business',
+  'pages.biz_title': 'Business owners',
+  'pages.biz_desc': 'Short videos every month that keep you in front of your customers, so they remember you',
+  'pages.re_title': 'Real-estate owners',
+  'pages.re_desc': 'Videos of your properties that bring you messages from serious buyers',
+  'pages.open': 'Open the page',
+
   'cta.title': 'It would be an honor to be the one who turns your message into a visual piece that reaches the world.',
   'cta.sub': 'Ready to start your project? Contact me now using the buttons below.',
 
