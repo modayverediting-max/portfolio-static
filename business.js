@@ -297,7 +297,41 @@
       var buffers = null, gains = null, sources = [], loading = null, began = 0, scrubbing = false;
 
       video.poster = base + '.webp';
-      video.src = base + '.mp4';
+
+      // Full quality unless the connection or the device says otherwise; the light file is the fallback
+      var stage = ba.querySelector('.biz-ba-stage');
+      var hd = false, picked = null, stalls = 0;
+      var canTakeHd = function () {
+        var net = navigator.connection;
+        if (net && (net.saveData || /(^|-)(2g|3g)$/.test(net.effectiveType || ''))) return Promise.resolve(false);
+        if (!navigator.mediaCapabilities || !navigator.mediaCapabilities.decodingInfo) return Promise.resolve(true);
+        return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="avc1.640033"', width: 3240, height: 1920, bitrate: 14000000, framerate: 30 } })
+          .then(function (r) { return r.supported && r.smooth; })
+          .catch(function () { return true; });
+      };
+      var pick = function () {
+        if (picked) return picked;
+        picked = canTakeHd().then(function (yes) {
+          hd = !!yes;
+          video.src = base + (hd ? '-hd' : '') + '.mp4';
+        });
+        return picked;
+      };
+      var toLight = function () {
+        if (!hd) return;
+        hd = false;
+        var at = video.currentTime, running = !video.paused;
+        video.src = base + '.mp4';
+        video.addEventListener('loadedmetadata', function once() {
+          video.removeEventListener('loadedmetadata', once);
+          video.currentTime = at;
+          if (running) video.play().catch(function () {});
+        });
+      };
+      video.addEventListener('error', toLight);
+      video.addEventListener('waiting', function () {
+        if (hd && ba.classList.contains('is-started') && ++stalls >= 2) toLight();
+      });
 
       var fetchSound = function (m) {
         return fetch(base + '-' + m + '.m4a')
@@ -346,7 +380,7 @@
         keepAwake.play().catch(function () {});
         players.forEach(function (p) { if (p !== player) p.pause(); });
         ba.classList.add('is-loading');
-        load().then(function () {
+        Promise.all([load(), pick()]).then(function () {
           ba.classList.remove('is-loading');
           if (video.ended) video.currentTime = 0;
           video.play().catch(function (err) { console.warn(err); });
@@ -370,8 +404,8 @@
           });
           placePill();
           video.style.transform = 'translateX(-' + (PANE[mode] * 100 / 3).toFixed(4) + '%)';
-          if (!calm && video.animate) {
-            video.animate([{ filter: 'blur(16px) brightness(1.3)' }, { filter: 'blur(0) brightness(1)' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
+          if (!calm && stage.animate) {
+            stage.animate([{ filter: 'blur(16px) brightness(1.3)' }, { filter: 'blur(0) brightness(1)' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
             flash.textContent = tab.textContent;
             flash.animate([
               { opacity: 0, transform: 'translate(-50%, -50%) scale(.8)' },
