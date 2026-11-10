@@ -257,9 +257,14 @@
             <div class="biz-ba-frame">
               <video class="biz-ba-video" muted playsinline preload="none"></video>
               <div class="biz-ba-play" aria-hidden="true"></div>
+              <div class="biz-ba-flash" aria-hidden="true"></div>
+              <div class="biz-ba-tip" aria-hidden="true">0:00</div>
               <div class="biz-ba-bar">
-                <input class="biz-ba-seek" type="range" min="0" max="1000" value="0" aria-label="Seek">
+                <input class="biz-ba-seek" type="range" min="0" max="1000" value="0" aria-label="موضع الفيديو" data-i18n-attr="aria-label:biz.ba_seek">
                 <span class="biz-ba-time">0:00</span>
+                <button type="button" class="biz-ba-icon biz-ba-mute" aria-label="كتم الصوت" data-i18n-attr="aria-label:biz.ba_mute"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-speaker" d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path class="biz-ba-waves" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="biz-ba-cross" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+                <input class="biz-ba-vol" type="range" min="0" max="100" value="100" aria-label="مستوى الصوت" data-i18n-attr="aria-label:biz.ba_vol">
+                <button type="button" class="biz-ba-icon biz-ba-full" aria-label="تكبير الفيديو" data-i18n-attr="aria-label:biz.ba_full"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-grow" d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/><path class="biz-ba-shrink" d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5"/></svg></button>
               </div>
             </div>
           </div>

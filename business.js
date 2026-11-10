@@ -219,7 +219,11 @@
     'biz.ba_sub': 'The same clip, before and after. Switch between them and hear the difference.',
     'biz.ba_before': 'Before',
     'biz.ba_after': 'After',
-    'biz.ba_together': 'Together'
+    'biz.ba_together': 'Together',
+    'biz.ba_seek': 'Video position',
+    'biz.ba_mute': 'Mute',
+    'biz.ba_vol': 'Volume',
+    'biz.ba_full': 'Enlarge video'
   });
 
   // Before and after, as one merge: each set is ONE silent video holding the three versions side by side,
@@ -237,12 +241,28 @@
     if (REAL_ESTATE) first.parentNode.insertBefore(second, first); else first.parentNode.appendChild(second);
 
     var players = [];
-    var ctx = null;
+    var ctx = null, master = null;
+    var volume = 1, muted = false;
+    // One volume for the whole page; squared, because hearing is not linear
+    var applyVolume = function () {
+      if (master) master.gain.setTargetAtTime(muted ? 0 : volume * volume, ctx.currentTime, 0.01);
+      document.querySelectorAll('.biz-ba-vol').forEach(function (v) {
+        v.value = Math.round(volume * 100);
+        v.style.setProperty('--p', (muted ? 0 : volume * 100) + '%');
+      });
+      document.querySelectorAll('.biz-ba-mute').forEach(function (m) { m.classList.toggle('is-off', muted || volume === 0); });
+    };
+    var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     // iPhones silence web sound when the ring switch is off, unless a normal audio element is playing
     var keepAwake = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYzLjEuMTAyAAAAAAAAAAAAAAD/83DAAAAAAAAAAAAASW5mbwAAAA8AAAAWAAAHcgAiIiIiLS0tLS04ODg4QkJCQkJNTU1NV1dXV1diYmJibGxsbGx3d3d3gYGBgYGMjIyMlpaWlpahoaGhoaurq6u2tra2tsDAwMDLy8vLy9XV1dXg4ODg4Orq6ur19fX19f////8AAAAATGF2YzYzLjEuAAAAAAAAAAAAAAAAJAQvAAAAAAAAB3I/0pgYAAAAAAAAAAAAAAAAAP/zMMQAAAADSAAAAABMQU1FVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsRBAAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEgwAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
     keepAwake.loop = true;
     var audioContext = function () {
-      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (!ctx) {
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        master = ctx.createGain();
+        master.gain.value = muted ? 0 : volume * volume;
+        master.connect(ctx.destination);
+      }
       if (ctx.state !== 'running') ctx.resume();
       return ctx;
     };
@@ -259,8 +279,9 @@
       var seek = ba.querySelector('.biz-ba-seek');
       var time = ba.querySelector('.biz-ba-time');
       var tabs = ba.querySelectorAll('.biz-ba-tab');
+      var flash = ba.querySelector('.biz-ba-flash');
       var mode = 'together';
-      var buffers = null, gains = null, sources = [], loading = null, began = 0;
+      var buffers = null, gains = null, sources = [], loading = null, began = 0, scrubbing = false;
 
       video.poster = base + '.webp';
       video.src = base + '.mp4';
@@ -278,7 +299,7 @@
             buffers[m] = list[i];
             gains[m] = ctx.createGain();
             gains[m].gain.value = m === mode ? 1 : 0;
-            gains[m].connect(ctx.destination);
+            gains[m].connect(master);
           });
         }).catch(function (err) { console.warn('sound did not load', err); });
         return loading;
@@ -289,7 +310,7 @@
       };
       var sound = function () {
         silence();
-        if (!buffers || video.paused) return;
+        if (!buffers || video.paused || scrubbing) return;
         var at = video.currentTime;
         began = ctx.currentTime - at;
         MODES.forEach(function (m) {
@@ -335,6 +356,16 @@
             t.setAttribute('aria-pressed', on ? 'true' : 'false');
           });
           video.style.transform = 'translateX(-' + (PANE[mode] * 100 / 3).toFixed(4) + '%)';
+          if (!calm && video.animate) {
+            video.animate([{ filter: 'blur(16px) brightness(1.3)' }, { filter: 'blur(0) brightness(1)' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
+            flash.textContent = tab.textContent;
+            flash.animate([
+              { opacity: 0, transform: 'translate(-50%, -50%) scale(.8)' },
+              { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.2 },
+              { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.62 },
+              { opacity: 0, transform: 'translate(-50%, -50%) scale(1.06)' }
+            ], { duration: 760, easing: 'ease-out' });
+          }
           if (!gains) return;
           var now = ctx.currentTime;
           MODES.forEach(function (m) {
@@ -355,17 +386,95 @@
       video.addEventListener('seeking', silence);
       video.addEventListener('seeked', sound);
       video.addEventListener('ended', function () { ba.classList.remove('is-playing'); silence(); });
+      var tip = ba.querySelector('.biz-ba-tip');
+      var lastSeek = 0, ticking = false;
+      var paint = function () {
+        if (scrubbing || !video.duration) return;
+        var part = video.currentTime / video.duration;
+        seek.value = Math.round(part * 1000);
+        seek.style.setProperty('--p', (part * 100).toFixed(2) + '%');
+        time.textContent = clock(video.currentTime) + ' / ' + clock(video.duration);
+      };
+      var showLoaded = function () {
+        if (!video.duration || !video.buffered.length) return;
+        seek.style.setProperty('--b', (video.buffered.end(video.buffered.length - 1) / video.duration * 100).toFixed(1) + '%');
+      };
+      var tick = function () {
+        paint();
+        if (!video.paused && !video.ended) requestAnimationFrame(tick); else ticking = false;
+      };
+      video.addEventListener('playing', function () {
+        if (!ticking) { ticking = true; requestAnimationFrame(tick); }
+      });
+      video.addEventListener('progress', showLoaded);
+      video.addEventListener('loadedmetadata', paint);
       video.addEventListener('timeupdate', function () {
-        if (video.duration) seek.value = Math.round(video.currentTime / video.duration * 1000);
-        time.textContent = clock(video.currentTime);
+        showLoaded();
+        paint();
         // The two clocks can slowly part; bring the sound back when they do
         if (sources.length && Math.abs(ctx.currentTime - began - video.currentTime) > 0.18) sound();
       });
-      seek.addEventListener('input', function () {
+      var beginScrub = function () {
+        scrubbing = true;
+        ba.classList.add('is-scrub');
+      };
+      var endScrub = function () {
+        if (!scrubbing) return;
+        scrubbing = false;
+        ba.classList.remove('is-scrub');
         if (video.duration) video.currentTime = seek.value / 1000 * video.duration;
+      };
+      seek.addEventListener('pointerdown', beginScrub);
+      seek.addEventListener('input', function () {
+        if (!scrubbing) beginScrub();
+        var part = seek.value / 1000;
+        var at = part * (video.duration || 0);
+        seek.style.setProperty('--p', (part * 100).toFixed(2) + '%');
+        time.textContent = clock(at) + ' / ' + clock(video.duration);
+        tip.textContent = clock(at);
+        tip.style.left = Math.min(frame.clientWidth - 30, Math.max(30, 12 + (frame.clientWidth - 24) * part)) + 'px';
+        var now = Date.now();
+        if (video.duration && now - lastSeek > 90) { lastSeek = now; video.currentTime = at; }
       });
+      seek.addEventListener('change', endScrub);
+      window.addEventListener('pointerup', endScrub);
+      window.addEventListener('pointercancel', endScrub);
+      ba.querySelector('.biz-ba-vol').addEventListener('input', function (e) {
+        volume = e.target.value / 100;
+        muted = false;
+        applyVolume();
+      });
+      ba.querySelector('.biz-ba-mute').addEventListener('click', function () {
+        if (volume === 0) { volume = 0.6; muted = false; } else muted = !muted;
+        applyVolume();
+      });
+
+      // Enlarging: the real full screen where the browser has one, and a page-filling view on iPhones, which do not.
+      // Either way it is the whole player that grows, so the three buttons come with it.
+      var fullNow = function () { return document.fullscreenElement || document.webkitFullscreenElement; };
+      var setFull = function (on) {
+        ba.classList.toggle('is-full', on);
+        document.documentElement.classList.toggle('biz-ba-lock', on);
+      };
+      ba.querySelector('.biz-ba-full').addEventListener('click', function () {
+        if (ba.classList.contains('is-full')) {
+          var leave = document.exitFullscreen || document.webkitExitFullscreen;
+          if (fullNow() && leave) leave.call(document);
+          setFull(false);
+          return;
+        }
+        setFull(true);
+        var enter = ba.requestFullscreen || ba.webkitRequestFullscreen;
+        if (enter) {
+          try { var asked = enter.call(ba); if (asked && asked.catch) asked.catch(function () {}); } catch (e) {}
+        }
+      });
+      var fullChanged = function () { if (!fullNow() && ba.classList.contains('is-full')) setFull(false); };
+      document.addEventListener('fullscreenchange', fullChanged);
+      document.addEventListener('webkitfullscreenchange', fullChanged);
+
       ba._video = video;
-      ba._state = function () { return { mode: mode, sources: sources.length, ctx: ctx && ctx.state, drift: sources.length ? Math.round((ctx.currentTime - began - video.currentTime) * 1000) : null }; };
+      ba._state = function () { return { mode: mode, sources: sources.length, ctx: ctx && ctx.state, drift: sources.length ? Math.round((ctx.currentTime - began - video.currentTime) * 1000) : null, level: master ? Math.round(master.gain.value * 100) / 100 : null }; };
     });
   })();
 
@@ -419,7 +528,10 @@
     var heroSeen = true;
     var lastSeen = false;
     var buttonsSeen = false;
-    var update = function () { sticky.classList.toggle('show', !heroSeen && !lastSeen && !buttonsSeen); };
+    var playerSeen = false;
+    var update = function () { sticky.classList.toggle('show', !heroSeen && !lastSeen && !buttonsSeen && !playerSeen); };
+    var playerGrid = document.querySelector('.biz-ba-grid');
+    if (playerGrid) new IntersectionObserver(function (e) { playerSeen = e[e.length - 1].isIntersecting; update(); }).observe(playerGrid);
     new IntersectionObserver(function (e) { heroSeen = e[e.length - 1].isIntersecting; update(); }).observe(hero);
     new IntersectionObserver(function (e) { lastSeen = e[e.length - 1].isIntersecting; update(); }).observe(last);
     if (mainButtons) new IntersectionObserver(function (e) { buttonsSeen = e[e.length - 1].isIntersecting; update(); }).observe(mainButtons);
