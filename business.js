@@ -222,6 +222,7 @@
     'biz.ba_together': 'Together',
     'biz.ba_seek': 'Video position',
     'biz.ba_toggle': 'Play or pause',
+    'biz.ba_hint': 'Tap to hear the raw clip',
     'biz.ba_mute': 'Mute',
     'biz.ba_vol': 'Volume',
     'biz.ba_full': 'Enlarge video'
@@ -254,6 +255,7 @@
       document.querySelectorAll('.biz-ba-mute').forEach(function (m) { m.classList.toggle('is-off', muted || volume === 0); });
     };
     var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var pressedAny = false;
     // iPhones silence web sound when the ring switch is off, unless a normal audio element is playing
     var keepAwake = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYzLjEuMTAyAAAAAAAAAAAAAAD/83DAAAAAAAAAAAAASW5mbwAAAA8AAAAWAAAHcgAiIiIiLS0tLS04ODg4QkJCQkJNTU1NV1dXV1diYmJibGxsbGx3d3d3gYGBgYGMjIyMlpaWlpahoaGhoaurq6u2tra2tsDAwMDLy8vLy9XV1dXg4ODg4Orq6ur19fX19f////8AAAAATGF2YzYzLjEuAAAAAAAAAAAAAAAAJAQvAAAAAAAAB3I/0pgYAAAAAAAAAAAAAAAAAP/zMMQAAAADSAAAAABMQU1FVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsRBAAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEgwAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
     keepAwake.loop = true;
@@ -281,6 +283,26 @@
       var time = ba.querySelector('.biz-ba-time');
       var tabs = ba.querySelectorAll('.biz-ba-tab');
       var flash = ba.querySelector('.biz-ba-flash');
+      // Many visitors would never try the buttons, so once, a few seconds in, the "before" button asks for it
+      var hint = ba.querySelector('.biz-ba-hint');
+      var hintTimer = 0, hinted = false, hintShow = null;
+      var stopHint = function () {
+        clearTimeout(hintTimer);
+        if (hintShow) hintShow.cancel();
+      };
+      var showHint = function () {
+        if (hinted || pressedAny || video.paused || mode !== 'together' || !hint.animate || ba.classList.contains('is-clean')) return;
+        hinted = true;
+        var target = ba.querySelector('[data-ba="before"]');
+        hint.style.left = (target.offsetLeft + target.offsetWidth / 2) + 'px';
+        hintShow = hint.animate([
+          { opacity: 0, transform: 'translateX(-50%) translateY(6px)' },
+          { opacity: 1, transform: 'translateX(-50%) translateY(0)', offset: 0.08 },
+          { opacity: 1, transform: 'translateX(-50%) translateY(0)', offset: 0.88 },
+          { opacity: 0, transform: 'translateX(-50%) translateY(0)' }
+        ], { duration: 3600, easing: 'ease-out' });
+        if (!calm) target.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.16)' }, { transform: 'scale(1)' }], { duration: 560, iterations: 2, easing: 'ease-in-out' });
+      };
       var pill = ba.querySelector('.biz-ba-pill');
       var placePill = function () {
         var on = ba.querySelector('.biz-ba-tab.is-on');
@@ -409,6 +431,8 @@
         tab.addEventListener('click', function () {
           var next = tab.getAttribute('data-ba');
           if (next === mode) return;
+          pressedAny = true;
+          stopHint();
           mode = next;
           tabs.forEach(function (t) {
             var on = t === tab;
@@ -443,9 +467,10 @@
         if (!wanted) { video.pause(); video.currentTime = 0; return; }     // it was only warming up
         ba.classList.remove('is-loading');
         ba.classList.add('is-playing', 'is-started');
+        if (!hinted && !pressedAny) { clearTimeout(hintTimer); hintTimer = setTimeout(showHint, 4000); }
         sound();
       });
-      video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); });
+      video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); clearTimeout(hintTimer); });
       video.addEventListener('waiting', silence);
       video.addEventListener('seeking', silence);
       video.addEventListener('seeked', sound);
