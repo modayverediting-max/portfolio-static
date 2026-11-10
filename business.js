@@ -675,6 +675,15 @@
     new IntersectionObserver(function (e) { lastSeen = e[e.length - 1].isIntersecting; update(); }).observe(last);
     if (mainButtons) new IntersectionObserver(function (e) { buttonsSeen = e[e.length - 1].isIntersecting; update(); }).observe(mainButtons);
   }
+  // The same moving glare as the home page's cards
+  document.querySelectorAll('.biz-step, .biz-chan, .biz-pack').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  });
+
   /* Leave your number: if a visitor forgets to message on WhatsApp, the number still reaches Khalid.
      It goes through the same mail service as the contact page, inside the message, with a stand-in
      address made from the number (the service needs an address; it never receives mail). The spare
