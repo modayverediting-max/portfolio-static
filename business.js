@@ -237,6 +237,9 @@
     if (!first) return;
     var PANE = { before: 0, after: 1, together: 2 };
     var MODES = ['before', 'after', 'together'];
+    // Raise this number whenever a video or sound file is replaced under the same name, so no browser
+    // mixes pieces of the old file it kept with the new one (that leaves the player loading forever)
+    var V = '?v=2';
 
     var second = first.cloneNode(true);
     second.setAttribute('data-set', 'realty');
@@ -297,7 +300,8 @@
         ], { duration: 650, easing: 'ease-out' });
       };
       var playPause = function () {
-        var resume = video.paused;
+        // While it only warms up (iPhones), it counts as paused: the first tap must start it, not stop it
+        var resume = video.paused || !wanted;
         if (resume) start(); else video.pause();
         pulse(resume);
       };
@@ -333,11 +337,11 @@
       var buffers = null, gains = null, sources = [], loading = null, began = 0, scrubbing = false;
 
       var cover = ba.querySelector('.biz-ba-cover');
-      cover.src = base + '.webp';
+      cover.src = base + '.webp' + V;
 
       // Full quality unless the connection or the device says otherwise; the light file is the fallback
       var stage = ba.querySelector('.biz-ba-stage');
-      var hd = false, picked = null, stalls = 0, wanted = false, prepared = false, shakeNext = false;
+      var hd = false, picked = null, stalls = 0, wanted = false, prepared = false, shakeNext = false, slowTimer = 0;
       var file = '';
       var smooth = function (codecs, width, height, bitrate) {
         return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="' + codecs + '"', width: width, height: height, bitrate: bitrate, framerate: 30 } })
@@ -358,7 +362,7 @@
         picked = bestFile().then(function (suffix) {
           file = suffix;
           hd = suffix !== '';
-          video.src = base + suffix + '.mp4';
+          video.src = base + suffix + '.mp4' + V;
         });
         return picked;
       };
@@ -366,7 +370,7 @@
         file = suffix;
         hd = suffix !== '';
         var at = video.currentTime, running = !video.paused || wanted;
-        video.src = base + suffix + '.mp4';
+        video.src = base + suffix + '.mp4' + V;
         video.addEventListener('loadedmetadata', function once() {
           video.removeEventListener('loadedmetadata', once);
           video.currentTime = at;
@@ -374,14 +378,18 @@
         });
       };
       var toLight = function () { if (hd) useFile(''); };
-      video.addEventListener('error', function () { if (file === '-hevc') useFile('-hd'); else toLight(); });
+      video.addEventListener('error', function () {
+        if (file === '-hevc') useFile('-hd');
+        else if (hd) toLight();
+        else ba.classList.remove('is-loading');     // nothing lighter left: no endless spinner, the next tap tries again
+      });
       video.addEventListener('waiting', function () {
         if (wanted) ba.classList.add('is-loading');
         if (hd && ba.classList.contains('is-started') && ++stalls >= 2) toLight();
       });
 
       var fetchSound = function (m) {
-        return fetch(base + '-' + m + '.m4a')
+        return fetch(base + '-' + m + '.m4a' + V)
           .then(function (r) { return r.arrayBuffer(); })
           .then(function (data) { return new Promise(function (ok, no) { ctx.decodeAudioData(data, ok, no); }); });
       };
@@ -432,8 +440,14 @@
         var soundReady = load().then(function () { if (!sources.length) sound(); });
         // The video never waits long for the sound: if it is not ready almost at once, the sound joins a moment later
         Promise.all([pick(), Promise.race([soundReady, new Promise(function (go) { setTimeout(go, 500); })])]).then(function () {
+          if (video.error) video.load();     // a failed load gets a fresh try
           if (video.ended) video.currentTime = 0;
           video.play().catch(function (err) { console.warn(err); ba.classList.remove('is-loading'); });
+          // A slow network: no picture after 6 seconds, so the lighter file takes over at the same moment
+          clearTimeout(slowTimer);
+          slowTimer = setTimeout(function () {
+            if (wanted && !video.paused && ba.classList.contains('is-loading') && hd) toLight();
+          }, 6000);
         });
       };
 
@@ -479,12 +493,14 @@
 
       video.addEventListener('playing', function () {
         if (!wanted) { video.pause(); video.currentTime = 0; return; }     // it was only warming up
+        clearTimeout(slowTimer);
         ba.classList.remove('is-loading');
         ba.classList.add('is-playing', 'is-started');
         if (shakeNext) { shakeNext = false; setTimeout(shakeTabs, 300); }
         sound();
       });
-      video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); });
+      // A pause also ends the loading circle: a second tap while it loads must not leave it spinning over a stopped video
+      video.addEventListener('pause', function () { clearTimeout(slowTimer); ba.classList.remove('is-playing', 'is-loading'); silence(); });
       video.addEventListener('waiting', silence);
       video.addEventListener('seeking', silence);
       video.addEventListener('seeked', sound);
