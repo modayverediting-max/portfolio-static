@@ -488,7 +488,7 @@
       video.addEventListener('waiting', silence);
       video.addEventListener('seeking', silence);
       video.addEventListener('seeked', sound);
-      video.addEventListener('ended', function () { ba.classList.remove('is-playing'); silence(); });
+      video.addEventListener('ended', function () { ba.classList.remove('is-playing'); silence(); setTimeout(function () { shakeTabs(true); }, 300); });
       var tip = ba.querySelector('.biz-ba-tip');
       var lastSeek = 0, ticking = false;
       var paint = function () {
