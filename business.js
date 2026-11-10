@@ -296,11 +296,12 @@
       var mode = 'together';
       var buffers = null, gains = null, sources = [], loading = null, began = 0, scrubbing = false;
 
-      video.poster = base + '.webp';
+      var cover = ba.querySelector('.biz-ba-cover');
+      cover.src = base + '.webp';
 
       // Full quality unless the connection or the device says otherwise; the light file is the fallback
       var stage = ba.querySelector('.biz-ba-stage');
-      var hd = false, picked = null, stalls = 0;
+      var hd = false, picked = null, stalls = 0, wanted = false, prepared = false;
       var canTakeHd = function () {
         var net = navigator.connection;
         if (net && (net.saveData || /(^|-)(2g|3g)$/.test(net.effectiveType || ''))) return Promise.resolve(false);
@@ -330,6 +331,7 @@
       };
       video.addEventListener('error', toLight);
       video.addEventListener('waiting', function () {
+        if (wanted) ba.classList.add('is-loading');
         if (hd && ba.classList.contains('is-started') && ++stalls >= 2) toLight();
       });
 
@@ -379,11 +381,13 @@
         audioContext();
         keepAwake.play().catch(function () {});
         players.forEach(function (p) { if (p !== player) p.pause(); });
+        wanted = true;
         ba.classList.add('is-loading');
-        Promise.all([load(), pick()]).then(function () {
-          ba.classList.remove('is-loading');
+        var soundReady = load().then(function () { if (!sources.length) sound(); });
+        // The video never waits long for the sound: if it is not ready almost at once, the sound joins a moment later
+        Promise.all([pick(), Promise.race([soundReady, new Promise(function (go) { setTimeout(go, 500); })])]).then(function () {
           if (video.ended) video.currentTime = 0;
-          video.play().catch(function (err) { console.warn(err); });
+          video.play().catch(function (err) { console.warn(err); ba.classList.remove('is-loading'); });
         });
       };
 
@@ -404,6 +408,7 @@
           });
           placePill();
           video.style.transform = 'translateX(-' + (PANE[mode] * 100 / 3).toFixed(4) + '%)';
+          cover.style.transform = video.style.transform;
           if (!calm && stage.animate) {
             stage.animate([{ filter: 'blur(16px) brightness(1.3)' }, { filter: 'blur(0) brightness(1)' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
             flash.textContent = tab.textContent;
@@ -426,6 +431,8 @@
       });
 
       video.addEventListener('playing', function () {
+        if (!wanted) { video.pause(); video.currentTime = 0; return; }     // it was only warming up
+        ba.classList.remove('is-loading');
         ba.classList.add('is-playing', 'is-started');
         sound();
       });
@@ -545,6 +552,31 @@
       var fullChanged = function () { if (!fullNow() && ba.classList.contains('is-full')) setFull(false); };
       document.addEventListener('fullscreenchange', fullChanged);
       document.addEventListener('webkitfullscreenchange', fullChanged);
+
+      // Get ready before the visitor reaches the player, so pressing play starts at once
+      var prepare = function () {
+        var net = navigator.connection;
+        if (prepared || (net && net.saveData)) return;
+        prepared = true;
+        audioContext();
+        load();
+        pick().then(function () {
+          video.preload = 'auto';
+          video.load();
+          // iPhones fetch nothing until a video has played. This one has no sound, so it may start by itself; it stops at once.
+          if (/iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+            var warm = video.play();
+            if (warm && warm.catch) warm.catch(function () {});
+          }
+        });
+      };
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (seen, watcher) {
+          if (!seen[0].isIntersecting) return;
+          watcher.disconnect();
+          prepare();
+        }, { rootMargin: '400px 0px' }).observe(ba);
+      }
 
       ba._video = video;
       ba._state = function () { return { mode: mode, sources: sources.length, ctx: ctx && ctx.state, drift: sources.length ? Math.round((ctx.currentTime - began - video.currentTime) * 1000) : null, level: master ? Math.round(master.gain.value * 100) / 100 : null }; };

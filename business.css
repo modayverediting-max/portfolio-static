@@ -353,7 +353,12 @@ section.biz-seam-sec, section.biz-seam-sec + section { margin-top: -1px; }
 .biz-ba-play { position: absolute; top: 50%; left: 50%; width: 68px; height: 68px; margin: -34px 0 0 -34px; border-radius: 50%; background: rgba(255, 255, 255, .94); box-shadow: 0 8px 24px rgba(10, 24, 48, .35); pointer-events: none; transition: opacity .2s ease; }
 .biz-ba-play::after { content: ''; position: absolute; top: 50%; left: 50%; margin: -12px 0 0 -7px; border-style: solid; border-width: 12px 0 12px 20px; border-color: transparent transparent transparent #3D7EE0; }
 .biz-ba.is-playing .biz-ba-play { opacity: 0; }
-.biz-ba.is-loading .biz-ba-play { background: rgba(255, 255, 255, .55); }
+.biz-ba.is-loading .biz-ba-play { opacity: 1; background: rgba(10, 24, 48, .5); }
+.biz-ba.is-loading .biz-ba-play::after { top: 12px; left: 12px; width: 44px; height: 44px; margin: 0; box-sizing: border-box; border-style: solid; border-width: 4px; border-color: rgba(255, 255, 255, .3); border-top-color: #fff; border-radius: 50%; animation: bizBaSpin .75s linear infinite; }
+@keyframes bizBaSpin { to { transform: rotate(360deg); } }
+/* A picture of the same three-wide layout, shown until the first play */
+.biz-ba-cover { position: absolute; top: 0; left: 0; width: 300%; max-width: none; height: 100%; object-fit: fill; transform: translateX(-66.6667%); pointer-events: none; }
+.biz-ba.is-started .biz-ba-cover { display: none; }
 .biz-ba-bar { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 10px; padding: 26px 12px 10px; background: linear-gradient(180deg, transparent, rgba(10, 24, 48, .62)); opacity: 0; pointer-events: none; transition: opacity .2s ease; }
 .biz-ba.is-started .biz-ba-bar { opacity: 1; pointer-events: auto; }
 .biz-ba-seek, .biz-ba-vol { -webkit-appearance: none; appearance: none; margin: 0; padding: 0; background: transparent; cursor: pointer; --p: 0%; --b: 0%; touch-action: pan-y; }
