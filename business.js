@@ -214,6 +214,86 @@
     if (buyerIcon) buyerIcon.innerHTML = '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>';
   }
 
+  Object.assign(en, {
+    'biz.ba_title': 'See the difference for yourself',
+    'biz.ba_sub': 'The same clip, before and after. Switch between them and hear the difference.',
+    'biz.ba_before': 'Before',
+    'biz.ba_after': 'After',
+    'biz.ba_together': 'Together'
+  });
+
+  // Before and after: one YouTube player and three videos. A button swaps the video and keeps the
+  // same moment. One player, because phones will not reliably play two YouTube videos with sound.
+  // The visitor's first tap lands on YouTube's own player (the picture above it lets taps through),
+  // which is what phones need before they allow sound.
+  (function () {
+    // YouTube ids; while any is empty the whole block stays off the page. sameMoment: the videos have the
+    // same cuts and length, so a button keeps the moment; otherwise a button starts its video from the top.
+    var VIDEOS = REAL_ESTATE
+      ? { before: 'Y5JkujHPr4Q', after: 'KSBtnV8pWO4', together: '8PyGPukZr68', sameMoment: false }
+      : { before: 'JFqrZzrzGNk', after: 'nv_kT_wFlvc', together: 'dZLuZeQU2Ww', sameMoment: true };
+    var block = document.getElementById('bizBaBlock');
+    var ba = document.getElementById('bizBa');
+    if (!block || !ba) return;
+    if (!VIDEOS.before || !VIDEOS.after || !VIDEOS.together) { block.remove(); return; }
+
+    var poster = ba.querySelector('.biz-ba-poster');
+    var tabs = ba.querySelectorAll('.biz-ba-tab');
+    var player = null;
+    var picture = function (mode) { return './assets/images/ba-' + (REAL_ESTATE ? 're-' : '') + mode + '.webp'; };
+    var mode = function () { return ba.getAttribute('data-mode'); };
+    if (REAL_ESTATE) poster.src = picture(mode());
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var next = tab.getAttribute('data-ba');
+        if (next === mode()) return;
+        ba.setAttribute('data-mode', next);
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.classList.toggle('is-on', on);
+          t.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        poster.src = picture(next);
+        if (!player || !player.getPlayerState) return;
+        var state = player.getPlayerState();
+        var same = { videoId: VIDEOS[next], startSeconds: VIDEOS.sameMoment ? (player.getCurrentTime() || 0) : 0 };
+        if (state === 1 || state === 3) player.loadVideoById(same);
+        else player.cueVideoById(same);
+      });
+    });
+
+    var make = function () {
+      player = new YT.Player('bizBaPlayer', {
+        videoId: VIDEOS[mode()],
+        width: '100%',
+        height: '100%',
+        playerVars: { playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, origin: location.origin },
+        events: {
+          onStateChange: function (e) {
+            if (e.data === 1) ba.classList.add('is-playing');
+            else if (e.data === 5) ba.classList.remove('is-playing');
+            else if (e.data === 0) player.cueVideoById(VIDEOS[mode()]);   // at the end: our picture, not YouTube's suggestions
+          }
+        }
+      });
+      ba._player = player;
+    };
+
+    // YouTube and the other two pictures load only when the visitor gets near this part
+    new IntersectionObserver(function (seen, watcher) {
+      if (!seen[0].isIntersecting) return;
+      watcher.disconnect();
+      ['before', 'after', 'together'].forEach(function (m) { new Image().src = picture(m); });
+      if (window.YT && YT.Player) return make();
+      var earlier = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = function () { if (earlier) earlier(); make(); };
+      var api = document.createElement('script');
+      api.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(api);
+    }, { rootMargin: '700px 0px' }).observe(ba);
+  })();
+
   // The two example months: four plain weeks, each with its videos
   var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
   document.querySelectorAll('.biz-cal').forEach(function (cal) {

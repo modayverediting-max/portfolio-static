@@ -243,33 +243,21 @@
         </a>
       </div>
 
-      <h3 class="biz-sub-title reveal-box reveal-up" data-i18n="biz.work_title">إعلانات وفيديوهات سويتها لشركات ومشاريع</h3>
-      <div class="biz-videos">
-        <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('bKnjU5Ra6Xg')">
-          <img src="https://img.youtube.com/vi/bKnjU5Ra6Xg/maxresdefault.jpg" alt="إعلان لشركة Yango Play" data-i18n-attr="alt:biz.v1" loading="lazy" onerror="this.src='https://img.youtube.com/vi/bKnjU5Ra6Xg/hqdefault.jpg'">
-          <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p data-i18n="biz.v1">إعلان لشركة Yango Play</p></div>
-        </div>
-        <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('cAEsLxWnCEM')">
-          <img src="https://img.youtube.com/vi/cAEsLxWnCEM/maxresdefault.jpg" alt="دورة تعليمية في التداول" data-i18n-attr="alt:biz.v2" loading="lazy" onerror="this.src='https://img.youtube.com/vi/cAEsLxWnCEM/hqdefault.jpg'">
-          <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p data-i18n="biz.v2">دورة تعليمية في التداول</p></div>
-        </div>
-        <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('wWPLLHCo_xU')">
-          <img src="https://img.youtube.com/vi/wWPLLHCo_xU/maxresdefault.jpg" alt="إعلان للعبة تحدي الملوك" data-i18n-attr="alt:biz.v3" loading="lazy" onerror="this.src='https://img.youtube.com/vi/wWPLLHCo_xU/hqdefault.jpg'">
-          <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p data-i18n="biz.v3">إعلان للعبة تحدي الملوك</p></div>
-        </div>
-      
-        <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('SSJhjvOIJQg')">
-          <img src="https://img.youtube.com/vi/SSJhjvOIJQg/maxresdefault.jpg" alt="إعلان لمتجر تجميعات الحاسوب" data-i18n-attr="alt:biz.v4" loading="lazy" onerror="this.src='https://img.youtube.com/vi/SSJhjvOIJQg/hqdefault.jpg'">
-          <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p data-i18n="biz.v4">إعلان لمتجر تجميعات الحاسوب</p></div>
-        </div>
-        <div class="video-thumbnail reveal-box reveal-up" onclick="openVideo('NINpruxaZjM')">
-          <img src="https://img.youtube.com/vi/NINpruxaZjM/maxresdefault.jpg" alt="فيديو تقديمي" data-i18n-attr="alt:biz.v5" loading="lazy" onerror="this.src='https://img.youtube.com/vi/NINpruxaZjM/hqdefault.jpg'">
-          <div class="play-overlay"><div class="play-btn"><div class="play-triangle"></div></div></div>
-          <div class="video-title-overlay"><p data-i18n="biz.v5">فيديو تقديمي</p></div>
+      <!-- Before and after: one player, three videos (business.js) -->
+      <div id="bizBaBlock">
+        <h3 class="biz-sub-title reveal-box reveal-up" data-i18n="biz.ba_title">شوف الفرق بنفسك</h3>
+        <p class="biz-ba-sub reveal-box reveal-up" data-i18n="biz.ba_sub">نفس المقطع، قبل وبعد. بدّل بينهم واسمع الفرق.</p>
+        <div class="biz-ba reveal-box reveal-up" id="bizBa" data-mode="together">
+          <div class="biz-ba-tabs">
+            <button type="button" class="biz-ba-tab" data-ba="before" aria-pressed="false" data-i18n="biz.ba_before">قبل</button>
+            <button type="button" class="biz-ba-tab" data-ba="after" aria-pressed="false" data-i18n="biz.ba_after">بعد</button>
+            <button type="button" class="biz-ba-tab is-on" data-ba="together" aria-pressed="true" data-i18n="biz.ba_together">معا</button>
+          </div>
+          <div class="biz-ba-frame">
+            <div id="bizBaPlayer"></div>
+            <img class="biz-ba-poster" src="./assets/images/ba-together.webp" alt="" loading="lazy">
+            <div class="biz-ba-play" aria-hidden="true"></div>
+          </div>
         </div>
       </div>
     </div>
