@@ -54,8 +54,8 @@
     'biz.pain4_t': 'An editor who became a new problem',
     'biz.pain4_d': 'Late delivery, daily follow-ups and endless changes. You wanted less work and got more.',
 
-    'biz.sell': '<strong>Your client must see you every day. One video a month will not reach them.</strong><br>They buy from the one they are used to seeing daily, and every appearance builds their trust in you.',
-    'biz.ben_title': 'What you gain, and what your customer gains',
+    'biz.sell': '<strong>Your customer buys from the one their eyes are used to seeing daily, and every appearance builds their trust in you even more.</strong><br>One video a month will not reach them.',
+    'biz.ben_title': 'What do you and your customer gain?',
     'biz.ben1_t': 'You, the company owner',
     'biz.ben1_a': 'Your customers see you on social media every day, so when they are ready to buy, your name comes to mind first. In the market, whoever shows up more sells more.',
     'biz.ben1_b': 'The more you show up, the more serious people see you, and the messages come from people who want to buy, not just views.',

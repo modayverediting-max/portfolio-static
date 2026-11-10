@@ -30,7 +30,7 @@ html:not([data-theme="dark"]) .biz-try .btn-secondary { background: #fff; }
   letter-spacing: -0.5px;
   margin-bottom: 26px;
 }
-.biz-hero .biz-hero-sell { max-width: 860px; text-wrap: balance; margin: 0 auto 14px; color: #fff; font-size: clamp(15.5px, 4.1vw, 21px); font-weight: 600; line-height: 1.7; }
+.biz-hero .biz-hero-sell { max-width: 1060px; text-wrap: balance; margin: 0 auto 14px; color: #fff; font-size: clamp(15.5px, 4.1vw, 21px); font-weight: 600; line-height: 1.7; }
 .biz-hero .biz-hero-sell strong { font-size: 1.1em; font-weight: 800; }
 .biz-hero .hero-desc { max-width: 640px; margin-inline: auto; }
 .biz-hero .hero-desc p { font-size: clamp(15px, 3.9vw, 19px); line-height: 1.85; }
@@ -508,6 +508,9 @@ html[lang="ar"] .biz-hero .hero-title {
   white-space: nowrap;
 }
 br.biz-m { display: none; }
+/* The bold hero line breaks after its comma until the screen is wide enough for one line */
+br.biz-t { display: none; }
+@media (max-width: 1099.98px) { br.biz-t { display: inline; } }
 @media (max-width: 639.98px) {
   br.biz-m { display: inline; }
   html[lang="ar"] .biz-hero .hero-title { font-size: calc((100vw - 34px) / 10.4); line-height: 1.45; }
