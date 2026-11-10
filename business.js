@@ -1,11 +1,18 @@
 /* ========================================
-   Sales page for business owners (modayver.com/business)
+   Sales page for business owners (modayver.com/business), and the same page
+   for real estate (modayver.com/real-estate).
    Runs before i18n.js: it adds this page's English text, so the shared
    translations file stays untouched and the page can be removed by deleting
-   its own files (business.html, business-page.html, business.css, business.js).
+   its own files (business.html, real-estate.html, business-page.html,
+   business.css, business.js).
    ======================================== */
 (function () {
   var WA = 'https://wa.me/213775051301?text=';
+
+  // real-estate.html is built from the same page and marks itself on <html> (see build_shells.py).
+  // Only the lines in the real-estate block below differ; change anything else once and both follow.
+  var REAL_ESTATE = document.documentElement.getAttribute('data-sector') === 'real-estate';
+  var PAGE_NAME = REAL_ESTATE ? 'صفحة العقار' : 'صفحة أصحاب الأعمال';
 
   // What the visitor's WhatsApp message starts with
   var MSG_AR = {
@@ -22,6 +29,11 @@
     p2: 'Hi Khalid, I would like to ask about the Medium package (8 videos a month).',
     p3: 'Hi Khalid, I would like to ask about the Full package (12 videos a month).'
   };
+
+  if (REAL_ESTATE) {
+    MSG_AR.talk = 'هلا خالد، شفت صفحتك وأبي أكلمك عن شغلي في العقار.';
+    MSG_EN.talk = 'Hi Khalid, I saw your page and I would like to tell you about my real estate business.';
+  }
 
   document.querySelectorAll('[data-wa]').forEach(function (a) {
     a.setAttribute('href', WA + encodeURIComponent(MSG_AR[a.getAttribute('data-wa')]));
@@ -43,7 +55,7 @@
     'biz.proof2': 'videos delivered to channels',
     'biz.proof3': 'years working in video',
 
-    'biz.pain_title': 'Why do deals slip away from you?',
+    'biz.pain_title': 'Why do sales slip away from you?',
     'biz.pain_sub': 'Your client looks you up before buying. If they find nothing new, they go to the one they see every day.',
     'biz.pain1_t': 'Clips waiting on your phone',
     'biz.pain1_d': 'You get excited and film, then the clips pile up because editing needs time you do not have. Every clip that never goes out is a sale you missed.',
@@ -59,10 +71,10 @@
     'biz.ben1_t': 'You, the business owner',
     'biz.ben1_a': 'Your customers see you on social media every day, so when they are ready to buy, your name comes to mind first. In the market, whoever shows up more sells more.',
     'biz.ben1_b': 'The more you show up, the more serious people see you, and the messages come from people who want to buy, not just views.',
-    'biz.ben1_c': 'No pressure from editing and endless tasks. Your mind is clear and your focus is on your customer, and that is what closes deals.',
+    'biz.ben1_c': 'No pressure from editing and endless tasks. Your mind is clear and your focus is on your customer, and that is what grows your sales.',
     'biz.ben2_t': 'Your customer, the buyer',
-    'biz.ben2_a': 'Your message reaches them clear and well ordered, so they see the property as it really is before visiting.',
-    'biz.ben2_b': 'Every second of the video is counted, so they understand the location and features in under a minute.',
+    'biz.ben2_a': 'Your message reaches them clear and well ordered, so they see what you sell as it really is before buying, whether it is a property, a product or a service.',
+    'biz.ben2_b': 'Every second of the video is counted, so they understand what sets you apart in under a minute.',
     'biz.ben2_c': 'Every word is chosen so they feel you know your business, and they trust you before sending a message.',
     'biz.change_title': 'Your month once we start',
     'biz.change_sub': 'The same filming, in an order that keeps you present all month.',
@@ -153,6 +165,54 @@
     'biz.cta_btn': 'Talk to me on WhatsApp',
     'biz.cta_other': 'Other ways to reach me'
   });
+
+  // The real-estate page: these lines replace the general ones. This runs before i18n.js
+  // stores the Arabic, so switching language and back keeps them.
+  if (REAL_ESTATE) {
+    var RE_AR = {
+      'biz.badge': 'لأصحاب العقار، وبالأخص في الإمارات والخليج',
+      'biz.ben1_t': 'انت، اللي تبيع العقار',
+      'biz.ben1_a': 'عميلك يشوفك كل يوم على السوشيال ميديا، فيوم يقرر يشتري عقار يجي اسمك في باله قبل غيرك. وفي سوق العقار، اللي يظهر أكثر يبيع أكثر.',
+      'biz.ben1_b': 'كل ما زاد ظهورك، شافك ناس جادين أكثر. وتوصلك رسايل من ناس تبي تشتري عقار، مو بس مشاهدات.',
+      'biz.ben1_c': 'ما تكون مضغوط بالمونتاج وكثرة المهام. بالك مرتاح وتركيزك كله على عميلك، وهذا اللي يقفل الصفقات.',
+      'biz.ben2_a': 'رسالتك توصله مرتبة وواضحة، فيشوف العقار زي ما هو قبل لا يزوره.',
+      'biz.ben2_b': 'كل ثانية في الفيديو محسوبة، فيفهم المكان والمميزات في أقل من دقيقة.',
+      'biz.ben2_c': 'كل كلمة مختارة عشان يحس إنك فاهم السوق، فيثق فيك قبل لا يراسلك.',
+      'biz.pain_title': 'ليش تضيع عليك الصفقات؟',
+      'biz.pain_sub': 'عميلك يدوّر عليك قبل لا يحجز معاينة. إذا ما لقى لك شي جديد، يروح للي يشوفه كل يوم.',
+      'biz.pain1_d': 'تتحمس وتصوّر العقار، بس المونتاج ياخذ وقت وانت مشغول بالمعاينات، فتظل المقاطع مكانها. وكل مقطع ما نزل، فرصة بيع راحت عليك.',
+      'biz.pain3_d': 'كلامك زين، بس المشاهد يطلع من الفيديو قبل لا يوصل لأقوى ميزة في العقار.',
+      'biz.step1_d': 'قبل لا نبدأ، أفهم أي عقار تبي تبيعه أول، وكم رسالة تبي توصلك ومن أي مشترين، ونختار مع بعض نوع الفيديو اللي يوصلك لها.',
+      'biz.step2_d': 'كل المقاطع برابط واحد، وأقول لك قبلها كيف تصوّر العقار عشان ما تعيد التصوير.',
+      'biz.step3_d': 'أبدأ بأقوى لقطة في العقار، وأرتب كلامك. توصلك أول نسخة خلال 72 ساعة، وتوافق عليها قبل النشر.',
+      'biz.proof_sub': 'نفس الخبرة اللي اشتغلت فيها معهم، أحطها في فيديوهات عقاراتك عشان توصل لعميلك وتبيع.'
+    };
+    Object.keys(RE_AR).forEach(function (k) {
+      var el = document.querySelector('[data-i18n="' + k + '"]');
+      if (el) el.innerHTML = RE_AR[k];
+    });
+    Object.assign(en, {
+      'biz.badge': 'For real estate owners, especially in the UAE and the Gulf',
+      'biz.ben1_t': 'You, the one selling the property',
+      'biz.ben1_a': 'Your customer sees you every day on social media, so the day they decide to buy a property, your name comes to mind before anyone else. In real estate, whoever shows up more sells more.',
+      'biz.ben1_b': 'The more you show up, the more serious people see you. You get messages from people who want to buy a property, not just views.',
+      'biz.ben1_c': 'No pressure from editing and endless tasks. Your mind is clear and your focus is on your customer, and that is what closes deals.',
+      'biz.ben2_a': 'Your message reaches them clear and well ordered, so they see the property as it really is before visiting.',
+      'biz.ben2_b': 'Every second of the video is counted, so they understand the location and features in under a minute.',
+      'biz.ben2_c': 'Every word is chosen so they feel you know the market, and they trust you before sending a message.',
+      'biz.pain_title': 'Why do deals slip away from you?',
+      'biz.pain_sub': 'Your customer looks you up before booking a viewing. If they find nothing new, they go to the one they see every day.',
+      'biz.pain1_d': 'You get excited and film the property, but editing takes time and you are busy with viewings, so the clips stay where they are. Every clip that never goes out is a sale you lost.',
+      'biz.pain3_d': 'What you say is good, but the viewer leaves before reaching the best feature of the property.',
+      'biz.step1_d': 'Before we start, I learn which property you want to sell first, how many messages you want and from which buyers, and we choose together the type of video that gets you there.',
+      'biz.step2_d': 'All the clips in one link, and beforehand I tell you how to film the property so you do not have to film again.',
+      'biz.step3_d': 'I open with the strongest shot of the property and arrange what you say. Your first version reaches you within 72 hours, and you approve it before it goes out.',
+      'biz.proof_sub': 'The same experience, put into your property videos so they reach your customers and sell.'
+    });
+    var buyerTitle = document.querySelector('[data-i18n="biz.ben2_t"]');
+    var buyerIcon = buyerTitle && buyerTitle.parentNode.querySelector('.service-badge svg');
+    if (buyerIcon) buyerIcon.innerHTML = '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.8V20h13V9.8"/><path d="M10 20v-5.5h4V20"/>';
+  }
 
   // The two example months: four plain weeks, each with its videos
   var PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>';
@@ -355,7 +415,7 @@
       leadBtn.disabled = true;
       leadBtn.textContent = say().busy;
 
-      var message = 'عميل من صفحة أصحاب الأعمال ترك رقمه عشان تكلمه.\n\n' +
+      var message = 'عميل من ' + PAGE_NAME + ' ترك رقمه عشان تكلمه.\n\n' +
         'الاسم: ' + name + '\n' +
         'رقم الواتساب: +' + number + '\n' +
         'افتح المحادثة: https://wa.me/' + number +
@@ -379,7 +439,7 @@
         var data = new FormData();
         data.append('access_key', WEB3FORMS_KEY);
         data.append('from_name', 'موقع مودايفر');
-        data.append('subject', 'رقم عميل من صفحة أصحاب الأعمال: ' + name);
+        data.append('subject', 'رقم عميل من ' + PAGE_NAME + ': ' + name);
         data.append('name', name);
         data.append('message', message);
         fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Accept': 'application/json' }, body: data, keepalive: true })
