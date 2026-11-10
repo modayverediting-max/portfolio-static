@@ -84,7 +84,7 @@
     'biz.step1_t': 'We define the result you want',
     'biz.step1_d': 'Before we start, I learn how many messages you want and from which clients, and together we choose the type of video that gets you there.',
     'biz.step2_t': 'You film and send it to me',
-    'biz.step2_d': 'All the clips in one link, and I give you simple tips so your time is not wasted.',
+    'biz.step2_d': 'All the clips in one link, and beforehand I tell you how to film so you do not have to film again.',
     'biz.step3_t': 'I turn your footage into videos that make clients message you',
     'biz.step3_d': 'I pick the strongest opening and arrange your words. You get the first version within 72 hours and approve it before it goes out.',
     'biz.step4_t': 'We review the result and improve',
