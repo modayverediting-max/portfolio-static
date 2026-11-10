@@ -222,9 +222,8 @@
     'biz.ba_together': 'Together',
     'biz.ba_seek': 'Video position',
     'biz.ba_toggle': 'Play or pause',
-    'biz.ba_hint': 'Tap “Before” to see the raw video',
     'biz.me_name': 'Khalid',
-    'biz.me_line': 'I put your message into words your customer gets. Talk to me directly.',
+    'biz.me_line': 'Let me translate your message for your customer.',
     'biz.ba_mute': 'Mute',
     'biz.ba_vol': 'Volume',
     'biz.ba_full': 'Enlarge video'
@@ -302,49 +301,29 @@
         if (resume) start(); else video.pause();
         pulse(resume);
       };
-      // Many visitors would never try the buttons, so once, a few seconds in, the "before" button asks for it
-      var hint = ba.querySelector('.biz-ba-hint');
-      var hintTimer = 0, hinted = false, hintShow = null;
-      var stopHint = function () {
-        clearTimeout(hintTimer);
-        if (hintShow) hintShow.cancel();
-      };
-      var showHint = function () {
-        if (hinted || pressedAny || video.paused || mode !== 'together' || !hint.animate || ba.classList.contains('is-clean')) return;
-        hinted = true;
-        var target = ba.querySelector('[data-ba="before"]');
-        hint.style.left = (target.offsetLeft + target.offsetWidth / 2) + 'px';
-        hintShow = hint.animate([
-          { opacity: 0, transform: 'translateX(-50%) translateY(6px)' },
-          { opacity: 1, transform: 'translateX(-50%) translateY(0)', offset: 0.08 },
-          { opacity: 1, transform: 'translateX(-50%) translateY(0)', offset: 0.88 },
-          { opacity: 0, transform: 'translateX(-50%) translateY(0)' }
-        ], { duration: 3600, easing: 'ease-out' });
-        if (!calm) target.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.16)' }, { transform: 'scale(1)' }], { duration: 560, iterations: 2, easing: 'ease-in-out' });
-      };
       var pill = ba.querySelector('.biz-ba-pill');
       // Pressing play shakes the three buttons for a moment, so nobody misses them
       var shakeTabs = function (always) {
         var bar = ba.querySelector('.biz-ba-tabs');
         if (calm || (pressedAny && always !== true) || !bar.animate) return;
         var base = ba.classList.contains('is-full') ? 'translateX(-50%) ' : '';
-        bar.animate([0, -9, 9, -7, 7, -4, 4, 0].map(function (x) { return { transform: base + 'translateX(' + x + 'px)' }; }), { duration: 560, easing: 'ease-in-out' });
+        bar.animate([0, -5, 5, -3, 3, 0].map(function (x) { return { transform: base + 'translateX(' + x + 'px)' }; }), { duration: 460, easing: 'ease-in-out' });
+        tabs.forEach(function (tab, i) {
+          if (tab.classList.contains('is-on')) return;
+          var color = getComputedStyle(tab).color;
+          tab.animate([
+            { backgroundColor: 'rgba(61, 126, 224, 0)', color: color },
+            { backgroundColor: 'rgba(61, 126, 224, 1)', color: '#fff', offset: 0.35 },
+            { backgroundColor: 'rgba(61, 126, 224, 0)', color: color }
+          ], { duration: 650, delay: i * 70, easing: 'ease-out' });
+        });
       };
       var placePill = function () {
         var on = ba.querySelector('.biz-ba-tab.is-on');
         if (!on || !on.offsetWidth) return;
         pill.style.width = on.offsetWidth + 'px';
         pill.style.transform = 'translateX(' + on.offsetLeft + 'px)';
-        // The nudge points at the "before" button, and never leaves the screen
-        var before = ba.querySelector('[data-ba="before"]');
-        hint.style.left = (before.offsetLeft + before.offsetWidth / 2) + 'px';
-        var box = hint.getBoundingClientRect();
-        var room = document.documentElement.clientWidth;
-        if (box.width && box.left < 8) hint.style.left = (parseFloat(hint.style.left) + 8 - box.left) + 'px';
-        else if (box.width && box.right > room - 8) hint.style.left = (parseFloat(hint.style.left) - (box.right - room + 8)) + 'px';
-        hint.style.setProperty('--tip', 'calc(50% - ' + (parseFloat(hint.style.left) - (before.offsetLeft + before.offsetWidth / 2)) + 'px)');
       };
-      if (!pressedAny) ba.classList.add('needs-hint');
       placePill();
       requestAnimationFrame(function () { requestAnimationFrame(function () { pill.classList.add('is-ready'); }); });
       window.addEventListener('resize', placePill);
@@ -468,8 +447,6 @@
           var next = tab.getAttribute('data-ba');
           if (next === mode) return;
           pressedAny = true;
-          stopHint();
-          document.querySelectorAll('.biz-ba').forEach(function (other) { other.classList.remove('needs-hint'); });
           mode = next;
           tabs.forEach(function (t) {
             var on = t === tab;
@@ -507,7 +484,7 @@
         if (shakeNext) { shakeNext = false; setTimeout(shakeTabs, 300); }
         sound();
       });
-      video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); clearTimeout(hintTimer); });
+      video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); });
       video.addEventListener('waiting', silence);
       video.addEventListener('seeking', silence);
       video.addEventListener('seeked', sound);
@@ -646,11 +623,12 @@
           prepare();
         }, { rootMargin: '400px 0px' }).observe(ba);
         // Reaching the player: one shake once it has settled on screen
-        new IntersectionObserver(function (seen, watcher) {
-          if (!seen[0].isIntersecting) return;
-          watcher.disconnect();
-          setTimeout(shakeTabs, 900);
-        }, { threshold: 0.6 }).observe(frame);
+        var away = true;
+        new IntersectionObserver(function (seen) {
+          var e = seen[seen.length - 1];
+          if (!e.isIntersecting) { away = true; return; }
+          if (away && e.intersectionRatio >= 0.6) { away = false; setTimeout(shakeTabs, 500); }
+        }, { threshold: [0, 0.6] }).observe(frame);
       }
 
       ba._video = video;
