@@ -306,27 +306,12 @@
         if (!calm) target.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.16)' }, { transform: 'scale(1)' }], { duration: 560, iterations: 2, easing: 'ease-in-out' });
       };
       var pill = ba.querySelector('.biz-ba-pill');
-      var guided = false;
-      var GUIDE = {
-        ar: 'الأزرار فوق تبدّل بين النسخ:<br>«قبل» الخام، «بعد» بعد المونتاج، «معا» الاثنين',
-        en: 'The buttons above switch versions:<br>“Before” raw, “After” edited, “Together” both'
-      };
-      var showGuide = function () {
-        if (pressedAny || video.paused || !flash.animate) return;
-        flash.innerHTML = GUIDE[document.documentElement.lang === 'en' ? 'en' : 'ar'];
-        flash.classList.add('is-guide');
-        var shown = flash.animate([
-          { opacity: 0, transform: 'translate(-50%, -50%) scale(.9)' },
-          { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.1 },
-          { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.88 },
-          { opacity: 0, transform: 'translate(-50%, -50%) scale(1)' }
-        ], { duration: 4200, easing: 'ease-out' });
-        shown.onfinish = function () { flash.classList.remove('is-guide'); };
-        if (!calm) ba.querySelector('.biz-ba-tabs').animate([
-          { boxShadow: '0 6px 20px rgba(30, 80, 160, .14)' },
-          { boxShadow: '0 0 0 7px rgba(61, 126, 224, .5)' },
-          { boxShadow: '0 6px 20px rgba(30, 80, 160, .14)' }
-        ], { duration: 900, iterations: 2, easing: 'ease-in-out' });
+      // Pressing play shakes the three buttons for a moment, so nobody misses them
+      var shakeTabs = function (always) {
+        var bar = ba.querySelector('.biz-ba-tabs');
+        if (calm || (pressedAny && always !== true) || !bar.animate) return;
+        var base = ba.classList.contains('is-full') ? 'translateX(-50%) ' : '';
+        bar.animate([0, -9, 9, -7, 7, -4, 4, 0].map(function (x) { return { transform: base + 'translateX(' + x + 'px)' }; }), { duration: 560, easing: 'ease-in-out' });
       };
       var placePill = function () {
         var on = ba.querySelector('.biz-ba-tab.is-on');
@@ -356,7 +341,7 @@
 
       // Full quality unless the connection or the device says otherwise; the light file is the fallback
       var stage = ba.querySelector('.biz-ba-stage');
-      var hd = false, picked = null, stalls = 0, wanted = false, prepared = false;
+      var hd = false, picked = null, stalls = 0, wanted = false, prepared = false, shakeNext = false;
       var file = '';
       var smooth = function (codecs, width, height, bitrate) {
         return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="' + codecs + '"', width: width, height: height, bitrate: bitrate, framerate: 30 } })
@@ -446,6 +431,7 @@
         keepAwake.play().catch(function () {});
         players.forEach(function (p) { if (p !== player) p.pause(); });
         wanted = true;
+        shakeNext = true;
         ba.classList.add('is-loading');
         var soundReady = load().then(function () { if (!sources.length) sound(); });
         // The video never waits long for the sound: if it is not ready almost at once, the sound joins a moment later
@@ -478,7 +464,6 @@
           cover.style.transform = video.style.transform;
           if (!calm && stage.animate) {
             stage.animate([{ filter: 'blur(16px) brightness(1.3)' }, { filter: 'blur(0) brightness(1)' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
-            flash.classList.remove('is-guide');
             flash.textContent = tab.textContent;
             flash.animate([
               { opacity: 0, transform: 'translate(-50%, -50%) scale(.8)' },
@@ -502,7 +487,7 @@
         if (!wanted) { video.pause(); video.currentTime = 0; return; }     // it was only warming up
         ba.classList.remove('is-loading');
         ba.classList.add('is-playing', 'is-started');
-        if (!guided && !pressedAny) { guided = true; setTimeout(showGuide, 500); }
+        if (shakeNext) { shakeNext = false; setTimeout(shakeTabs, 300); }
         sound();
       });
       video.addEventListener('pause', function () { ba.classList.remove('is-playing'); silence(); clearTimeout(hintTimer); });
@@ -586,7 +571,7 @@
       var setFull = function (on) {
         ba.classList.toggle('is-full', on);
         document.documentElement.classList.toggle('biz-ba-lock', on);
-        if (on) wake(); else { clearTimeout(hideTimer); ba.classList.remove('is-clean'); }
+        if (on) { wake(); setTimeout(function () { shakeTabs(true); }, 380); } else { clearTimeout(hideTimer); ba.classList.remove('is-clean'); }
         setTimeout(placePill, 60);
       };
       // Enlarged: the buttons leave after a moment so only the video is on screen; a tap brings them back or sends them away
@@ -645,6 +630,12 @@
           watcher.disconnect();
           prepare();
         }, { rootMargin: '400px 0px' }).observe(ba);
+        // Reaching the player: one shake once it has settled on screen
+        new IntersectionObserver(function (seen, watcher) {
+          if (!seen[0].isIntersecting) return;
+          watcher.disconnect();
+          setTimeout(shakeTabs, 900);
+        }, { threshold: 0.6 }).observe(frame);
       }
 
       ba._video = video;
