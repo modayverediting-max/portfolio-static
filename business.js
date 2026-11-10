@@ -305,7 +305,7 @@
         var net = navigator.connection;
         if (net && (net.saveData || /(^|-)(2g|3g)$/.test(net.effectiveType || ''))) return Promise.resolve(false);
         if (!navigator.mediaCapabilities || !navigator.mediaCapabilities.decodingInfo) return Promise.resolve(true);
-        return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="avc1.640033"', width: 3240, height: 1920, bitrate: 14000000, framerate: 30 } })
+        return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="avc1.640033"', width: 2700, height: 1600, bitrate: 9000000, framerate: 30 } })
           .then(function (r) { return r.supported && r.smooth; })
           .catch(function () { return true; });
       };
