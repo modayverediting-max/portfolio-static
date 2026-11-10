@@ -35,7 +35,7 @@
   Object.assign(en, {
     'biz.badge': 'For business owners, especially in the UAE and the Gulf',
     'biz.title': 'How many clients went to someone else this month?',
-    'biz.desc': 'I help you get more messages from serious clients, <br class="biz-m">and you film just once.',
+    'biz.desc': 'I help you get more messages from serious clients, <br class="biz-m">and all you have to do is film.',
     'biz.btn_sample': 'Try the first two videos',
     'biz.alt_btn': 'Leave your number and I will message you',
     'biz.btn_work': 'See my work',
