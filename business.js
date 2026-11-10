@@ -56,7 +56,7 @@
 
     'biz.sell': '<strong>Your customer buys from the one their eyes are used to seeing daily, and every appearance builds their trust in you even more.</strong><br>One video a month will not reach them.',
     'biz.ben_title': 'What do you and your customer gain?',
-    'biz.ben1_t': 'You, the company owner',
+    'biz.ben1_t': 'You, the business owner',
     'biz.ben1_a': 'Your customers see you on social media every day, so when they are ready to buy, your name comes to mind first. In the market, whoever shows up more sells more.',
     'biz.ben1_b': 'The more you show up, the more serious people see you, and the messages come from people who want to buy, not just views.',
     'biz.ben1_c': 'No pressure from editing and endless tasks. Your mind is clear and your focus is on your customer, and that is what closes deals.',
