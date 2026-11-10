@@ -46,7 +46,7 @@
     'biz.pain_title': 'Why do deals slip away from you?',
     'biz.pain_sub': 'Your client looks you up before buying. If they find nothing new, they go to the one they see every day.',
     'biz.pain1_t': 'Clips waiting on your phone',
-    'biz.pain1_d': 'You film with energy, then the clips pile up because editing needs time you do not have. Every clip that never goes out is a sale you missed.',
+    'biz.pain1_d': 'You get excited and film, then the clips pile up because editing needs time you do not have. Every clip that never goes out is a sale you missed.',
     'biz.pain2_t': 'One week on, one month gone',
     'biz.pain2_d': 'Every time you stop posting, you start again from zero.',
     'biz.pain3_t': 'A good message nobody finishes',
