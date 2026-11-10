@@ -221,6 +221,7 @@
     'biz.ba_after': 'After',
     'biz.ba_together': 'Together',
     'biz.ba_seek': 'Video position',
+    'biz.ba_toggle': 'Play or pause',
     'biz.ba_mute': 'Mute',
     'biz.ba_vol': 'Volume',
     'biz.ba_full': 'Enlarge video'
@@ -280,6 +281,18 @@
       var time = ba.querySelector('.biz-ba-time');
       var tabs = ba.querySelectorAll('.biz-ba-tab');
       var flash = ba.querySelector('.biz-ba-flash');
+      var pill = ba.querySelector('.biz-ba-pill');
+      var placePill = function () {
+        var on = ba.querySelector('.biz-ba-tab.is-on');
+        if (!on || !on.offsetWidth) return;
+        pill.style.width = on.offsetWidth + 'px';
+        pill.style.transform = 'translateX(' + on.offsetLeft + 'px)';
+      };
+      placePill();
+      requestAnimationFrame(function () { requestAnimationFrame(function () { pill.classList.add('is-ready'); }); });
+      window.addEventListener('resize', placePill);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(placePill);
+      new MutationObserver(placePill).observe(ba.querySelector('.biz-ba-tabs'), { childList: true, subtree: true, characterData: true });
       var mode = 'together';
       var buffers = null, gains = null, sources = [], loading = null, began = 0, scrubbing = false;
 
@@ -341,7 +354,7 @@
       };
 
       frame.addEventListener('click', function (e) {
-        if (e.target.closest('.biz-ba-bar')) return;
+        if (e.target.closest('.biz-ba-bar') || ba.classList.contains('is-full')) return;
         if (video.paused) start(); else video.pause();
       });
 
@@ -355,6 +368,7 @@
             t.classList.toggle('is-on', on);
             t.setAttribute('aria-pressed', on ? 'true' : 'false');
           });
+          placePill();
           video.style.transform = 'translateX(-' + (PANE[mode] * 100 / 3).toFixed(4) + '%)';
           if (!calm && video.animate) {
             video.animate([{ filter: 'blur(16px) brightness(1.3)' }, { filter: 'blur(0) brightness(1)' }], { duration: 380, easing: 'cubic-bezier(.2,.7,.2,1)' });
@@ -452,10 +466,35 @@
       // Enlarging: the real full screen where the browser has one, and a page-filling view on iPhones, which do not.
       // Either way it is the whole player that grows, so the three buttons come with it.
       var fullNow = function () { return document.fullscreenElement || document.webkitFullscreenElement; };
+      var hideTimer = 0, movedAt = 0;
+      var hideSoon = function () {
+        clearTimeout(hideTimer);
+        if (!ba.classList.contains('is-full') || video.paused) return;
+        hideTimer = setTimeout(function () { if (scrubbing) hideSoon(); else ba.classList.add('is-clean'); }, 2600);
+      };
+      var wake = function () { ba.classList.remove('is-clean'); hideSoon(); };
       var setFull = function (on) {
         ba.classList.toggle('is-full', on);
         document.documentElement.classList.toggle('biz-ba-lock', on);
+        if (on) wake(); else { clearTimeout(hideTimer); ba.classList.remove('is-clean'); }
+        setTimeout(placePill, 60);
       };
+      // Enlarged: the buttons leave after a moment so only the video is on screen; a tap brings them back or sends them away
+      ba.addEventListener('click', function (e) {
+        if (!ba.classList.contains('is-full')) return;
+        if (e.target.closest('.biz-ba-tabs, .biz-ba-bar')) { wake(); return; }
+        if (video.paused) { start(); wake(); return; }
+        if (ba.classList.contains('is-clean')) wake();
+        else if (Date.now() - movedAt > 250) { clearTimeout(hideTimer); ba.classList.add('is-clean'); }
+      });
+      ba.addEventListener('pointermove', function (e) {
+        if (e.pointerType === 'mouse' && ba.classList.contains('is-full')) { movedAt = Date.now(); wake(); }
+      });
+      video.addEventListener('playing', hideSoon);
+      video.addEventListener('pause', wake);
+      ba.querySelector('.biz-ba-toggle').addEventListener('click', function () {
+        if (video.paused) start(); else video.pause();
+      });
       ba.querySelector('.biz-ba-full').addEventListener('click', function () {
         if (ba.classList.contains('is-full')) {
           var leave = document.exitFullscreen || document.webkitExitFullscreen;
