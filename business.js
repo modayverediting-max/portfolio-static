@@ -224,7 +224,7 @@
     'biz.ba_toggle': 'Play or pause',
     'biz.ba_hint': 'Tap “Before” to see the raw video',
     'biz.me_name': 'Khalid',
-    'biz.me_line': 'Talk to me directly. I am the one who works on your videos.',
+    'biz.me_line': 'I put your message into words your customer gets. Talk to me directly.',
     'biz.ba_mute': 'Mute',
     'biz.ba_vol': 'Volume',
     'biz.ba_full': 'Enlarge video'
@@ -285,6 +285,23 @@
       var time = ba.querySelector('.biz-ba-time');
       var tabs = ba.querySelectorAll('.biz-ba-tab');
       var flash = ba.querySelector('.biz-ba-flash');
+      var pulseSign = ba.querySelector('.biz-ba-pulse');
+      var PLAY_SIGN = '<svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>';
+      var PAUSE_SIGN = '<svg viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>';
+      var pulse = function (playing) {
+        if (!pulseSign.animate) return;
+        pulseSign.innerHTML = playing ? PLAY_SIGN : PAUSE_SIGN;
+        pulseSign.animate([
+          { opacity: 0, transform: 'translate(-50%, -50%) scale(.7)' },
+          { opacity: 1, transform: 'translate(-50%, -50%) scale(1)', offset: 0.25 },
+          { opacity: 0, transform: 'translate(-50%, -50%) scale(1.25)' }
+        ], { duration: 650, easing: 'ease-out' });
+      };
+      var playPause = function () {
+        var resume = video.paused;
+        if (resume) start(); else video.pause();
+        pulse(resume);
+      };
       // Many visitors would never try the buttons, so once, a few seconds in, the "before" button asks for it
       var hint = ba.querySelector('.biz-ba-hint');
       var hintTimer = 0, hinted = false, hintShow = null;
@@ -443,7 +460,7 @@
 
       frame.addEventListener('click', function (e) {
         if (e.target.closest('.biz-ba-bar') || ba.classList.contains('is-full')) return;
-        if (video.paused) start(); else video.pause();
+        playPause();
       });
 
       tabs.forEach(function (tab) {
@@ -578,18 +595,16 @@
       ba.addEventListener('click', function (e) {
         if (!ba.classList.contains('is-full')) return;
         if (e.target.closest('.biz-ba-tabs, .biz-ba-bar')) { wake(); return; }
-        if (video.paused) { start(); wake(); return; }
-        if (ba.classList.contains('is-clean')) wake();
-        else if (Date.now() - movedAt > 250) { clearTimeout(hideTimer); ba.classList.add('is-clean'); }
+        // Enlarged too, a tap plays or pauses; the buttons come back and leave again on their own
+        playPause();
+        wake();
       });
       ba.addEventListener('pointermove', function (e) {
         if (e.pointerType === 'mouse' && ba.classList.contains('is-full')) { movedAt = Date.now(); wake(); }
       });
       video.addEventListener('playing', hideSoon);
       video.addEventListener('pause', wake);
-      ba.querySelector('.biz-ba-toggle').addEventListener('click', function () {
-        if (video.paused) start(); else video.pause();
-      });
+      ba.querySelector('.biz-ba-toggle').addEventListener('click', playPause);
       ba.querySelector('.biz-ba-full').addEventListener('click', function () {
         if (ba.classList.contains('is-full')) {
           var leave = document.exitFullscreen || document.webkitExitFullscreen;

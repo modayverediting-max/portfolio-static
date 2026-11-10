@@ -797,3 +797,20 @@ html .biz-change-sec .hero-buttons a.biz-btn-work:hover { background: linear-gra
 @media (prefers-reduced-motion: reduce) { .biz-ba.needs-hint .biz-ba-hint, .biz-ba.needs-hint .biz-ba-tab[data-ba="before"] { animation: none; } }
 
 html[dir="rtl"] .biz-ba-flash { direction: rtl; }
+
+/* A tap plays or pauses: the sign shows for a moment, then the big play button comes back if paused */
+.biz-ba-pulse { position: absolute; top: 50%; left: 50%; z-index: 2; display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%; background: rgba(10, 24, 48, .55); color: #fff; pointer-events: none; opacity: 0; transform: translate(-50%, -50%); }
+.biz-ba-pulse svg { width: 34px; height: 34px; fill: currentColor; }
+.biz-ba.is-started:not(.is-playing):not(.is-loading) .biz-ba-play { transition-delay: .55s; }
+
+/* His photo: a turning ring of the brand blues and a "typing" bubble, he is the one who turns the message into video */
+.biz-me .biz-me-pic { position: relative; flex: none; width: 62px; height: 62px; }
+.biz-me .biz-me-pic::before { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: conic-gradient(#fff, #8EC5FF, #3D7EE0, #0A4482, #fff); animation: bizMeRing 5s linear infinite; }
+.biz-me .biz-me-pic img { position: relative; display: block; width: 62px; height: 62px; box-shadow: 0 0 0 2px rgba(255, 255, 255, .95), 0 8px 20px rgba(0, 30, 80, .35); }
+.biz-me-bubble { position: absolute; top: -9px; right: -14px; display: flex; align-items: center; gap: 3px; padding: 6px 7px; border-radius: 12px 12px 12px 3px; background: #fff; box-shadow: 0 4px 12px rgba(0, 30, 80, .32); }
+.biz-me-bubble i { width: 5px; height: 5px; border-radius: 50%; background: #3D7EE0; animation: bizMeDot 1.2s ease-in-out infinite; }
+.biz-me-bubble i:nth-child(2) { animation-delay: .15s; }
+.biz-me-bubble i:nth-child(3) { animation-delay: .3s; }
+@keyframes bizMeRing { to { transform: rotate(360deg); } }
+@keyframes bizMeDot { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-3px); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .biz-me .biz-me-pic::before, .biz-me-bubble i { animation: none; } }
