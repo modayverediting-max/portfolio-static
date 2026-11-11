@@ -925,4 +925,22 @@
         });
     });
   }
+
+  // HIS RULE 2026-11-11: the address stays /business or /real-estate, never #work or #last.
+  // In-page buttons scroll to their section without adding the hash; a shared link with a hash is cleaned once the page has loaded.
+  var cleanAddress = function () {
+    if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
+  };
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    var target = id ? document.getElementById(id) : null;
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ block: 'start' });
+    cleanAddress();
+  });
+  if (document.readyState === 'complete') setTimeout(cleanAddress, 60);
+  else window.addEventListener('load', function () { setTimeout(cleanAddress, 60); });
 })();
