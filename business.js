@@ -306,10 +306,42 @@
         pulse(resume);
       };
       var pill = ba.querySelector('.biz-ba-pill');
+      // HIS RULE 2026-11-12: lead the visitor through the three versions. From «معا» the «بعد» button shakes until it is pressed,
+      // then «قبل» shakes until it is pressed; whichever is still unseen comes next, so each visitor sees all three.
+      var GUIDE = ['after', 'before'];
+      var seenModes = { together: true };
+      var guideTimer = 0, inView = false;
+      var guideTarget = function () {
+        for (var i = 0; i < GUIDE.length; i++) if (!seenModes[GUIDE[i]]) return ba.querySelector('.biz-ba-tab[data-ba="' + GUIDE[i] + '"]');
+        return null;
+      };
+      var shakeOne = function (tab) {
+        if (calm || !tab || !tab.animate || tab.classList.contains('is-on')) return;
+        var grow = [1, 1.08, 1.08, 1.05, 1.02, 1];
+        tab.animate([0, -5, 5, -3, 3, 0].map(function (x, i) { return { transform: 'translateX(' + x + 'px) scale(' + grow[i] + ')' }; }), { duration: 560, easing: 'ease-in-out' });
+        var color = getComputedStyle(tab).color;
+        tab.animate([
+          { backgroundColor: 'rgba(61, 126, 224, 0)', color: color },
+          { backgroundColor: 'rgba(61, 126, 224, 1)', color: '#fff', offset: 0.35 },
+          { backgroundColor: 'rgba(61, 126, 224, 0)', color: color }
+        ], { duration: 760, easing: 'ease-out' });
+      };
+      var guide = function (delay) {
+        clearTimeout(guideTimer);
+        if (!guideTarget()) return;
+        guideTimer = setTimeout(function loop() {
+          var target = guideTarget();
+          if (!target) return;
+          if (inView && !document.hidden) shakeOne(target);
+          guideTimer = setTimeout(loop, 3200);
+        }, delay);
+      };
       // Pressing play shakes the three buttons for a moment, so nobody misses them
       var shakeTabs = function (always) {
         var bar = ba.querySelector('.biz-ba-tabs');
-        if (calm || (pressedAny && always !== true) || !bar.animate) return;
+        if (calm) return;
+        if (guideTarget()) { guide(150); return; }     // still guiding: only the next button to press shakes
+        if ((pressedAny && always !== true) || !bar.animate) return;
         var base = ba.classList.contains('is-full') ? 'translateX(-50%) ' : '';
         bar.animate([0, -5, 5, -3, 3, 0].map(function (x) { return { transform: base + 'translateX(' + x + 'px)' }; }), { duration: 460, easing: 'ease-in-out' });
         tabs.forEach(function (tab, i) {
@@ -462,6 +494,8 @@
           if (next === mode) return;
           pressedAny = true;
           mode = next;
+          seenModes[next] = true;
+          guide(2600);     // let this version show for a moment, then the next unseen button starts shaking
           tabs.forEach(function (t) {
             var on = t === tab;
             t.classList.toggle('is-on', on);
@@ -642,8 +676,9 @@
         var away = true;
         new IntersectionObserver(function (seen) {
           var e = seen[seen.length - 1];
-          if (!e.isIntersecting) { away = true; return; }
-          if (away && e.intersectionRatio >= 0.6) { away = false; setTimeout(shakeTabs, 500); }
+          inView = e.isIntersecting && e.intersectionRatio >= 0.6;
+          if (!e.isIntersecting) { away = true; clearTimeout(guideTimer); return; }
+          if (away && inView) { away = false; if (guideTarget()) guide(500); else setTimeout(shakeTabs, 500); }
         }, { threshold: [0, 0.6] }).observe(frame);
       }
 
