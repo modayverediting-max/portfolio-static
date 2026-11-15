@@ -279,68 +279,125 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 
-/* Home page: the retention drawing walks through the parts of a video (hook, intro, cuts and pace, ending).
-   One part is lit at a time with its sentence; it moves on by itself, and a tap on a clip picks that part. */
+/* Home page: the retention drawing plays like a video being watched.
+   A playhead crosses the four parts (hook, intro, cuts, ending) at one steady speed, never stopping between them;
+   a line under the clips fills as it goes, the part under it lights up with its sentence, and a face pops in
+   on the line when the playhead reaches it. At the end it rests a moment, clears, and plays again.
+   A tap on a clip jumps to that part. */
 (function() {
   var box = document.querySelector('.home-keep');
   if (!box) return;
   var segs = box.querySelectorAll('.k-seg');
   var bands = box.querySelectorAll('.k-band');
   var says = box.querySelectorAll('.home-keep-say');
+  var faces = box.querySelectorAll('.k-emo');
   var head = box.querySelector('.k-head');
   var dot = box.querySelector('.k-dot');
-  var curve = box.querySelector('.k-b');
-  if (!segs.length || !head || !dot || !curve || !curve.getPointAtLength) return;
+  var prog = box.querySelector('.k-prog');
+  var lineB = box.querySelector('.k-b');
+  var lineA = box.querySelector('.k-a');
+  if (!segs.length || !head || !dot || !lineB || !lineB.getPointAtLength) return;
 
-  // The middle of each clip, and how high the solid line is above it
-  var X = [56, 146, 288, 440];
-  var heightAt = function(x) {
-    var lo = 0, hi = curve.getTotalLength(), mid;
-    for (var i = 0; i < 22; i++) {
-      mid = (lo + hi) / 2;
-      if (curve.getPointAtLength(mid).x < x) lo = mid; else hi = mid;
+  var X0 = 20, X1 = 500;
+  // How high a line is above every point of the timeline, read once
+  var heights = function(path) {
+    var len = path.getTotalLength(), out = [], d = 0, p = path.getPointAtLength(0);
+    for (var x = X0; x <= X1; x++) {
+      while (p.x < x && d < len) { d += 0.5; p = path.getPointAtLength(d); }
+      out.push(p.y);
     }
-    return curve.getPointAtLength((lo + hi) / 2).y;
+    return out;
   };
-  var Y = X.map(heightAt);
+  var HB = heights(lineB), HA = lineA ? heights(lineA) : HB;
+  var heightAt = function(table, x) {
+    var i = Math.max(0, Math.min(table.length - 1, x - X0)), a = Math.floor(i), b = Math.min(table.length - 1, a + 1);
+    return table[a] + (table[b] - table[a]) * (i - a);
+  };
 
-  var now = 0, seen = false, held = 0;
+  var starts = [], k;
+  for (k = 0; k < segs.length; k++) starts.push(parseFloat(segs[k].getAttribute('data-from')));
+  for (k = 0; k < faces.length; k++) {
+    faces[k]._x = parseFloat(faces[k].getAttribute('data-x'));
+    faces[k].parentNode.setAttribute('transform', 'translate(' + faces[k]._x + ' ' +
+      heightAt(faces[k].getAttribute('data-line') === 'a' ? HA : HB, faces[k]._x).toFixed(1) + ')');
+  }
+
+  var part = -1;
+  var light = function(i) {
+    if (i === part) return;
+    part = i;
+    for (var n = 0; n < segs.length; n++) {
+      segs[n].classList.toggle('is-on', n === i);
+      segs[n].setAttribute('aria-pressed', n === i ? 'true' : 'false');
+      if (bands[n]) bands[n].classList.toggle('is-on', n === i);
+      if (says[n]) says[n].classList.toggle('is-on', n === i);
+    }
+  };
+
+  // No motion wanted: everything is simply there, and a tap on a clip shows its sentence
   var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var show = function(i) {
-    now = i;
-    for (var k = 0; k < segs.length; k++) {
-      segs[k].classList.toggle('is-on', k === i);
-      segs[k].setAttribute('aria-pressed', k === i ? 'true' : 'false');
-      if (bands[k]) bands[k].classList.toggle('is-on', k === i);
-      if (says[k]) says[k].classList.toggle('is-on', k === i);
-    }
-    head.style.transform = 'translateX(' + X[i] + 'px)';
-    dot.style.transform = 'translate(' + X[i] + 'px, ' + Y[i] + 'px)';
+  if (calm || !window.requestAnimationFrame) {
+    box.classList.add('is-calm');
+    for (k = 0; k < faces.length; k++) faces[k].classList.add('is-on');
+    light(0);
+    for (k = 0; k < segs.length; k++) (function(n) { segs[n].addEventListener('click', function() { light(n); }); })(k);
+    return;
+  }
+
+  var TRAVEL = 17000;   // one pass from the first second to the last, at one steady speed
+  var REST = 1900;      // the finished picture stays a moment
+  var CLEAR = 600;      // then it clears, and the next pass starts
+  var x = X0, phase = 'clear', left = 900, last = 0, raf = 0, seen = false;
+  var place = function() {
+    head.setAttribute('transform', 'translate(' + x.toFixed(2) + ' 0)');
+    dot.setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + heightAt(HB, x).toFixed(2) + ')');
+    if (prog) prog.setAttribute('x2', x.toFixed(2));
+    var now = 0;
+    for (var n = 0; n < starts.length; n++) if (x >= starts[n]) now = n;
+    light(now);
+    for (n = 0; n < faces.length; n++) faces[n].classList.toggle('is-on', x >= faces[n]._x - 5);
   };
-  for (var n = 0; n < segs.length; n++) {
-    (function(k) {
-      var pick = function() { held = Date.now() + 9000; show(k); };   // the visitor's choice stays for a while
-      segs[k].addEventListener('click', pick);
-      segs[k].addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); }
+  var frame = function(ts) {
+    raf = requestAnimationFrame(frame);
+    var dt = last ? Math.min(ts - last, 80) : 0;
+    last = ts;
+    if (document.hidden) return;
+    if (phase === 'run') {
+      x += (X1 - X0) * dt / TRAVEL;
+      if (x >= X1) { x = X1; phase = 'rest'; left = REST; }
+      place();
+    } else if (phase === 'rest') {
+      left -= dt;
+      if (left <= 0) {
+        phase = 'clear'; left = CLEAR;
+        box.classList.add('is-clearing');
+        for (var n = 0; n < faces.length; n++) faces[n].classList.remove('is-on');
+      }
+    } else {
+      left -= dt;
+      if (left <= 0) { x = X0; phase = 'run'; place(); box.classList.remove('is-clearing'); }
+    }
+  };
+  for (k = 0; k < segs.length; k++) {
+    (function(n) {
+      var jump = function() { x = starts[n]; phase = 'run'; box.classList.remove('is-clearing'); place(); };
+      segs[n].addEventListener('click', jump);
+      segs[n].addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); jump(); }
       });
-    })(n);
+    })(k);
   }
-  show(0);
+  box.classList.add('is-clearing');
+  light(0);
+  place();
+  // It only runs while it is on screen
+  var run = function(on) {
+    if (on && !raf) { last = 0; raf = requestAnimationFrame(frame); }
+    if (!on && raf) { cancelAnimationFrame(raf); raf = 0; }
+  };
   if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function(e) {
-      var inView = e[e.length - 1].isIntersecting;
-      // Each time it comes into view, the part on show stays long enough to be read
-      if (inView && !seen) held = Math.max(held, Date.now() + 4200);
-      seen = inView;
-    }).observe(box);
+    new IntersectionObserver(function(e) { seen = e[e.length - 1].isIntersecting; run(seen); }).observe(box);
   } else {
-    seen = true;
-  }
-  if (!calm) {
-    setInterval(function() {
-      if (!seen || document.hidden || Date.now() < held) return;
-      show((now + 1) % segs.length);
-    }, 3600);
+    run(true);
   }
 })();
