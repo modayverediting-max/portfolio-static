@@ -278,3 +278,69 @@ document.addEventListener('DOMContentLoaded', function() {
     observer.observe(el);
   });
 });
+
+/* Home page: the retention drawing walks through the parts of a video (hook, intro, cuts and pace, ending).
+   One part is lit at a time with its sentence; it moves on by itself, and a tap on a clip picks that part. */
+(function() {
+  var box = document.querySelector('.home-keep');
+  if (!box) return;
+  var segs = box.querySelectorAll('.k-seg');
+  var bands = box.querySelectorAll('.k-band');
+  var says = box.querySelectorAll('.home-keep-say');
+  var head = box.querySelector('.k-head');
+  var dot = box.querySelector('.k-dot');
+  var curve = box.querySelector('.k-b');
+  if (!segs.length || !head || !dot || !curve || !curve.getPointAtLength) return;
+
+  // The middle of each clip, and how high the solid line is above it
+  var X = [56, 146, 288, 440];
+  var heightAt = function(x) {
+    var lo = 0, hi = curve.getTotalLength(), mid;
+    for (var i = 0; i < 22; i++) {
+      mid = (lo + hi) / 2;
+      if (curve.getPointAtLength(mid).x < x) lo = mid; else hi = mid;
+    }
+    return curve.getPointAtLength((lo + hi) / 2).y;
+  };
+  var Y = X.map(heightAt);
+
+  var now = 0, seen = false, held = 0;
+  var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var show = function(i) {
+    now = i;
+    for (var k = 0; k < segs.length; k++) {
+      segs[k].classList.toggle('is-on', k === i);
+      segs[k].setAttribute('aria-pressed', k === i ? 'true' : 'false');
+      if (bands[k]) bands[k].classList.toggle('is-on', k === i);
+      if (says[k]) says[k].classList.toggle('is-on', k === i);
+    }
+    head.style.transform = 'translateX(' + X[i] + 'px)';
+    dot.style.transform = 'translate(' + X[i] + 'px, ' + Y[i] + 'px)';
+  };
+  for (var n = 0; n < segs.length; n++) {
+    (function(k) {
+      var pick = function() { held = Date.now() + 9000; show(k); };   // the visitor's choice stays for a while
+      segs[k].addEventListener('click', pick);
+      segs[k].addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); }
+      });
+    })(n);
+  }
+  show(0);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function(e) {
+      var inView = e[e.length - 1].isIntersecting;
+      // Each time it comes into view, the part on show stays long enough to be read
+      if (inView && !seen) held = Math.max(held, Date.now() + 4200);
+      seen = inView;
+    }).observe(box);
+  } else {
+    seen = true;
+  }
+  if (!calm) {
+    setInterval(function() {
+      if (!seen || document.hidden || Date.now() < held) return;
+      show((now + 1) % segs.length);
+    }, 3600);
+  }
+})();

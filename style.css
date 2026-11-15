@@ -2596,7 +2596,9 @@ br.home-br { display: none; }
   .home-hero .hero-buttons > * { flex: 1 1 0; min-width: 0 !important; max-width: 172px; padding-inline: 10px; }
 }
 
-/* The picture of the problem: viewers still watching, second by second (an illustration) */
+/* How the video is built so the viewer stays: a small drawing that walks through its parts (an illustration).
+   Two lines of viewers still watching; under them the video as four clips, like an editing timeline.
+   One part is lit at a time, with one sentence about it; a tap on a clip picks it. */
 .home-keep {
   max-width: 560px;
   margin: 30px auto 0;
@@ -2617,44 +2619,70 @@ br.home-br { display: none; }
   flex-wrap: wrap;
   justify-content: center;
   gap: 4px 18px;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   color: #fff;
   font-size: clamp(11.5px, 3.1vw, 13.5px);
   font-weight: 700;
 }
-html[dir="rtl"] .home-keep-legend, html[dir="rtl"] .home-keep-note { direction: rtl; }
+html[dir="rtl"] .home-keep-legend, html[dir="rtl"] .home-keep-says, html[dir="rtl"] .home-keep-note { direction: rtl; }
 .home-keep-key { display: inline-flex; align-items: center; gap: 7px; }
 .home-keep-key i { flex: none; width: 26px; height: 0; border-top: 3.5px solid #fff; border-radius: 3px; }
 .home-keep-key-a { color: rgba(255,255,255,0.8); font-weight: 600; }
 .home-keep-key-a i { border-top: 2.5px dotted rgba(255,255,255,0.75); }
 .home-keep-chart { display: block; width: 100%; height: auto; overflow: visible; }
-.home-keep-chart .k-grid line { stroke: rgba(255,255,255,0.14); stroke-width: 1; }
-.home-keep-chart .k-grid .k-base { stroke: rgba(255,255,255,0.42); }
-.home-keep-chart .k-a { fill: none; stroke: rgba(255,255,255,0.66); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 2 7; }
+.home-keep-chart .k-grid line { stroke: rgba(255,255,255,0.13); stroke-width: 1; }
+.home-keep-chart .k-grid .k-base { stroke: rgba(255,255,255,0.4); }
+.home-keep-chart .k-a { fill: none; stroke: rgba(255,255,255,0.62); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 2 7; }
 .home-keep-chart .k-b { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; filter: drop-shadow(0 3px 6px rgba(0,30,90,0.35)); }
-.home-keep-chart .k-mark { stroke: rgba(255,255,255,0.5); stroke-width: 1.2; stroke-dasharray: 3 4; }
-.home-keep-chart .k-dot { fill: #00376C; stroke: #fff; stroke-width: 2.5; }
-.home-keep-chart text { fill: #fff; font-family: inherit; }
-.home-keep-chart .k-drop, .home-keep-chart .k-stay { font-size: 14.5px; font-weight: 700; }
-.home-keep-chart .k-drop { fill: rgba(255,255,255,0.9); }
-.home-keep-chart .k-tick { font-size: 11.5px; font-weight: 500; fill: rgba(255,255,255,0.76); }
+/* The part of the video being explained: a soft light over it, the playhead on it, a dot riding the solid line */
+.home-keep-chart .k-band { fill: #fff; opacity: 0; transition: opacity 0.55s ease; }
+.home-keep-chart .k-band.is-on { opacity: 0.13; }
+.home-keep-chart .k-head { transition: transform 0.75s var(--ease-land); }
+.home-keep-chart .k-head line { stroke: #fff; stroke-width: 1.6; }
+.home-keep-chart .k-head path { fill: #fff; }
+.home-keep-chart .k-dot { fill: #00376C; stroke: #fff; stroke-width: 2.6; transition: transform 0.75s var(--ease-land); }
+/* The four clips */
+.home-keep-chart .k-seg { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
+.home-keep-chart .k-seg rect { fill: rgba(255,255,255,0.14); stroke: rgba(255,255,255,0.34); stroke-width: 1; transition: fill 0.4s ease, stroke 0.4s ease; }
+.home-keep-chart .k-seg text { fill: #fff; font-family: inherit; font-size: 15.5px; font-weight: 700; transition: fill 0.4s ease; pointer-events: none; }
+.home-keep-chart .k-seg:hover rect { fill: rgba(255,255,255,0.26); }
+.home-keep-chart .k-seg.is-on rect { fill: #fff; stroke: #fff; }
+.home-keep-chart .k-seg.is-on text { fill: #00376C; }
+.home-keep-chart .k-seg:focus-visible rect { stroke: #fff; stroke-width: 3; }
 /* The drawing is scaled down on phones, so its words get bigger units there */
 @media (max-width: 639.98px) {
   .home-keep { padding: 12px 12px 10px; }
-  .home-keep-chart .k-drop, .home-keep-chart .k-stay { font-size: 21px; }
-  .home-keep-chart .k-tick { font-size: 17px; }
+  .home-keep-chart .k-seg text { font-size: 20px; }
 }
-.home-keep-note { margin-top: 4px; color: rgba(255,255,255,0.74); font-size: clamp(10.5px, 2.8vw, 12px); line-height: 1.6; }
+/* One sentence at a time; the four share one place, so the card never changes height */
+.home-keep-says { display: grid; margin-top: 8px; }
+.home-keep-say {
+  grid-area: 1 / 1;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(12.5px, 3.45vw, 15px);
+  font-weight: 500;
+  line-height: 1.7;
+  text-wrap: balance;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.4s ease, transform 0.5s var(--ease-land);
+  pointer-events: none;
+}
+.home-keep-say.is-on { opacity: 1; transform: none; transition-delay: 0.12s; }
+.home-keep-say strong { font-weight: 800; }
+.home-keep-say strong::after { content: ': '; }
+.home-keep-note { margin-top: 6px; color: rgba(255,255,255,0.7); font-size: clamp(10px, 2.7vw, 11.5px); line-height: 1.6; }
 /* It draws itself when it appears: first the ordinary line, then the one that keeps the viewer */
-.home-keep .k-a, .home-keep .k-dot, .home-keep .k-mark, .home-keep .k-drop { opacity: 0; transition: opacity 0.7s ease 0.35s; }
+.home-keep .k-a { opacity: 0; transition: opacity 0.7s ease 0.35s; }
 .home-keep .k-b { stroke-dashoffset: 1; transition: stroke-dashoffset 1.9s cubic-bezier(0.33, 0, 0.2, 1) 0.7s; }
-.home-keep .k-area, .home-keep .k-stay { opacity: 0; transition: opacity 0.9s ease 1.9s; }
-.home-keep.revealed .k-a, .home-keep.revealed .k-dot, .home-keep.revealed .k-mark, .home-keep.revealed .k-drop,
-.home-keep.revealed .k-area, .home-keep.revealed .k-stay { opacity: 1; }
+.home-keep .k-area { opacity: 0; transition: opacity 0.9s ease 1.9s; }
+.home-keep.revealed .k-a, .home-keep.revealed .k-area { opacity: 1; }
 .home-keep.revealed .k-b { stroke-dashoffset: 0; }
 @media (prefers-reduced-motion: reduce) {
-  .home-keep .k-a, .home-keep .k-dot, .home-keep .k-mark, .home-keep .k-drop, .home-keep .k-area, .home-keep .k-stay { opacity: 1; transition: none; }
+  .home-keep .k-a, .home-keep .k-area { opacity: 1; transition: none; }
   .home-keep .k-b { stroke-dashoffset: 0; transition: none; }
+  .home-keep-chart .k-head, .home-keep-chart .k-dot, .home-keep-chart .k-band, .home-keep-say { transition: none; }
 }
 
 /* Channels, right under the first screen */

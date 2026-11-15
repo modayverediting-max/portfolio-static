@@ -104,36 +104,46 @@
           <button onclick="scrollToSection('portfolio')" class="btn-tertiary reveal-box reveal-up" style="min-width:160px" data-i18n="hero.portfolio">شاهد أعمالي</button>
         </div>
 
-        <!-- A picture of the problem: how many viewers are still watching, second by second. An illustration, not measured data. -->
+        <!-- How the video is built so the viewer stays: the drawing walks through its parts, one at a time (script.js).
+             An illustration, not measured data. -->
         <div class="home-keep reveal-box reveal-up">
           <div class="home-keep-legend">
             <span class="home-keep-key home-keep-key-b"><i></i><span data-i18n="keep.b">مونتاج يُبقي المشاهد</span></span>
             <span class="home-keep-key home-keep-key-a"><i></i><span data-i18n="keep.a">مونتاج عادي</span></span>
           </div>
-          <svg class="home-keep-chart" viewBox="0 0 520 200" role="img" aria-label="رسم توضيحي لعدد المشاهدين الباقين في الفيديو" data-i18n-attr="aria-label:keep.alt">
+          <svg class="home-keep-chart" viewBox="0 0 520 206" role="img" aria-label="رسم توضيحي: كيف يُبنى الفيديو ليبقى المشاهد" data-i18n-attr="aria-label:keep.alt">
             <defs>
               <linearGradient id="keepFill" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0" stop-color="#fff" stop-opacity="0.3"/>
                 <stop offset="1" stop-color="#fff" stop-opacity="0"/>
               </linearGradient>
             </defs>
+            <rect class="k-band" x="20" y="24" width="74" height="126" rx="6"/>
+            <rect class="k-band" x="96" y="24" width="102" height="126" rx="6"/>
+            <rect class="k-band" x="200" y="24" width="178" height="126" rx="6"/>
+            <rect class="k-band" x="380" y="24" width="120" height="126" rx="6"/>
             <g class="k-grid">
-              <line x1="20" y1="34" x2="500" y2="34"/>
-              <line x1="20" y1="80" x2="500" y2="80"/>
-              <line x1="20" y1="126" x2="500" y2="126"/>
-              <line class="k-base" x1="20" y1="172" x2="500" y2="172"/>
+              <line x1="20" y1="36" x2="500" y2="36"/>
+              <line x1="20" y1="74" x2="500" y2="74"/>
+              <line x1="20" y1="112" x2="500" y2="112"/>
+              <line class="k-base" x1="20" y1="150" x2="500" y2="150"/>
             </g>
-            <path class="k-area" d="M20 34 C60 50 110 60 160 66 S380 86 500 94 L500 172 L20 172 Z" fill="url(#keepFill)"/>
-            <path class="k-a" d="M20 34 C42 78 66 104 100 112 S300 146 500 156"/>
-            <path class="k-b" pathLength="1" d="M20 34 C60 50 110 60 160 66 S380 86 500 94"/>
-            <line class="k-mark" x1="100" y1="22" x2="100" y2="172"/>
-            <circle class="k-dot" cx="100" cy="112" r="5"/>
-            <text class="k-drop" x="112" y="162" data-i18n="keep.drop">هنا يخرج المشاهد</text>
-            <text class="k-stay" x="492" y="70" text-anchor="end" data-i18n="keep.stay">يبقى إلى النهاية</text>
-            <text class="k-tick" x="20" y="192">0:00</text>
-            <text class="k-tick" x="100" y="192" text-anchor="middle">0:30</text>
-            <text class="k-tick" x="500" y="192" text-anchor="end" data-i18n="keep.end">نهاية الفيديو</text>
+            <path class="k-area" d="M20 36 C60 50 110 58 160 63 S380 80 500 88 L500 150 L20 150 Z" fill="url(#keepFill)"/>
+            <path class="k-a" d="M20 36 C42 76 66 98 100 105 S300 134 500 142"/>
+            <path class="k-b" pathLength="1" d="M20 36 C60 50 110 58 160 63 S380 80 500 88"/>
+            <g class="k-head"><line x1="0" y1="24" x2="0" y2="150"/><path d="M-6 14h12v6l-6 6-6-6z"/></g>
+            <circle class="k-dot" cx="0" cy="0" r="5.5"/>
+            <g class="k-seg is-on" data-stage="0" role="button" tabindex="0" aria-pressed="true"><rect x="20" y="160" width="72" height="38" rx="10"/><text x="56" y="185" text-anchor="middle" data-i18n="keep.s1_t">الهوك</text></g>
+            <g class="k-seg" data-stage="1" role="button" tabindex="0" aria-pressed="false"><rect x="96" y="160" width="100" height="38" rx="10"/><text x="146" y="185" text-anchor="middle" data-i18n="keep.s2_t">المقدمة</text></g>
+            <g class="k-seg" data-stage="2" role="button" tabindex="0" aria-pressed="false"><rect x="200" y="160" width="176" height="38" rx="10"/><text x="288" y="185" text-anchor="middle" data-i18n="keep.s3_t">التقطيع والإيقاع</text></g>
+            <g class="k-seg" data-stage="3" role="button" tabindex="0" aria-pressed="false"><rect x="380" y="160" width="120" height="38" rx="10"/><text x="440" y="185" text-anchor="middle" data-i18n="keep.s4_t">النهاية</text></g>
           </svg>
+          <div class="home-keep-says" aria-live="polite">
+            <p class="home-keep-say is-on"><strong data-i18n="keep.s1_t">الهوك</strong><span data-i18n="keep.s1_d">أفتح الفيديو بأقوى لحظة فيه، قبل أن يفكّر المشاهد في الخروج.</span></p>
+            <p class="home-keep-say"><strong data-i18n="keep.s2_t">المقدمة</strong><span data-i18n="keep.s2_d">في ثوانٍ يعرف المشاهد ماذا سيرى، ولماذا يستحق أن يبقى.</span></p>
+            <p class="home-keep-say"><strong data-i18n="keep.s3_t">التقطيع والإيقاع</strong><span data-i18n="keep.s3_d">أحذف كل ثانية مملّة، وأُدخل الموشن والصوت كلما هدأ الإيقاع.</span></p>
+            <p class="home-keep-say"><strong data-i18n="keep.s4_t">النهاية</strong><span data-i18n="keep.s4_d">أبني التشويق حتى أفضل لحظة، وأختم والحماس في أعلاه.</span></p>
+          </div>
           <p class="home-keep-note" data-i18n="keep.note">رسم توضيحي لشكل بقاء المشاهدين، وليس أرقام قناة بعينها.</p>
         </div>
       </div>
@@ -459,7 +469,7 @@
         <div class="home-step reveal-box reveal-up">
           <div class="home-step-num" dir="ltr">1</div>
           <h3 data-i18n="steps.s1_t">نتفق على كل شيء أولًا</h3>
-          <p data-i18n="steps.s1_d">السعر، وموعد التسليم، وعدد مرات التعديل. اتفاق واضح قبل أن أبدأ، ويمكن توثيقه مجانًا في <a href="contract">صانع العقد</a>.</p>
+          <p data-i18n="steps.s1_d">السعر، وموعد التسليم، وعدد مرات التعديل. اتفاق واضح قبل أن أبدأ، فلا مفاجآت بعدها.</p>
         </div>
         <div class="home-step reveal-box reveal-up">
           <div class="home-step-num" dir="ltr">2</div>
