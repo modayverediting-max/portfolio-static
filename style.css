@@ -2819,3 +2819,35 @@ html:not([data-theme="dark"]) .gradient-ads .home-head .section-subtitle { color
 html:not([data-theme="dark"]) .home-cta .cta-heading { color: var(--brand1); }
 html:not([data-theme="dark"]) .home-cta .cta-subtext { color: #2E4A6B; }
 [data-theme="dark"] .home-cta .cta-subtext { color: var(--d-soft); }
+
+/* ========================================
+   The picture fills its glass frame evenly on every browser (2026-11-15)
+   iPhones do not size a picture by "height: 100%" inside a box whose height comes from its shape (aspect-ratio):
+   the picture kept its own height, so it covered the bottom of the frame and looked pushed down.
+   Pinned to the frame from all four sides, it is the same everywhere.
+   ======================================== */
+.video-thumbnail img {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 16px);
+  display: block;
+}
+.vfx-card-thumb img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+}
+/* Phones: the small videos of the work section get a thinner frame, in keeping with their size */
+@media (max-width: 639.98px) {
+  .home-portfolio .grid-3.gap-sm .video-thumbnail { padding: 5px; border-radius: 13px; }
+  .home-portfolio .grid-3.gap-sm .video-thumbnail img {
+    top: 5px;
+    left: 5px;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    border-radius: 8px;
+  }
+}
