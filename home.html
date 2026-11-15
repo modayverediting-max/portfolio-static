@@ -89,7 +89,7 @@
     </div>
   </header>
 
-  <!-- Hero Section: speaks to YouTube creators (2026-11-15) -->
+  <!-- Hero Section: opens on the YouTuber's own problem, viewers leaving early (2026-11-15) -->
   <section id="hero" class="gradient-hero home-hero">
     <div class="container">
       <div class="text-center">
@@ -97,13 +97,44 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="4"/><path d="M10 9.2v5.6l4.8-2.8z" fill="white" stroke="none"/></svg>
           <span data-i18n="hero.badge">لصنّاع المحتوى على يوتيوب</span>
         </div>
-        <h1 class="hero-title reveal-box reveal-up" data-i18n="hero.title">مونتاج يُبقي المشاهد<br class="home-br"> إلى آخر ثانية</h1>
-        <div class="hero-desc reveal-box reveal-up">
-          <p data-i18n="hero.desc">أنت تصوّر، وأنا أتولّى الباقي: المونتاج، والموشن جرافيك، والهندسة الصوتية. يصلك الفيديو جاهزًا للنشر، ويبقى وقتك لأفكارك وقناتك.</p>
-        </div>
+        <h1 class="hero-title reveal-box reveal-up" data-i18n="hero.title">كم مشاهدًا ترك فيديوك<br class="home-br"> قبل أفضل لحظة فيه؟</h1>
+        <p class="home-sell reveal-box reveal-up" data-i18n="hero.sell"><strong>المشاهد يقرّر في الثواني الأولى: يبقى أو يخرج.</strong><br>أكثر من 400 فيديو و235 مليون مشاهدة علّمتني كيف أُبقيه.</p>
         <div class="hero-buttons">
           <a href="contact" class="btn-primary reveal-box reveal-up" style="min-width:160px;text-align:center" data-i18n="nav.contact">تواصل معي</a>
           <button onclick="scrollToSection('portfolio')" class="btn-tertiary reveal-box reveal-up" style="min-width:160px" data-i18n="hero.portfolio">شاهد أعمالي</button>
+        </div>
+
+        <!-- A picture of the problem: how many viewers are still watching, second by second. An illustration, not measured data. -->
+        <div class="home-keep reveal-box reveal-up">
+          <div class="home-keep-legend">
+            <span class="home-keep-key home-keep-key-b"><i></i><span data-i18n="keep.b">مونتاج يُبقي المشاهد</span></span>
+            <span class="home-keep-key home-keep-key-a"><i></i><span data-i18n="keep.a">مونتاج عادي</span></span>
+          </div>
+          <svg class="home-keep-chart" viewBox="0 0 520 200" role="img" aria-label="رسم توضيحي لعدد المشاهدين الباقين في الفيديو" data-i18n-attr="aria-label:keep.alt">
+            <defs>
+              <linearGradient id="keepFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#fff" stop-opacity="0.3"/>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <g class="k-grid">
+              <line x1="20" y1="34" x2="500" y2="34"/>
+              <line x1="20" y1="80" x2="500" y2="80"/>
+              <line x1="20" y1="126" x2="500" y2="126"/>
+              <line class="k-base" x1="20" y1="172" x2="500" y2="172"/>
+            </g>
+            <path class="k-area" d="M20 34 C60 50 110 60 160 66 S380 86 500 94 L500 172 L20 172 Z" fill="url(#keepFill)"/>
+            <path class="k-a" d="M20 34 C42 78 66 104 100 112 S300 146 500 156"/>
+            <path class="k-b" pathLength="1" d="M20 34 C60 50 110 60 160 66 S380 86 500 94"/>
+            <line class="k-mark" x1="100" y1="22" x2="100" y2="172"/>
+            <circle class="k-dot" cx="100" cy="112" r="5"/>
+            <text class="k-drop" x="112" y="162" data-i18n="keep.drop">هنا يخرج المشاهد</text>
+            <text class="k-stay" x="492" y="70" text-anchor="end" data-i18n="keep.stay">يبقى إلى النهاية</text>
+            <text class="k-tick" x="20" y="192">0:00</text>
+            <text class="k-tick" x="100" y="192" text-anchor="middle">0:30</text>
+            <text class="k-tick" x="500" y="192" text-anchor="end" data-i18n="keep.end">نهاية الفيديو</text>
+          </svg>
+          <p class="home-keep-note" data-i18n="keep.note">رسم توضيحي لشكل بقاء المشاهدين، وليس أرقام قناة بعينها.</p>
         </div>
       </div>
     </div>
@@ -373,41 +404,45 @@
     </div>
   </section>
 
-  <!-- What the channel gets -->
+  <!-- What the YouTuber says, and how each one is fixed -->
   <section class="gradient-channels section-padding home-services">
     <div class="container">
       <div class="section-header">
-        <h2 class="section-title text-white reveal-box reveal-up" data-i18n="svc.title">ماذا أقدّم لقناتك؟</h2>
-        <p class="section-subtitle text-white reveal-box reveal-up" data-i18n="svc.sub">كل ما يحتاجه الفيديو بعد التصوير، في مكان واحد</p>
+        <h2 class="section-title text-white reveal-box reveal-up" data-i18n="fix.title">هل تقول شيئًا من هذا؟</h2>
+        <p class="section-subtitle text-white reveal-box reveal-up" data-i18n="fix.sub">لكل واحدة منها حلّ أعمل عليه في كل فيديو</p>
       </div>
       <div class="grid-4 gap-sm">
-        <div class="service-card home-card text-center reveal-box reveal-up">
+        <div class="service-card home-card home-fix text-center reveal-box reveal-up">
+          <p class="home-fix-say" data-i18n="fix.p1">«مشاهداتي تنزل من أول ثلاثين ثانية»</p>
           <div class="service-badge" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
           </div>
-          <h3 class="service-title" data-i18n="svc.s1_title">مونتاج كامل</h3>
-          <p class="service-desc" data-i18n="svc.s1_desc">أبدأ بأقوى لحظة في تصويرك، وأضبط الإيقاع حتى يبقى المشاهد من أول ثلاثين ثانية إلى النهاية.</p>
+          <h3 class="service-title" data-i18n="fix.t1">بداية تشدّ المشاهد</h3>
+          <p class="service-desc" data-i18n="fix.d1">أبدأ بأقوى لحظة في تصويرك، وأضبط الإيقاع حتى يبقى المشاهد إلى النهاية.</p>
         </div>
-        <div class="service-card home-card text-center reveal-box reveal-up">
+        <div class="service-card home-card home-fix text-center reveal-box reveal-up">
+          <p class="home-fix-say" data-i18n="fix.p2">«فكرتي قوية، لكنها لا تصل»</p>
           <div class="service-badge" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 18C13 18 11 6 17.5 6"/><path d="M4 15.5 6.5 18 4 20.5 1.5 18z" fill="currentColor"/><path d="M20 3.5 22.5 6 20 8.5 17.5 6z" fill="currentColor"/></svg>
           </div>
-          <h3 class="service-title" data-i18n="svc.s2_title">موشن جرافيك</h3>
-          <p class="service-desc" data-i18n="svc.s2_desc">مقدمات ولقطات توضيحية وانتقالات تشرح الفكرة بسرعة وتزيد الحماس.</p>
+          <h3 class="service-title" data-i18n="fix.t2">موشن جرافيك يشرحها في ثوانٍ</h3>
+          <p class="service-desc" data-i18n="fix.d2">مقدمات ولقطات توضيحية تجعل المشاهد يفهم الفكرة بسرعة، ويتحمّس ليرى الباقي.</p>
         </div>
-        <div class="service-card home-card text-center reveal-box reveal-up">
+        <div class="service-card home-card home-fix text-center reveal-box reveal-up">
+          <p class="home-fix-say" data-i18n="fix.p3">«الفيديو ينقصه شيء، ولا أعرف ما هو»</p>
           <div class="service-badge" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10v4M8 6.5v11M12 3.5v17M16 7.5v9M20 10v4"/></svg>
           </div>
-          <h3 class="service-title" data-i18n="svc.s3_title">هندسة صوتية</h3>
-          <p class="service-desc" data-i18n="svc.s3_desc">مؤثرات صوتية وموسيقى مضبوطة مع كل حركة، لأن نصف المتعة في الصوت.</p>
+          <h3 class="service-title" data-i18n="fix.t3">صوت يملأ كل حركة</h3>
+          <p class="service-desc" data-i18n="fix.d3">مؤثرات صوتية وموسيقى مضبوطة مع كل حركة، لأن نصف المتعة في الصوت.</p>
         </div>
-        <div class="service-card home-card text-center reveal-box reveal-up">
+        <div class="service-card home-card home-fix text-center reveal-box reveal-up">
+          <p class="home-fix-say" data-i18n="fix.p4">«المونتاج يأخذ كل وقتي»</p>
           <div class="service-badge" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2.5"/><path d="M16 10.5l5-3v9l-5-3z"/><circle cx="7" cy="12" r="0.6" fill="currentColor"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>
           </div>
-          <h3 class="service-title" data-i18n="svc.s4_title">فيديوهات إعلانية</h3>
-          <p class="service-desc" data-i18n="svc.s4_desc">إعلانات لقناتك أو لمنتجك، بالجودة نفسها التي تراها في أعمالي.</p>
+          <h3 class="service-title" data-i18n="fix.t4">وقتك يرجع لأفكارك</h3>
+          <p class="service-desc" data-i18n="fix.d4">ترسل التصوير برابط واحد، ويصلك الفيديو جاهزًا للنشر في الموعد الذي اتفقنا عليه.</p>
         </div>
       </div>
     </div>
@@ -511,7 +546,7 @@
   <section class="gradient-cta section-padding home-cta">
     <div class="container">
       <div class="text-center">
-        <h2 class="cta-heading reveal-box reveal-up" data-i18n="cta.title">جاهز لنبدأ العمل على قناتك؟</h2>
+        <h2 class="cta-heading reveal-box reveal-up" data-i18n="cta.title">لنجعل فيديوك القادم يُشاهَد إلى آخره</h2>
         <p class="cta-subtext reveal-box reveal-up" data-i18n="cta.sub">أرسل لي رابط قناتك وفكرة الفيديو القادم، وسأردّ عليك في أقرب وقت.</p>
         <div class="hero-buttons">
           <a href="https://youtube.com/playlist?list=PLkg0kslwXX2gFCTHmM5pgX3vSwJdTLeC_&si=KebxnJ9C6bzHNlrB" target="_blank" rel="noopener noreferrer" class="btn-secondary reveal-box reveal-up" style="min-width:180px;text-align:center;padding:12px 32px" data-i18n="port.more">المزيد من أعمالي</a>

@@ -2567,20 +2567,95 @@ section.home-hero {
   background-image: linear-gradient(180deg, #3D7EE0 0%, #4687E3 100%);
 }
 @media (min-width: 768px) { section.home-hero { padding: 128px 0 48px; } }
-@media (min-width: 1024px) { section.home-hero { padding: 152px 0 56px; } }
+@media (min-width: 1024px) { section.home-hero { padding: 132px 0 56px; } }
 [data-theme="dark"] section.home-hero { background-image: linear-gradient(180deg, #1B4B95 0%, #12305E 100%); }
 .home-hero .vfx-badge { margin-bottom: 22px; }
 .home-hero .hero-title {
-  margin-bottom: 22px;
-  font-size: clamp(26px, 8.2vw, 64px);
-  line-height: 1.32;
+  margin-bottom: 20px;
+  font-size: clamp(22px, 7.6vw, 54px);
+  line-height: 1.36;
   letter-spacing: -0.6px;
   text-wrap: balance;
 }
-.home-hero .hero-desc { max-width: 720px; margin-bottom: 30px; }
-.home-hero .hero-desc p { color: #fff; font-size: clamp(15px, 3.9vw, 18.5px); line-height: 1.9; text-wrap: pretty; }
+/* Under the question: the reason in bold, then the proof in one line */
+.home-hero .home-sell {
+  max-width: 760px;
+  margin: 0 auto 28px;
+  color: #fff;
+  font-size: clamp(15px, 3.95vw, 19px);
+  font-weight: 600;
+  line-height: 1.8;
+  text-wrap: balance;
+}
+.home-hero .home-sell strong { font-size: 1.08em; font-weight: 800; }
 br.home-br { display: none; }
-@media (max-width: 639.98px) { br.home-br { display: inline; } }
+@media (max-width: 639.98px) {
+  br.home-br { display: inline; }
+  /* Phones: the two buttons side by side, so the picture under them stays in the first screen */
+  .home-hero .hero-buttons { flex-direction: row; gap: 10px; }
+  .home-hero .hero-buttons > * { flex: 1 1 0; min-width: 0 !important; max-width: 172px; padding-inline: 10px; }
+}
+
+/* The picture of the problem: viewers still watching, second by second (an illustration) */
+.home-keep {
+  max-width: 560px;
+  margin: 30px auto 0;
+  padding: 14px 16px 12px;
+  border-radius: 22px;
+  direction: ltr;
+  background:
+    radial-gradient(120% 90% at 18% -20%, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0) 60%),
+    rgba(255,255,255,0.12);
+  box-shadow: 0 18px 40px rgba(0,40,110,0.2), inset 0 1px 1px rgba(255,255,255,0.7), inset 0 0 0 1px rgba(255,255,255,0.22);
+}
+[data-theme="dark"] .home-keep {
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 0 1px rgba(255,255,255,0.1);
+}
+.home-keep-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 18px;
+  margin-bottom: 6px;
+  color: #fff;
+  font-size: clamp(11.5px, 3.1vw, 13.5px);
+  font-weight: 700;
+}
+html[dir="rtl"] .home-keep-legend, html[dir="rtl"] .home-keep-note { direction: rtl; }
+.home-keep-key { display: inline-flex; align-items: center; gap: 7px; }
+.home-keep-key i { flex: none; width: 26px; height: 0; border-top: 3.5px solid #fff; border-radius: 3px; }
+.home-keep-key-a { color: rgba(255,255,255,0.8); font-weight: 600; }
+.home-keep-key-a i { border-top: 2.5px dotted rgba(255,255,255,0.75); }
+.home-keep-chart { display: block; width: 100%; height: auto; overflow: visible; }
+.home-keep-chart .k-grid line { stroke: rgba(255,255,255,0.14); stroke-width: 1; }
+.home-keep-chart .k-grid .k-base { stroke: rgba(255,255,255,0.42); }
+.home-keep-chart .k-a { fill: none; stroke: rgba(255,255,255,0.66); stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 2 7; }
+.home-keep-chart .k-b { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; filter: drop-shadow(0 3px 6px rgba(0,30,90,0.35)); }
+.home-keep-chart .k-mark { stroke: rgba(255,255,255,0.5); stroke-width: 1.2; stroke-dasharray: 3 4; }
+.home-keep-chart .k-dot { fill: #00376C; stroke: #fff; stroke-width: 2.5; }
+.home-keep-chart text { fill: #fff; font-family: inherit; }
+.home-keep-chart .k-drop, .home-keep-chart .k-stay { font-size: 14.5px; font-weight: 700; }
+.home-keep-chart .k-drop { fill: rgba(255,255,255,0.9); }
+.home-keep-chart .k-tick { font-size: 11.5px; font-weight: 500; fill: rgba(255,255,255,0.76); }
+/* The drawing is scaled down on phones, so its words get bigger units there */
+@media (max-width: 639.98px) {
+  .home-keep { padding: 12px 12px 10px; }
+  .home-keep-chart .k-drop, .home-keep-chart .k-stay { font-size: 21px; }
+  .home-keep-chart .k-tick { font-size: 17px; }
+}
+.home-keep-note { margin-top: 4px; color: rgba(255,255,255,0.74); font-size: clamp(10.5px, 2.8vw, 12px); line-height: 1.6; }
+/* It draws itself when it appears: first the ordinary line, then the one that keeps the viewer */
+.home-keep .k-a, .home-keep .k-dot, .home-keep .k-mark, .home-keep .k-drop { opacity: 0; transition: opacity 0.7s ease 0.35s; }
+.home-keep .k-b { stroke-dashoffset: 1; transition: stroke-dashoffset 1.9s cubic-bezier(0.33, 0, 0.2, 1) 0.7s; }
+.home-keep .k-area, .home-keep .k-stay { opacity: 0; transition: opacity 0.9s ease 1.9s; }
+.home-keep.revealed .k-a, .home-keep.revealed .k-dot, .home-keep.revealed .k-mark, .home-keep.revealed .k-drop,
+.home-keep.revealed .k-area, .home-keep.revealed .k-stay { opacity: 1; }
+.home-keep.revealed .k-b { stroke-dashoffset: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .home-keep .k-a, .home-keep .k-dot, .home-keep .k-mark, .home-keep .k-drop, .home-keep .k-area, .home-keep .k-stay { opacity: 1; transition: none; }
+  .home-keep .k-b { stroke-dashoffset: 0; transition: none; }
+}
 
 /* Channels, right under the first screen */
 section.home-channels {
@@ -2627,6 +2702,33 @@ html:not([data-theme="dark"]) section.home-portfolio { background-image: linear-
     rgba(255,255,255,0.9);
 }
 .home-card .service-desc { color: #2E4A6B; font-size: 14.5px; line-height: 1.85; text-wrap: pretty; }
+/* What the YouTuber says, in a small speech bubble above the fix */
+.home-fix { padding-top: 20px; }
+.home-fix-say {
+  position: relative;
+  margin: 0 auto 20px;
+  padding: 8px 12px;
+  border-radius: 13px;
+  color: #41597A;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.6;
+  background: #DDE8F6;
+  text-wrap: balance;
+}
+.home-fix-say::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 2px;
+  background: #DDE8F6;
+  transform: rotate(45deg);
+}
+[data-theme="dark"] .home-fix-say, [data-theme="dark"] .home-fix-say::after { color: var(--d-soft); background: #223A63; }
 [data-theme="dark"] .home-card,
 [data-theme="dark"] .home-card:hover {
   background: rgba(255,255,255,0.07);
