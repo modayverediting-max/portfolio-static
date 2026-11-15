@@ -2556,3 +2556,136 @@ a.service-card.page-card {
 [data-theme="dark"] #pages .section-subtitle {
   color: #A9BBD6;
 }
+
+/* ========================================
+   Home page for YouTube creators (2026-11-15)
+   The first screen stays blue so every word reads, the channels come right under it,
+   and one slow fade runs from the top through the channels into the white of the work section.
+   ======================================== */
+section.home-hero {
+  padding: 100px 0 40px;
+  background-image: linear-gradient(180deg, #3D7EE0 0%, #4687E3 100%);
+}
+@media (min-width: 768px) { section.home-hero { padding: 128px 0 48px; } }
+@media (min-width: 1024px) { section.home-hero { padding: 152px 0 56px; } }
+[data-theme="dark"] section.home-hero { background-image: linear-gradient(180deg, #1B4B95 0%, #12305E 100%); }
+.home-hero .vfx-badge { margin-bottom: 22px; }
+.home-hero .hero-title {
+  margin-bottom: 22px;
+  font-size: clamp(26px, 8.2vw, 64px);
+  line-height: 1.32;
+  letter-spacing: -0.6px;
+  text-wrap: balance;
+}
+.home-hero .hero-desc { max-width: 720px; margin-bottom: 30px; }
+.home-hero .hero-desc p { color: #fff; font-size: clamp(15px, 3.9vw, 18.5px); line-height: 1.9; text-wrap: pretty; }
+br.home-br { display: none; }
+@media (max-width: 639.98px) { br.home-br { display: inline; } }
+
+/* Channels, right under the first screen */
+section.home-channels {
+  margin-top: -1px;
+  padding-top: 14px;
+  background-image: linear-gradient(180deg, #4687E3 0%, #80C2FF 100%);
+}
+.home-channels .section-header { margin-bottom: 36px; }
+/* Phones: the three channels share one row, so the work shows sooner */
+@media (max-width: 639.98px) {
+  .home-chans { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .home-chans .channel-card { padding: 14px 6px 12px; gap: 7px; border-radius: 18px; }
+  .home-chans .channel-avatar { width: 62px; height: 62px; padding: 3px; margin-bottom: 4px; }
+  .home-chans .channel-avatar::before { inset: -9px; }
+  .home-chans .channel-name { font-size: clamp(11.5px, 3.3vw, 14px); line-height: 1.4; letter-spacing: 0; overflow-wrap: anywhere; }
+  /* The count on one line and the word under it, the same on all three cards */
+  .home-chans .channel-subs { display: block; width: 78px; max-width: 100%; padding: 4px 8px; font-size: 10.5px; line-height: 1.45; text-align: center; border-radius: 12px; }
+  .home-chans .channel-subs::before { display: none; }
+  .home-chans .channel-yt-link { width: 34px; height: 34px; margin-top: 2px; }
+  .home-chans .channel-yt-link svg { width: 19px; height: 19px; }
+}
+
+/* Work: picks up the light blue the channels end on, then white, then back to the blue as before */
+section.home-portfolio { margin-top: -1px; }
+html:not([data-theme="dark"]) section.home-portfolio { background-image: linear-gradient(180deg, #80C2FF 0, #FFFFFF 160px, #3D7EE0 100%); }
+[data-theme="dark"] section.home-portfolio { background-image: linear-gradient(180deg, #0E2142 0, #0A1830 160px, #12305E 100%); }
+/* Phones: the six smaller videos sit two by two, so the page is shorter */
+@media (max-width: 639.98px) {
+  .home-portfolio .grid-3.gap-sm { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .home-portfolio .grid-3.gap-sm .play-btn { width: 44px; height: 44px; }
+  .home-portfolio .grid-3.gap-sm .play-triangle { border-width: 8px 0 8px 14px; margin-left: 3px; }
+}
+
+/* What the channel gets: cards that stay readable over the blue */
+.home-card {
+  padding: 26px 20px 24px;
+  background:
+    radial-gradient(120% 70% at 18% -12%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 58%),
+    rgba(255,255,255,0.8);
+}
+.home-card:hover {
+  background:
+    radial-gradient(120% 70% at 18% -12%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 58%),
+    rgba(255,255,255,0.9);
+}
+.home-card .service-desc { color: #2E4A6B; font-size: 14.5px; line-height: 1.85; text-wrap: pretty; }
+[data-theme="dark"] .home-card,
+[data-theme="dark"] .home-card:hover {
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .home-card .service-desc { color: var(--d-soft); }
+
+/* Titles in the light part of the page: navy, so they read on the light blue and on the white */
+html:not([data-theme="dark"]) .gradient-ads .home-head .section-title { color: #00376C; }
+html:not([data-theme="dark"]) .gradient-ads .home-head .section-subtitle { color: #2E4A6B; }
+
+/* How we work: four numbered steps */
+.home-steps { display: grid; grid-template-columns: 1fr; gap: 14px; margin-bottom: 72px; }
+@media (min-width: 700px) { .home-steps { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+@media (min-width: 1200px) { .home-steps { grid-template-columns: repeat(4, 1fr); } }
+.home-step {
+  position: relative;
+  padding: 20px 18px 22px;
+  border-radius: 22px;
+  text-align: center;
+  color: var(--brand1);
+  background: rgba(255,255,255,0.86);
+  box-shadow: 0 16px 36px rgba(0,55,108,0.13), inset 0 1px 1px #fff, inset 0 0 0 1px rgba(61,126,224,0.12);
+  transition: box-shadow 0.55s var(--ease-land);
+}
+.home-step.reveal-done:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 26px 50px rgba(30,90,180,0.2), inset 0 1px 1px #fff, inset 0 0 0 1px rgba(61,126,224,0.16);
+}
+.home-step-num {
+  width: 38px;
+  height: 38px;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 16.5px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(160deg, #3D7EE0 0%, #00376C 100%);
+  box-shadow: 0 8px 18px rgba(0,55,108,0.3), inset 0 1px 1px rgba(255,255,255,0.5);
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.home-step:hover .home-step-num { transform: translateY(-3px) scale(1.12); }
+.home-step h3 { font-size: 18px; font-weight: 700; line-height: 1.5; margin-bottom: 6px; text-wrap: balance; }
+.home-step p { font-size: 14.5px; line-height: 1.85; color: #2E4A6B; text-wrap: pretty; }
+.home-step a { color: var(--base2); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+[data-theme="dark"] .home-step {
+  color: var(--d-ink);
+  background: rgba(255,255,255,0.07);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+[data-theme="dark"] .home-step p { color: var(--d-soft); }
+[data-theme="dark"] .home-step a { color: #8EC5FF; }
+@media (prefers-reduced-motion: reduce) { .home-step, .home-step-num { transition: none; } }
+
+/* Last call: dark words on the light top of the fade, so the question is easy to read */
+.home-cta .cta-heading { font-size: clamp(25px, 3.4vw, 40px); }
+html:not([data-theme="dark"]) .home-cta .cta-heading { color: var(--brand1); }
+html:not([data-theme="dark"]) .home-cta .cta-subtext { color: #2E4A6B; }
+[data-theme="dark"] .home-cta .cta-subtext { color: var(--d-soft); }
