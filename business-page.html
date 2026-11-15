@@ -71,36 +71,45 @@
         <div class="hero-desc reveal-box reveal-up">
           <p data-i18n="biz.desc">أساعدك توصلك رسايل أكثر من عملاء جادين،<br class="biz-m"> وكل اللي عليك تصوّر.</p>
         </div>
+        <!-- The first screen has one button: the trial -->
+        <a href="https://wa.me/213775051301" data-wa="sample" data-i18n-attr="href:biz.wa_sample" target="_blank" rel="noopener noreferrer" class="btn-primary biz-wa biz-hero-btn reveal-box reveal-up">
+          <svg viewBox="0 0 50 50" fill="none" aria-hidden="true"><path d="M25 2C12.3 2 2 12.3 2 25c0 4 1 7.9 3 11.3L2 46.7c-.1.3 0 .7.3 1 .2.2.4.3.7.3h.2l10.9-2.7C17.5 47.1 21.2 48 25 48c12.7 0 23-10.3 23-23S37.7 2 25 2zm11.6 31.1c-.5 1.4-2.9 2.6-4 2.8-1 .1-2.3.2-3.7-.2-.9-.3-2-.6-3.4-1.2-5.9-2.5-9.8-8.4-10.1-8.8-.3-.4-2.4-3.2-2.4-6 0-2.9 1.5-4.3 2.1-4.9.5-.6 1.2-.7 1.6-.7h1.1c.4 0 .9-.1 1.3 1 .5 1.2 1.7 4 1.8 4.3.1.3.2.6 0 1-.2.4-.3.6-.6 1-.3.3-.6.8-.9 1-.3.3-.6.6-.3 1.2.3.6 1.5 2.5 3.3 4 2.3 2 4.2 2.6 4.8 2.9.6.3.9.2 1.3-.1.3-.4 1.5-1.7 1.9-2.3.4-.6.8-.5 1.3-.3.5.2 3.4 1.6 4 1.9.6.3 1 .4 1.1.7.2.2.2 1.4-.3 2.8z" fill="currentColor"/></svg>
+          <span data-i18n="biz.btn_sample">جرّب أول فيديوهين</span>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- What each side gains -->
-  <section class="gradient-portfolio biz-ben-sec biz-seam-sec">
+  <!-- Before and after, right under the first screen: one video file holds all three versions (business.js) -->
+  <section class="gradient-portfolio biz-ba-sec biz-seam-sec">
     <div class="container">
-      <h2 class="section-title blue-text text-center reveal-box reveal-up" data-i18n="biz.ben_title">ما هي فائدتك أنت وعميلك؟</h2>
-      <div class="biz-bens">
-        <div class="service-card biz-card biz-ben reveal-box reveal-up">
-          <div class="biz-ben-head">
-            <div class="service-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="13" rx="2.5"/><path d="M8.5 7.5V6a2.5 2.5 0 0 1 2.5-2.5h2A2.5 2.5 0 0 1 15.5 6v1.5"/><path d="M3 13h18"/></svg></div>
-            <h3 class="service-title" data-i18n="biz.ben1_t">انت، صاحب البزنس</h3>
+      <div id="bizBaBlock">
+        <h2 class="section-title blue-text text-center reveal-box reveal-up" data-i18n="biz.ba_title">شوف الفرق بنفسك</h2>
+        <p class="biz-ba-sub reveal-box reveal-up" data-i18n="biz.ba_sub">نفس المقطع، قبل وبعد. بدّل بينهم واسمع الفرق.</p>
+        <div class="biz-ba-grid">
+          <div class="biz-ba reveal-box reveal-up" data-set="talk">
+            <div class="biz-ba-tabs">
+              <span class="biz-ba-pill" aria-hidden="true"></span>
+              <button type="button" class="biz-ba-tab" data-ba="before" aria-pressed="false" data-i18n="biz.ba_before">قبل</button>
+              <button type="button" class="biz-ba-tab" data-ba="after" aria-pressed="false" data-i18n="biz.ba_after">بعد</button>
+              <button type="button" class="biz-ba-tab is-on" data-ba="together" aria-pressed="true" data-i18n="biz.ba_together">معا</button>
+            </div>
+            <div class="biz-ba-frame">
+              <div class="biz-ba-stage"><video class="biz-ba-video" muted playsinline preload="none"></video><img class="biz-ba-cover" alt=""></div>
+              <div class="biz-ba-play" aria-hidden="true"></div>
+              <div class="biz-ba-pulse" aria-hidden="true"></div>
+              <div class="biz-ba-flash" aria-hidden="true"></div>
+              <div class="biz-ba-tip" aria-hidden="true">0:00</div>
+              <div class="biz-ba-bar">
+                <input class="biz-ba-seek" type="range" min="0" max="1000" value="0" aria-label="موضع الفيديو" data-i18n-attr="aria-label:biz.ba_seek">
+                <button type="button" class="biz-ba-icon biz-ba-toggle" aria-label="تشغيل أو إيقاف" data-i18n-attr="aria-label:biz.ba_toggle"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-is-play" d="M7 4.5v15l12-7.5z"/><path class="biz-ba-is-pause" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg></button>
+                <span class="biz-ba-time">0:00</span>
+                <button type="button" class="biz-ba-icon biz-ba-mute" aria-label="كتم الصوت" data-i18n-attr="aria-label:biz.ba_mute"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-speaker" d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path class="biz-ba-waves" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="biz-ba-cross" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
+                <input class="biz-ba-vol" type="range" min="0" max="100" value="100" aria-label="مستوى الصوت" data-i18n-attr="aria-label:biz.ba_vol">
+                <button type="button" class="biz-ba-icon biz-ba-full" aria-label="تكبير الفيديو" data-i18n-attr="aria-label:biz.ba_full"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-grow" d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/><path class="biz-ba-shrink" d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5"/></svg></button>
+              </div>
+            </div>
           </div>
-          <ul class="biz-ben-list">
-            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben1_a">عميلك يشوفك كل يوم على السوشيال ميديا، فيوم يبي يشتري يجي اسمك في باله قبل غيرك. وفي السوق، اللي يظهر أكثر يبيع أكثر.</span></li>
-            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben1_b">كل ما زاد ظهورك، شافك ناس جادين أكثر. وتوصلك رسايل من ناس تبي تشتري، مو بس مشاهدات.</span></li>
-            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben1_c">ما تكون مضغوط بالمونتاج وكثرة المهام. بالك مرتاح وتركيزك كله على عميلك، وهذا اللي يزيد مبيعاتك.</span></li>
-          </ul>
-        </div>
-        <div class="service-card biz-card biz-ben reveal-box reveal-up">
-          <div class="biz-ben-head">
-            <div class="service-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg></div>
-            <h3 class="service-title" data-i18n="biz.ben2_t">عميلك، المشتري</h3>
-          </div>
-          <ul class="biz-ben-list">
-            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben2_a">رسالتك توصله مرتبة وواضحة، فيشوف اللي تبيعه زي ما هو قبل لا يشتري، سواء عقار أو منتج أو خدمة.</span></li>
-            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben2_b">كل ثانية في الفيديو محسوبة، فيفهم شو يميزك عن غيرك في أقل من دقيقة.</span></li>
-            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben2_c">كل كلمة مختارة عشان يحس إنك فاهم شغلك، فيثق فيك قبل لا يراسلك.</span></li>
-          </ul>
         </div>
       </div>
     </div>
@@ -157,7 +166,7 @@
   </section>
 
   <!-- The problem -->
-  <section class="gradient-portfolio section-padding biz-seam-sec">
+  <section class="gradient-portfolio section-padding biz-seam-sec biz-pain-sec">
     <div class="container">
       <div class="section-header">
         <h2 class="section-title blue-text reveal-box reveal-up" data-i18n="biz.pain_title">ليش تضيع عليك المبيعات؟</h2>
@@ -183,6 +192,37 @@
           <div class="service-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></div>
           <h3 class="service-title" data-i18n="biz.pain4_t">جرّبت مونتير وتعبت معه</h3>
           <p class="service-desc" data-i18n="biz.pain4_d">يتأخر، وتلاحقه كل يوم، والتعديلات ما تخلص. بدل ما يريّحك، زاد عليك الشغل.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What each side gains: right after the problem, on the same slow fade -->
+  <section class="gradient-portfolio biz-ben-sec">
+    <div class="container">
+      <h2 class="section-title blue-text text-center reveal-box reveal-up" data-i18n="biz.ben_title">ما هي فائدتك أنت وعميلك؟</h2>
+      <div class="biz-bens">
+        <div class="service-card biz-card biz-ben reveal-box reveal-up">
+          <div class="biz-ben-head">
+            <div class="service-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7.5" width="18" height="13" rx="2.5"/><path d="M8.5 7.5V6a2.5 2.5 0 0 1 2.5-2.5h2A2.5 2.5 0 0 1 15.5 6v1.5"/><path d="M3 13h18"/></svg></div>
+            <h3 class="service-title" data-i18n="biz.ben1_t">انت، صاحب البزنس</h3>
+          </div>
+          <ul class="biz-ben-list">
+            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben1_a">عميلك يشوفك كل يوم على السوشيال ميديا، فيوم يبي يشتري يجي اسمك في باله قبل غيرك. وفي السوق، اللي يظهر أكثر يبيع أكثر.</span></li>
+            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben1_b">كل ما زاد ظهورك، شافك ناس جادين أكثر. وتوصلك رسايل من ناس تبي تشتري، مو بس مشاهدات.</span></li>
+            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben1_c">ما تكون مضغوط بالمونتاج وكثرة المهام. بالك مرتاح وتركيزك كله على عميلك، وهذا اللي يزيد مبيعاتك.</span></li>
+          </ul>
+        </div>
+        <div class="service-card biz-card biz-ben reveal-box reveal-up">
+          <div class="biz-ben-head">
+            <div class="service-badge" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.2-3.6 4-5.5 7.5-5.5s6.3 1.9 7.5 5.5"/></svg></div>
+            <h3 class="service-title" data-i18n="biz.ben2_t">عميلك، المشتري</h3>
+          </div>
+          <ul class="biz-ben-list">
+            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben2_a">رسالتك توصله مرتبة وواضحة، فيشوف اللي تبيعه زي ما هو قبل لا يشتري، سواء عقار أو منتج أو خدمة.</span></li>
+            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben2_b">كل ثانية في الفيديو محسوبة، فيفهم شو يميزك عن غيرك في أقل من دقيقة.</span></li>
+            <li><span class="biz-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span data-i18n="biz.ben2_c">كل كلمة مختارة عشان يحس إنك فاهم شغلك، فيثق فيك قبل لا يراسلك.</span></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -241,37 +281,6 @@
           <img src="./assets/images/052320252152496830ee314d21c-1785191590783.png" alt="" loading="lazy">
           <span><strong>MsToLHaCkEr</strong><small data-i18n="biz.ch3">1.55 مليون مشترك</small></span>
         </a>
-      </div>
-
-      <!-- Before and after: one video file holds all three versions (business.js) -->
-      <div id="bizBaBlock">
-        <h3 class="biz-sub-title reveal-box reveal-up" data-i18n="biz.ba_title">شوف الفرق بنفسك</h3>
-        <p class="biz-ba-sub reveal-box reveal-up" data-i18n="biz.ba_sub">نفس المقطع، قبل وبعد. بدّل بينهم واسمع الفرق.</p>
-        <div class="biz-ba-grid">
-          <div class="biz-ba reveal-box reveal-up" data-set="talk">
-            <div class="biz-ba-tabs">
-              <span class="biz-ba-pill" aria-hidden="true"></span>
-              <button type="button" class="biz-ba-tab" data-ba="before" aria-pressed="false" data-i18n="biz.ba_before">قبل</button>
-              <button type="button" class="biz-ba-tab" data-ba="after" aria-pressed="false" data-i18n="biz.ba_after">بعد</button>
-              <button type="button" class="biz-ba-tab is-on" data-ba="together" aria-pressed="true" data-i18n="biz.ba_together">معا</button>
-            </div>
-            <div class="biz-ba-frame">
-              <div class="biz-ba-stage"><video class="biz-ba-video" muted playsinline preload="none"></video><img class="biz-ba-cover" alt=""></div>
-              <div class="biz-ba-play" aria-hidden="true"></div>
-              <div class="biz-ba-pulse" aria-hidden="true"></div>
-              <div class="biz-ba-flash" aria-hidden="true"></div>
-              <div class="biz-ba-tip" aria-hidden="true">0:00</div>
-              <div class="biz-ba-bar">
-                <input class="biz-ba-seek" type="range" min="0" max="1000" value="0" aria-label="موضع الفيديو" data-i18n-attr="aria-label:biz.ba_seek">
-                <button type="button" class="biz-ba-icon biz-ba-toggle" aria-label="تشغيل أو إيقاف" data-i18n-attr="aria-label:biz.ba_toggle"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-is-play" d="M7 4.5v15l12-7.5z"/><path class="biz-ba-is-pause" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg></button>
-                <span class="biz-ba-time">0:00</span>
-                <button type="button" class="biz-ba-icon biz-ba-mute" aria-label="كتم الصوت" data-i18n-attr="aria-label:biz.ba_mute"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-speaker" d="M4 9.5v5h3.5l4.5 4v-13l-4.5 4z"/><path class="biz-ba-waves" d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12"/><path class="biz-ba-cross" d="M16 9.5l5 5M21 9.5l-5 5"/></svg></button>
-                <input class="biz-ba-vol" type="range" min="0" max="100" value="100" aria-label="مستوى الصوت" data-i18n-attr="aria-label:biz.ba_vol">
-                <button type="button" class="biz-ba-icon biz-ba-full" aria-label="تكبير الفيديو" data-i18n-attr="aria-label:biz.ba_full"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="biz-ba-grow" d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/><path class="biz-ba-shrink" d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5"/></svg></button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
