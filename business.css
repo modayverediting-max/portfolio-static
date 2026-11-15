@@ -777,7 +777,9 @@ html .biz-change-sec .hero-buttons a.biz-btn-work:hover { background: linear-gra
 /* ---------- Motion like the home page ----------
    Cards: a glare that follows the cursor, a soft lift and a springy icon, as on the home page.
    On phones, where there is no hover, the icons pop in one after another when their card appears. */
-.biz-step, .biz-chan, .biz-pack { position: relative; transition: box-shadow .55s var(--ease-land), background-color .4s var(--ease-calm); }
+/* No transition of their own here: it would replace the entrance motion of .reveal-box (the cards would just appear).
+   Their hover transitions come from .reveal-box.reveal-done. */
+.biz-step, .biz-chan, .biz-pack { position: relative; }
 .biz-step::after, .biz-chan::after, .biz-pack::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 62%); opacity: 0; transition: opacity .45s var(--ease-calm); }
 .biz-pack-main::after { background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, .22), rgba(255, 255, 255, 0) 62%); }
 [data-theme="dark"] .biz-step::after, [data-theme="dark"] .biz-chan::after, [data-theme="dark"] .biz-pack::after { background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 0%), rgba(255, 255, 255, .13), rgba(255, 255, 255, 0) 62%); }
