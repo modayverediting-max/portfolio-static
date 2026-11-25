@@ -170,7 +170,7 @@
   // stores the Arabic, so switching language and back keeps them.
   if (REAL_ESTATE) {
     var RE_AR = {
-      'biz.badge': 'لأصحاب العقار، وبالأخص في الإمارات والخليج',
+      'biz.badge': 'للوسطاء والمستشارين العقاريين، وبالأخص في الإمارات والخليج',
       'biz.ben1_t': 'انت، اللي تبيع العقار',
       'biz.ben1_a': 'عميلك يشوفك كل يوم على السوشيال ميديا، فيوم يقرر يشتري عقار يجي اسمك في باله قبل غيرك. وفي سوق العقار، اللي يظهر أكثر يبيع أكثر.',
       'biz.ben1_b': 'كل ما زاد ظهورك، شافك ناس جادين أكثر. وتوصلك رسايل من ناس تبي تشتري عقار، مو بس مشاهدات.',
@@ -183,8 +183,8 @@
       'biz.pain1_d': 'تتحمس وتصوّر العقار، بس المونتاج ياخذ وقت وانت مشغول بالمعاينات، فتظل المقاطع مكانها. وكل مقطع ما نزل، فرصة بيع راحت عليك.',
       'biz.pain3_d': 'كلامك زين، بس المشاهد يطلع من الفيديو قبل لا يوصل لأقوى ميزة في العقار.',
       'biz.step1_d': 'قبل لا نبدأ، أفهم أي عقار تبي تبيعه أول، وكم رسالة تبي توصلك ومن أي مشترين، ونختار مع بعض نوع الفيديو اللي يوصلك لها.',
-      'biz.step2_d': 'كل المقاطع برابط واحد، وأقول لك قبلها كيف تصوّر العقار عشان ما تعيد التصوير.',
-      'biz.step3_d': 'أبدأ بأقوى لقطة في العقار، وأرتب كلامك. توصلك أول نسخة خلال 72 ساعة، وتوافق عليها قبل النشر.',
+      'biz.step2_d': 'كل المقاطع برابط واحد، وأرسل لك قبلها شو تقول وكيف تصوّر، عشان ما تعيد التصوير.',
+      'biz.step3_d': 'أبدأ بأقوى لقطة في العقار، وأرتب كلامك، وأحط في كل فيديو كلمة يرسلها لك المهتم، فتعرف مين الجاد. توصلك أول نسخة خلال 72 ساعة، وتوافق عليها قبل النشر.',
       'biz.proof_sub': 'نفس الخبرة اللي اشتغلت فيها معهم، أحطها في فيديوهات عقاراتك عشان توصل لعميلك وتبيع.'
     };
     Object.keys(RE_AR).forEach(function (k) {
@@ -192,7 +192,7 @@
       if (el) el.innerHTML = RE_AR[k];
     });
     Object.assign(en, {
-      'biz.badge': 'For real estate owners, especially in the UAE and the Gulf',
+      'biz.badge': 'For real estate agents and consultants, especially in the UAE and the Gulf',
       'biz.ben1_t': 'You, the one selling the property',
       'biz.ben1_a': 'Your customer sees you every day on social media, so the day they decide to buy a property, your name comes to mind before anyone else. In real estate, whoever shows up more sells more.',
       'biz.ben1_b': 'The more you show up, the more serious people see you. You get messages from people who want to buy a property, not just views.',
@@ -205,8 +205,8 @@
       'biz.pain1_d': 'You get excited and film the property, but editing takes time and you are busy with viewings, so the clips stay where they are. Every clip that never goes out is a sale you lost.',
       'biz.pain3_d': 'What you say is good, but the viewer leaves before reaching the best feature of the property.',
       'biz.step1_d': 'Before we start, I learn which property you want to sell first, how many messages you want and from which buyers, and we choose together the type of video that gets you there.',
-      'biz.step2_d': 'All the clips in one link, and beforehand I tell you how to film the property so you do not have to film again.',
-      'biz.step3_d': 'I open with the strongest shot of the property and arrange what you say. Your first version reaches you within 72 hours, and you approve it before it goes out.',
+      'biz.step2_d': 'All the clips in one link, and beforehand I send you what to say and how to film, so you do not have to film again.',
+      'biz.step3_d': 'I open with the strongest shot of the property, arrange what you say, and put a keyword in every video for interested buyers to send you, so you know who is serious. Your first version reaches you within 72 hours, and you approve it before it goes out.',
       'biz.proof_sub': 'The same experience, put into your property videos so they reach your customers and sell.'
     });
     var buyerTitle = document.querySelector('[data-i18n="biz.ben2_t"]');
