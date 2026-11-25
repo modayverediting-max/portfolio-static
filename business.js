@@ -386,7 +386,9 @@
           { opacity: 0, transform: 'translate(-50%, -50%) scale(1.25)' }
         ], { duration: 650, easing: 'ease-out' });
       };
+      var leftPlaying = false;     // it was playing when it left the screen
       var playPause = function () {
+        leftPlaying = false;
         // While it only warms up (iPhones), it counts as paused: the first tap must start it, not stop it
         var resume = video.paused || !wanted;
         if (resume) start(); else video.pause();
@@ -584,7 +586,7 @@
       };
 
       var player = {
-        pause: function () { video.pause(); },
+        pause: function () { leftPlaying = false; video.pause(); },
         // Is this player on the line right now? Loading or playing, or made ready and not played yet
         holds: function () { return (wanted && !video.paused) || (prepared && !ba.classList.contains('is-started')); },
         // Gives the line to the player the visitor pressed: one that was only getting ready stops downloading
@@ -846,9 +848,19 @@
         new IntersectionObserver(function (seen) {
           var e = seen[seen.length - 1];
           inView = e.isIntersecting && e.intersectionRatio >= 0.6;
+          // HIS RULE 2026-11-25: «مش هو أسفل الصفحة والفيديو شغال فوق». A video never keeps playing where the visitor cannot
+          // see it: it stops when it leaves the screen, and carries on from the same moment when he comes back to it.
+          // Only a video that was playing comes back by itself, never one he stopped with his own hand.
+          if (e.intersectionRatio < 0.25 && wanted && !video.paused && !ba.classList.contains('is-full')) {
+            leftPlaying = true;
+            video.pause();
+          } else if (leftPlaying && inView) {
+            leftPlaying = false;
+            start();
+          }
           if (!e.isIntersecting) { away = true; clearTimeout(guideTimer); return; }
           if (away && inView) { away = false; if (guideTarget()) guide(500); else setTimeout(shakeTabs, 500); }
-        }, { threshold: [0, 0.6] }).observe(frame);
+        }, { threshold: [0, 0.25, 0.6] }).observe(frame);
       }
 
       ba._video = video;
