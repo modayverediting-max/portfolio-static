@@ -485,6 +485,9 @@
       };
       var setFile = function (suffix) {
         file = suffix;
+        // The page's video tag asks for nothing by itself (preload none). From here on it must fetch: a player pressed before it
+        // was made ready, and then moved to a lighter file, waited forever for a first byte that was never asked for.
+        video.preload = 'auto';
         video.src = base + suffix + '.mp4' + V;
       };
       var pick = function () {
