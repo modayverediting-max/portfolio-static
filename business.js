@@ -253,6 +253,15 @@
     first.parentNode.classList.add('has-3');
 
     var players = [];
+    // Which player gets ready next: the first one near the screen, in the order they stand on the page, and only while no other is on the line
+    var nextTimer = 0;
+    var readyNext = function () {
+      clearTimeout(nextTimer);
+      nextTimer = setTimeout(function () {
+        if (players.some(function (p) { return p.holds(); })) return;
+        for (var i = 0; i < players.length; i++) if (players[i].waits()) { players[i].prepare(); return; }
+      }, 80);
+    };
     var ctx = null, master = null;
     var volume = 1, muted = false;
     // One volume for the whole page; squared, because hearing is not linear
@@ -266,6 +275,66 @@
     };
     var calm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     var pressedAny = false;
+    // HIS REPORT 2026-11-25: «الفيديوهات تطوّل لين تشتغل، تقعد دور». Three players fetched three heavy videos and nine
+    // sound files at once, so the one the visitor pressed got a third of the line, and the lightest file still needed 5 Mbps.
+    // Now ONE player uses the line at a time, the file is chosen by the speed measured on the first sound file, and a
+    // small file (-sm, about 1.8 Mbps) starts at once on slow lines.
+    var line = { mbps: 0, bytes: 0, t0: 0, busy: false, tested: false, kept: 0, waiters: [] };
+    try {
+      var keptLine = JSON.parse(localStorage.getItem('modayver-line') || 'null');
+      if (keptLine && Date.now() - keptLine.t < 6 * 3600 * 1000) line.kept = keptLine.mbps;
+    } catch (e) {}
+    var lineKnown = function (mbps) {
+      line.mbps = mbps;
+      if (mbps) { try { localStorage.setItem('modayver-line', JSON.stringify({ mbps: Math.round(mbps * 10) / 10, t: Date.now() })); } catch (e) {} }
+      line.waiters.splice(0).forEach(function (f) { f(); });
+    };
+    // The best guess right now, in Mbps; 0 = nothing known yet
+    var lineSpeed = function () {
+      if (line.mbps) return line.mbps;
+      var waited = performance.now() - line.t0;
+      if (line.busy && waited >= 400) return Math.max(0.3, line.bytes * 8 / waited / 1000);
+      var net = navigator.connection;
+      if (net && net.downlink && net.downlink < 9.5) return net.downlink;     // browsers cap this number at 10, so only a low one says something
+      return line.kept || 0;
+    };
+    // Downloads a sound file. The first one of the page is also the speed test: nothing else is on the line then.
+    var download = function (url, signal) {
+      var probe = !line.tested;
+      if (probe) { line.tested = true; line.busy = true; line.bytes = 0; line.t0 = performance.now(); }
+      return fetch(url, signal ? { signal: signal } : undefined).then(function (r) {
+        if (!r.ok) throw new Error('sound ' + r.status);
+        if (!probe || !r.body || !r.body.getReader) return r.arrayBuffer();
+        var reader = r.body.getReader(), parts = [];
+        return (function pump() {
+          return reader.read().then(function (x) {
+            if (x.done) {
+              var all = new Uint8Array(line.bytes), at = 0;
+              parts.forEach(function (p) { all.set(p, at); at += p.length; });
+              return all.buffer;
+            }
+            parts.push(x.value);
+            line.bytes += x.value.length;
+            return pump();
+          });
+        })();
+      }).then(function (data) {
+        if (probe) {
+          var took = Math.max(30, performance.now() - line.t0), cached = false;
+          line.busy = false;
+          try {
+            var entry = performance.getEntriesByName(new URL(url, location.href).href).pop();
+            cached = !!entry && entry.transferSize === 0 && entry.decodedBodySize > 0;
+          } catch (e) {}
+          // A file the browser already had says nothing about the line: keep the last measure, if there is one
+          lineKnown(cached ? line.kept : Math.max(0.3, data.byteLength * 8 / took / 1000));
+        }
+        return data;
+      }, function (err) {
+        if (probe) { line.busy = false; line.tested = false; }
+        throw err;
+      });
+    };
     // The players sit right under the first screen, so nothing heavy is fetched while the page opens:
     // sound and video get ready at the visitor's first touch, scroll or move. A visitor who leaves at once downloads no video.
     var active = false, waiting = [];
@@ -296,7 +365,7 @@
       return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
     };
 
-    [first, second, third].forEach(function (ba) {
+    Array.prototype.slice.call(first.parentNode.querySelectorAll('.biz-ba')).forEach(function (ba) {
       var set = ba.getAttribute('data-set');
       var base = './assets/compare/' + set;
       var frame = ba.querySelector('.biz-ba-frame');
@@ -384,120 +453,189 @@
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(placePill);
       new MutationObserver(placePill).observe(ba.querySelector('.biz-ba-tabs'), { childList: true, subtree: true, characterData: true });
       var mode = 'together';
-      var buffers = null, gains = null, sources = [], loading = null, began = 0, scrubbing = false;
+      var buffers = {}, gains = null, sources = [], jobs = {}, stop = null, began = 0, scrubbing = false;
 
       var cover = ba.querySelector('.biz-ba-cover');
       cover.src = base + '.webp' + V;
 
-      // Full quality unless the connection or the device says otherwise; the light file is the fallback
+      // Full quality where the device AND the line can take it, then the light file, then the small one that starts at once on a slow line
       var stage = ba.querySelector('.biz-ba-stage');
-      var hd = false, picked = null, stalls = 0, wanted = false, prepared = false, shakeNext = false, slowTimer = 0;
+      var top = '', picked = null, stalls = 0, wanted = false, prepared = false, near = false, shakeNext = false, slowTimer = 0;
       var file = '';
       var smooth = function (codecs, width, height, bitrate) {
         return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="' + codecs + '"', width: width, height: height, bitrate: bitrate, framerate: 30 } })
           .then(function (r) { return r.supported && r.smooth; })
           .catch(function () { return false; });
       };
+      // The best file this DEVICE plays smoothly
       var bestFile = function () {
-        var net = navigator.connection;
-        if (net && (net.saveData || /(^|-)(2g|3g)$/.test(net.effectiveType || ''))) return Promise.resolve('');
         if (!navigator.mediaCapabilities || !navigator.mediaCapabilities.decodingInfo) return Promise.resolve('-hd');
         return smooth('hvc1.1.6.L153.B0', 3240, 1920, 8000000).then(function (yes) {
           if (yes) return '-hevc';
           return smooth('avc1.640033', 2700, 1600, 9000000).then(function (ok) { return ok ? '-hd' : ''; });
         });
       };
+      // The best file this LINE carries without stopping: a file needs about one and a half times its own rate (8, 5 and 1.8 Mbps)
+      var forLine = function () {
+        var net = navigator.connection, mbps = lineSpeed();
+        if (net && (net.saveData || /(^|-)(2g|3g)$/.test(net.effectiveType || ''))) return '-sm';
+        if (!mbps) return '';
+        if (mbps >= 12) return top;
+        return mbps >= 6.5 ? '' : '-sm';
+      };
+      var setFile = function (suffix) {
+        file = suffix;
+        video.src = base + suffix + '.mp4' + V;
+      };
       var pick = function () {
         if (picked) return picked;
-        picked = bestFile().then(function (suffix) {
-          file = suffix;
-          hd = suffix !== '';
-          video.src = base + suffix + '.mp4' + V;
+        var mine = picked = bestFile().then(function (suffix) {
+          if (picked !== mine) return;     // meanwhile this player gave the line to another one
+          top = suffix;
+          setFile(forLine());
         });
         return picked;
       };
       var useFile = function (suffix) {
-        file = suffix;
-        hd = suffix !== '';
         var at = video.currentTime, running = !video.paused || wanted;
-        video.src = base + suffix + '.mp4' + V;
+        setFile(suffix);
         video.addEventListener('loadedmetadata', function once() {
           video.removeEventListener('loadedmetadata', once);
           video.currentTime = at;
           if (running) video.play().catch(function () {});
         });
       };
-      var toLight = function () { if (hd) useFile(''); };
+      // One step down at the same moment: full quality, then light, then small
+      var lighter = function () {
+        if (file === '-sm') return false;
+        stalls = 0;
+        useFile(file === '' ? '-sm' : '');
+        return true;
+      };
       video.addEventListener('error', function () {
+        if (!picked) return;     // its download was stopped on purpose
         if (file === '-hevc') useFile('-hd');
-        else if (hd) toLight();
-        else ba.classList.remove('is-loading');     // nothing lighter left: no endless spinner, the next tap tries again
+        else if (!lighter()) ba.classList.remove('is-loading');     // nothing lighter left: no endless spinner, the next tap tries again
       });
       video.addEventListener('waiting', function () {
         if (wanted) ba.classList.add('is-loading');
-        if (hd && ba.classList.contains('is-started') && ++stalls >= 2) toLight();
+        if (video.seeking || scrubbing) return;     // the visitor moved the time: that is not a slow line
+        if (ba.classList.contains('is-started') && ++stalls >= 2) lighter();
       });
 
-      var fetchSound = function (m) {
-        return fetch(base + '-' + m + '.m4a' + V)
-          .then(function (r) { return r.arrayBuffer(); })
-          .then(function (data) { return new Promise(function (ok, no) { ctx.decodeAudioData(data, ok, no); }); });
-      };
-      var load = function () {
-        if (loading) return loading;
-        loading = Promise.all(MODES.map(fetchSound)).then(function (list) {
-          buffers = {}; gains = {};
-          MODES.forEach(function (m, i) {
-            buffers[m] = list[i];
-            gains[m] = ctx.createGain();
-            gains[m].gain.value = m === mode ? 1 : 0;
-            gains[m].connect(master);
-          });
-        }).catch(function (err) { console.warn('sound did not load', err); });
-        return loading;
+      var ensureGains = function () {
+        if (gains) return;
+        gains = {};
+        MODES.forEach(function (m) {
+          gains[m] = ctx.createGain();
+          gains[m].gain.value = m === mode ? 1 : 0;
+          gains[m].connect(master);
+        });
       };
       var silence = function () {
         sources.forEach(function (s) { try { s.stop(); } catch (e) {} });
         sources = [];
       };
+      var addSource = function (m, at) {
+        if (at >= buffers[m].duration) return;
+        var s = ctx.createBufferSource();
+        s.buffer = buffers[m];
+        s.connect(gains[m]);
+        s.start(0, at);
+        sources.push(s);
+      };
       var sound = function () {
         silence();
-        if (!buffers || video.paused || scrubbing) return;
+        if (!gains || video.paused || scrubbing) return;
         var at = video.currentTime;
         began = ctx.currentTime - at;
-        MODES.forEach(function (m) {
-          if (at >= buffers[m].duration) return;
-          var s = ctx.createBufferSource();
-          s.buffer = buffers[m];
-          s.connect(gains[m]);
-          s.start(0, at);
-          sources.push(s);
+        MODES.forEach(function (m) { if (buffers[m]) addSource(m, at); });
+      };
+      // One sound file. It joins the running video the moment it is ready, in step with the ones already playing.
+      var fetchSound = function (m) {
+        if (jobs[m]) return jobs[m];
+        if (!stop && window.AbortController) stop = new AbortController();
+        jobs[m] = download(base + '-' + m + '.m4a' + V, stop && stop.signal)
+          .then(function (data) { return new Promise(function (ok, no) { ctx.decodeAudioData(data, ok, no); }); })
+          .then(function (buffer) {
+            buffers[m] = buffer;
+            if (!wanted || video.paused || video.seeking || scrubbing) return;
+            if (sources.length) addSource(m, Math.max(0, ctx.currentTime - began));
+            else if (video.readyState >= 3 && ba.classList.contains('is-playing')) sound();
+          })
+          .catch(function (err) {
+            jobs[m] = null;
+            if (!err || err.name !== 'AbortError') console.warn('sound did not load', err);
+          });
+        return jobs[m];
+      };
+      // The version on screen first, so the visitor hears it at once; the other two follow, one after the other
+      var load = function () {
+        audioContext();
+        ensureGains();
+        var first = fetchSound(mode);
+        first.then(function () {
+          MODES.reduce(function (p, m) { return p.then(function () { if (prepared) return fetchSound(m); }); }, Promise.resolve());
         });
+        return first;
       };
 
       var player = {
-        pause: function () { video.pause(); }
+        pause: function () { video.pause(); },
+        // Is this player on the line right now? Loading or playing, or made ready and not played yet
+        holds: function () { return (wanted && !video.paused) || (prepared && !ba.classList.contains('is-started')); },
+        // Gives the line to the player the visitor pressed: one that was only getting ready stops downloading
+        release: function () {
+          if (ba.classList.contains('is-started')) return;     // it has shown its picture: it keeps what it loaded
+          prepared = false;
+          wanted = false;
+          clearTimeout(slowTimer);
+          ba.classList.remove('is-loading');
+          if (stop) { stop.abort(); stop = null; }
+          MODES.forEach(function (m) { if (!buffers[m]) jobs[m] = null; });
+          if (picked) {
+            picked = null;
+            file = '';
+            video.removeAttribute('src');
+            video.load();
+          }
+        },
+        // Near the screen and not ready yet
+        waits: function () { return near && !prepared && !ba.classList.contains('is-started'); },
+        prepare: function () { prepare(); }
       };
       players.push(player);
 
       var start = function () {
         audioContext();
         keepAwake.play().catch(function () {});
-        players.forEach(function (p) { if (p !== player) p.pause(); });
         wanted = true;
+        prepared = true;
+        players.forEach(function (p) { if (p !== player) { p.pause(); p.release(); } });
         shakeNext = true;
         ba.classList.add('is-loading');
-        var soundReady = load().then(function () { if (!sources.length) sound(); });
+        var soundReady = load();
+        // Pressed before the line was measured? The moment it is known, and while there is still no picture, the right file takes over
+        if (!line.mbps) line.waiters.push(function () {
+          if (!wanted || !picked) return;
+          picked.then(function () {
+            var right = forLine();
+            if (picked && right !== file && !ba.classList.contains('is-started')) useFile(right);
+          });
+        });
         // The video never waits long for the sound: if it is not ready almost at once, the sound joins a moment later
         Promise.all([pick(), Promise.race([soundReady, new Promise(function (go) { setTimeout(go, 500); })])]).then(function () {
+          if (!wanted) return;
           if (video.error) video.load();     // a failed load gets a fresh try
           if (video.ended) video.currentTime = 0;
           video.play().catch(function (err) { console.warn(err); ba.classList.remove('is-loading'); });
-          // A slow network: no picture after 6 seconds, so the lighter file takes over at the same moment
+          // A slow line: still no picture after three and a half seconds, so the next lighter file takes over at the same moment
           clearTimeout(slowTimer);
-          slowTimer = setTimeout(function () {
-            if (wanted && !video.paused && ba.classList.contains('is-loading') && hd) toLight();
-          }, 6000);
+          (function watch() {
+            slowTimer = setTimeout(function () {
+              if (wanted && !video.paused && ba.classList.contains('is-loading') && lighter()) watch();
+            }, 3500);
+          })();
         });
       };
 
@@ -533,6 +671,7 @@
             ], { duration: 760, easing: 'ease-out' });
           }
           if (!gains) return;
+          if (!buffers[mode]) fetchSound(mode);
           var now = ctx.currentTime;
           MODES.forEach(function (m) {
             var g = gains[m].gain;
@@ -552,7 +691,12 @@
         sound();
       });
       // A pause also ends the loading circle: a second tap while it loads must not leave it spinning over a stopped video
-      video.addEventListener('pause', function () { clearTimeout(slowTimer); ba.classList.remove('is-playing', 'is-loading'); silence(); });
+      video.addEventListener('pause', function () {
+        clearTimeout(slowTimer);
+        ba.classList.remove('is-playing', 'is-loading');
+        silence();
+        if (ba.classList.contains('is-started')) readyNext();     // the line is free: the next one on screen gets ready
+      });
       video.addEventListener('waiting', silence);
       video.addEventListener('seeking', silence);
       video.addEventListener('seeked', sound);
@@ -667,29 +811,31 @@
       document.addEventListener('fullscreenchange', fullChanged);
       document.addEventListener('webkitfullscreenchange', fullChanged);
 
-      // Get ready before the visitor reaches the player, so pressing play starts at once
+      // Get ready before the visitor reaches the player, so pressing play starts at once. Only ONE player does this at a time.
+      // The sound of the version on screen comes first: it is small, and it tells how fast the line is, so the right video file is chosen.
       var prepare = function () {
         var net = navigator.connection;
         if (prepared || (net && net.saveData)) return;
         prepared = true;
-        audioContext();
-        load();
-        pick().then(function () {
-          video.preload = 'auto';
-          video.load();
-          // iPhones fetch nothing until a video has played. This one has no sound, so it may start by itself; it stops at once.
-          if (/iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
-            var warm = video.play();
-            if (warm && warm.catch) warm.catch(function () {});
-          }
+        load().then(function () {
+          if (!prepared) return;     // meanwhile the visitor pressed another player
+          return pick().then(function () {
+            if (!prepared || !picked || wanted) return;
+            video.preload = 'auto';
+            video.load();
+            // iPhones fetch nothing until a video has played. This one has no sound, so it may start by itself; it stops at once.
+            if (/iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+              var warm = video.play();
+              if (warm && warm.catch) warm.catch(function () {});
+            }
+          });
         });
       };
       if ('IntersectionObserver' in window) {
         whenActive(function () {
-          new IntersectionObserver(function (seen, watcher) {
-            if (!seen[0].isIntersecting) return;
-            watcher.disconnect();
-            prepare();
+          new IntersectionObserver(function (seen) {
+            near = seen[seen.length - 1].isIntersecting;
+            if (near) readyNext();
           }, { rootMargin: '400px 0px' }).observe(ba);
         });
         // Reaching the player: one shake once it has settled on screen
