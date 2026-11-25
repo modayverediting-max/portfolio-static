@@ -245,6 +245,12 @@
     second.setAttribute('data-set', 'realty');
     // Each page leads with its own video
     if (REAL_ESTATE) first.parentNode.insertBefore(second, first); else first.parentNode.appendChild(second);
+    // 2026-11-25, his words: «حطهم في الأعمال وفي العقار»: the villa tour is the third set on both pages, right after the page's own video
+    var third = first.cloneNode(true);
+    third.setAttribute('data-set', 'villa');
+    var lead = REAL_ESTATE ? second : first;
+    lead.parentNode.insertBefore(third, lead.nextSibling);
+    first.parentNode.classList.add('has-3');
 
     var players = [];
     var ctx = null, master = null;
@@ -290,7 +296,7 @@
       return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2);
     };
 
-    [first, second].forEach(function (ba) {
+    [first, second, third].forEach(function (ba) {
       var set = ba.getAttribute('data-set');
       var base = './assets/compare/' + set;
       var frame = ba.querySelector('.biz-ba-frame');
