@@ -253,13 +253,23 @@
     first.parentNode.classList.add('has-3');
 
     var players = [];
-    // Which player gets ready next: the first one near the screen, in the order they stand on the page, and only while no other is on the line
+    // HIS ASK 2026-11-26: «الفيديو حمّل، مش لمّا تضغط عليه يقعد يحمّل». Once the page has shown, the players get ready by
+    // themselves, ONE after the other in the order they stand on the page: the sound of the version on screen and the first
+    // seconds of the picture. After the three heads, the other sounds. So pressing any of them starts at once, with no circle.
+    // What is in stays in; a head still on its way gives the line to the player the visitor pressed.
     var nextTimer = 0;
     var readyNext = function () {
       clearTimeout(nextTimer);
       nextTimer = setTimeout(function () {
-        if (players.some(function (p) { return p.holds(); })) return;
-        for (var i = 0; i < players.length; i++) if (players[i].waits()) { players[i].prepare(); return; }
+        if (!active) return;
+        if (players.some(function (p) { return p.holds(); })) return;     // one at a time
+        // A video is playing on a line with nothing to spare: the others wait until it stops
+        if (players.some(function (p) { return p.playing(); }) && lineSpeed() < 12) return;
+        var i;
+        // Pictures first, so every player starts at once; then the sound of the version on screen of each; then the other sounds
+        for (i = 0; i < players.length; i++) if (players[i].waits()) { players[i].prepare(); return; }
+        for (i = 0; i < players.length; i++) if (players[i].lacksSound(true)) { players[i].restSounds(true); return; }
+        for (i = 0; i < players.length; i++) if (players[i].lacksSound(false)) { players[i].restSounds(false); return; }
       }, 80);
     };
     var ctx = null, master = null;
@@ -346,6 +356,9 @@
       waiting.splice(0).forEach(function (f) { f(); });
     };
     WAKE.forEach(function (n) { window.addEventListener(n, wake, { capture: true, passive: true }); });
+    // ... and by itself a moment after the page has finished showing, so the videos are ready before anyone presses them
+    var wakeSoon = function () { setTimeout(wake, 1200); };
+    if (document.readyState === 'complete') wakeSoon(); else window.addEventListener('load', wakeSoon);
     var whenActive = function (f) { if (active) f(); else waiting.push(f); };
     // iPhones silence web sound when the ring switch is off, unless a normal audio element is playing
     var keepAwake = new Audio('data:audio/mpeg;base64,SUQzBAAAAAAAIlRTU0UAAAAOAAADTGF2ZjYzLjEuMTAyAAAAAAAAAAAAAAD/83DAAAAAAAAAAAAASW5mbwAAAA8AAAAWAAAHcgAiIiIiLS0tLS04ODg4QkJCQkJNTU1NV1dXV1diYmJibGxsbGx3d3d3gYGBgYGMjIyMlpaWlpahoaGhoaurq6u2tra2tsDAwMDLy8vLy9XV1dXg4ODg4Orq6ur19fX19f////8AAAAATGF2YzYzLjEuAAAAAAAAAAAAAAAAJAQvAAAAAAAAB3I/0pgYAAAAAAAAAAAAAAAAAP/zMMQAAAADSAAAAABMQU1FVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsRBAAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEgwAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVUxBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MyxL0AAANIAAAAAFVVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMMS+AAADSAAAAABVVVVVVVVMQU1FMy4xMDBVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVf/zMsS9AAADSAAAAABVVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zDEvgAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/8zLEvQAAA0gAAAAAVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//MwxL4AAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV');
@@ -462,7 +475,8 @@
 
       // Full quality where the device AND the line can take it, then the light file, then the small one that starts at once on a slow line
       var stage = ba.querySelector('.biz-ba-stage');
-      var top = '', picked = null, stalls = 0, wanted = false, prepared = false, near = false, shakeNext = false, slowTimer = 0;
+      var top = '', picked = null, stalls = 0, wanted = false, prepared = false, shakeNext = false, slowTimer = 0;
+      var headReady = false, headTimer = 0, restBusy = false, restTries = 0, circleTimer = 0;
       var file = '';
       var smooth = function (codecs, width, height, bitrate) {
         return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="' + codecs + '"', width: width, height: height, bitrate: bitrate, framerate: 30 } })
@@ -585,19 +599,52 @@
         return first;
       };
 
+      // The first seconds of the picture are in: enough for an instant start. The browser stops fetching here (preload back to
+      // metadata; measured: 3 to 7 seconds stay ready, instead of 14 to 18), and the rest comes when the video is played.
+      var headIn = function () {
+        if (headReady || !prepared) return;
+        headReady = true;
+        clearTimeout(headTimer);
+        if (!wanted) video.preload = 'metadata';
+        readyNext();
+      };
+      var headCheck = function () {
+        if (headReady || !prepared || wanted) return;
+        var end = video.buffered.length ? video.buffered.end(video.buffered.length - 1) : 0;
+        if (video.readyState >= 3 && end >= 3) headIn();
+      };
+      video.addEventListener('progress', headCheck);
+      video.addEventListener('canplaythrough', headCheck);
+      // The other two sounds of this player, one after the other, once every picture is ready
+      var restSounds = function (mainOnly) {
+        restBusy = true;
+        restTries++;
+        var list = mainOnly ? [mode] : [mode].concat(MODES.filter(function (m) { return m !== mode; }));
+        audioContext();
+        ensureGains();
+        list.reduce(function (p, m) { return p.then(function () { return fetchSound(m); }); }, Promise.resolve()).then(function () {
+          restBusy = false;
+          readyNext();
+        });
+      };
       var player = {
         pause: function () { leftPlaying = false; video.pause(); },
-        // Is this player on the line right now? Loading or playing, or made ready and not played yet
-        holds: function () { return (wanted && !video.paused) || (prepared && !ba.classList.contains('is-started')); },
-        // Gives the line to the player the visitor pressed: one that was only getting ready stops downloading
+        // Is this player fetching right now? Its head or its sounds on the way, or pressed and still without a picture
+        holds: function () {
+          return restBusy || (prepared && !headReady && !ba.classList.contains('is-started')) || (wanted && !video.paused && !ba.classList.contains('is-playing'));
+        },
+        playing: function () { return wanted && !video.paused; },
+        // Gives the line to the player the visitor pressed: one whose head is still on its way stops downloading
         release: function () {
-          if (ba.classList.contains('is-started')) return;     // it has shown its picture: it keeps what it loaded
-          prepared = false;
-          wanted = false;
-          clearTimeout(slowTimer);
-          ba.classList.remove('is-loading');
           if (stop) { stop.abort(); stop = null; }
           MODES.forEach(function (m) { if (!buffers[m]) jobs[m] = null; });
+          if (ba.classList.contains('is-started') || headReady) return;     // what is in stays in
+          prepared = false;
+          wanted = false;
+          clearTimeout(headTimer);
+          clearTimeout(slowTimer);
+          clearTimeout(circleTimer);
+          ba.classList.remove('is-loading');
           if (picked) {
             picked = null;
             file = '';
@@ -605,9 +652,14 @@
             video.load();
           }
         },
-        // Near the screen and not ready yet
-        waits: function () { return near && !prepared && !ba.classList.contains('is-started'); },
-        prepare: function () { prepare(); }
+        // Not ready yet
+        waits: function () { return !prepared && !ba.classList.contains('is-started'); },
+        prepare: function () { prepare(); },
+        lacksSound: function (mainOnly) {
+          if (restTries >= 8 || !(prepared || ba.classList.contains('is-started'))) return false;
+          return mainOnly ? !buffers[mode] : MODES.some(function (m) { return !buffers[m]; });
+        },
+        restSounds: function (mainOnly) { restSounds(mainOnly); }
       };
       players.push(player);
 
@@ -616,9 +668,14 @@
         keepAwake.play().catch(function () {});
         wanted = true;
         prepared = true;
+        video.preload = 'auto';     // a head that was waiting carries on loading from where it stopped
         players.forEach(function (p) { if (p !== player) { p.pause(); p.release(); } });
         shakeNext = true;
-        ba.classList.add('is-loading');
+        // The loading circle shows only if the picture is not there within a quarter of a second: a ready video starts with no circle
+        clearTimeout(circleTimer);
+        circleTimer = setTimeout(function () {
+          if (wanted && !ba.classList.contains('is-playing')) ba.classList.add('is-loading');
+        }, 260);
         var soundReady = load();
         // Pressed before the line was measured? The moment it is known, and while there is still no picture, the right file takes over
         if (!line.mbps) line.waiters.push(function () {
@@ -628,8 +685,10 @@
             if (picked && right !== file && !ba.classList.contains('is-started')) useFile(right);
           });
         });
-        // The video never waits long for the sound: if it is not ready almost at once, the sound joins a moment later
-        Promise.all([pick(), Promise.race([soundReady, new Promise(function (go) { setTimeout(go, 500); })])]).then(function () {
+        // A picture that is ready starts at once and its sound joins the moment it is in. A picture still on its way
+        // gives the sound half a second, so the two start together when they can.
+        var patience = video.readyState >= 3 ? 0 : 500;
+        Promise.all([pick(), Promise.race([soundReady, new Promise(function (go) { setTimeout(go, patience); })])]).then(function () {
           if (!wanted) return;
           if (video.error) video.load();     // a failed load gets a fresh try
           if (video.ended) video.currentTime = 0;
@@ -688,16 +747,19 @@
       });
 
       video.addEventListener('playing', function () {
-        if (!wanted) { video.pause(); video.currentTime = 0; return; }     // it was only warming up
+        if (!wanted) { video.pause(); video.currentTime = 0; headIn(); return; }     // it was only warming up
         clearTimeout(slowTimer);
+        clearTimeout(circleTimer);
         ba.classList.remove('is-loading');
         ba.classList.add('is-playing', 'is-started');
         if (shakeNext) { shakeNext = false; setTimeout(shakeTabs, 300); }
         sound();
+        readyNext();     // it has its picture: on a fast line the others carry on getting ready
       });
       // A pause also ends the loading circle: a second tap while it loads must not leave it spinning over a stopped video
       video.addEventListener('pause', function () {
         clearTimeout(slowTimer);
+        clearTimeout(circleTimer);
         ba.classList.remove('is-playing', 'is-loading');
         silence();
         if (ba.classList.contains('is-started')) readyNext();     // the line is free: the next one on screen gets ready
@@ -816,18 +878,29 @@
       document.addEventListener('fullscreenchange', fullChanged);
       document.addEventListener('webkitfullscreenchange', fullChanged);
 
-      // Get ready before the visitor reaches the player, so pressing play starts at once. Only ONE player does this at a time.
+      // Get ready before the visitor presses, so play starts at once. Only ONE player does this at a time (see readyNext).
       // The sound of the version on screen comes first: it is small, and it tells how fast the line is, so the right video file is chosen.
       var prepare = function () {
         var net = navigator.connection;
         if (prepared || (net && net.saveData)) return;
         prepared = true;
-        load().then(function () {
+        audioContext();
+        ensureGains();
+        // The first player fetches its sound first: that download measures the line. Once the line is known, the others go
+        // straight to their picture, and their sound follows when the three pictures are ready.
+        (line.mbps ? Promise.resolve() : fetchSound(mode)).then(function () {
           if (!prepared) return;     // meanwhile the visitor pressed another player
           return pick().then(function () {
             if (!prepared || !picked || wanted) return;
             video.preload = 'auto';
             video.load();
+            clearTimeout(headTimer);
+            headTimer = setTimeout(headIn, 9000);     // whatever happens, the next player is not kept waiting
+            // On a fast line the head is in within a blink: look often, so the fetching stops at a few seconds and not at fifteen
+            var look = setInterval(function () {
+              headCheck();
+              if (headReady || !prepared || wanted) clearInterval(look);
+            }, 100);
             // iPhones fetch nothing until a video has played. This one has no sound, so it may start by itself; it stops at once.
             if (/iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
               var warm = video.play();
@@ -837,12 +910,6 @@
         });
       };
       if ('IntersectionObserver' in window) {
-        whenActive(function () {
-          new IntersectionObserver(function (seen) {
-            near = seen[seen.length - 1].isIntersecting;
-            if (near) readyNext();
-          }, { rootMargin: '400px 0px' }).observe(ba);
-        });
         // Reaching the player: one shake once it has settled on screen
         var away = true;
         new IntersectionObserver(function (seen) {
@@ -862,6 +929,8 @@
           if (away && inView) { away = false; if (guideTarget()) guide(500); else setTimeout(shakeTabs, 500); }
         }, { threshold: [0, 0.25, 0.6] }).observe(frame);
       }
+
+      whenActive(readyNext);
 
       ba._video = video;
       ba._state = function () { return { mode: mode, sources: sources.length, ctx: ctx && ctx.state, drift: sources.length ? Math.round((ctx.currentTime - began - video.currentTime) * 1000) : null, level: master ? Math.round(master.gain.value * 100) / 100 : null }; };
