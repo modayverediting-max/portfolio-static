@@ -264,7 +264,7 @@
         if (!active) return;
         if (players.some(function (p) { return p.holds(); })) return;     // one at a time
         // A video is playing on a line with nothing to spare: the others wait until it stops
-        if (players.some(function (p) { return p.playing(); }) && lineSpeed() < 12) return;
+        if (players.some(function (p) { return p.playing(); }) && lineSpeed() < 30) return;
         var i;
         // Pictures first, so every player starts at once; then the sound of the version on screen of each; then the other sounds
         for (i = 0; i < players.length; i++) if (players[i].waits()) { players[i].prepare(); return; }
@@ -515,6 +515,17 @@
         });
         return picked;
       };
+      // No picture three and a half seconds after it was asked for: the next lighter file takes over at the same moment.
+      // On the lightest file it keeps waiting, and a load that broke gets a fresh try.
+      var armWatch = function () {
+        clearTimeout(slowTimer);
+        slowTimer = setTimeout(function () {
+          if (!wanted || !ba.classList.contains('is-loading')) return;
+          if (lighter()) return;
+          if (video.error || video.networkState === 3) useFile(file);
+          else armWatch();
+        }, 3500);
+      };
       var useFile = function (suffix) {
         var at = video.currentTime, running = !video.paused || wanted;
         setFile(suffix);
@@ -523,6 +534,7 @@
           video.currentTime = at;
           if (running) video.play().catch(function () {});
         });
+        if (running) { ba.classList.add('is-loading'); armWatch(); }
       };
       // One step down at the same moment: full quality, then light, then small
       var lighter = function () {
@@ -536,10 +548,24 @@
         if (file === '-hevc') useFile('-hd');
         else if (!lighter()) ba.classList.remove('is-loading');     // nothing lighter left: no endless spinner, the next tap tries again
       });
+      // When is the line too slow for this file? Two real stops (longer than a third of a second), or one stop of two and a half
+      // seconds. A blink right after the start or after coming back to the video is not a slow line (2026-11-26: such blinks
+      // moved a good line down to the light file, and that switch sometimes hung).
+      var stalledAt = 0, stallTimer = 0;
+      var stallOver = function () {
+        clearTimeout(stallTimer);
+        var lasted = stalledAt ? performance.now() - stalledAt : 0;
+        stalledAt = 0;
+        return lasted;
+      };
       video.addEventListener('waiting', function () {
         if (wanted) ba.classList.add('is-loading');
-        if (video.seeking || scrubbing) return;     // the visitor moved the time: that is not a slow line
-        if (ba.classList.contains('is-started') && ++stalls >= 2) lighter();
+        if (video.seeking || scrubbing || !ba.classList.contains('is-started')) return;     // the visitor moved the time: that is not a slow line
+        stalledAt = performance.now();
+        clearTimeout(stallTimer);
+        stallTimer = setTimeout(function () {
+          if (stalledAt && wanted && !video.paused) { stalledAt = 0; lighter(); }
+        }, 2500);
       });
 
       var ensureGains = function () {
@@ -577,6 +603,7 @@
         jobs[m] = download(base + '-' + m + '.m4a' + V, stop && stop.signal)
           .then(function (data) { return new Promise(function (ok, no) { ctx.decodeAudioData(data, ok, no); }); })
           .then(function (buffer) {
+            if (buffers[m]) return;     // a second copy of the same sound (its first fetch was given up while it was still being read): one is enough, two would play it twice as loud
             buffers[m] = buffer;
             if (!wanted || video.paused || video.seeking || scrubbing) return;
             if (sources.length) addSource(m, Math.max(0, ctx.currentTime - began));
@@ -693,13 +720,7 @@
           if (video.error) video.load();     // a failed load gets a fresh try
           if (video.ended) video.currentTime = 0;
           video.play().catch(function (err) { console.warn(err); ba.classList.remove('is-loading'); });
-          // A slow line: still no picture after three and a half seconds, so the next lighter file takes over at the same moment
-          clearTimeout(slowTimer);
-          (function watch() {
-            slowTimer = setTimeout(function () {
-              if (wanted && !video.paused && ba.classList.contains('is-loading') && lighter()) watch();
-            }, 3500);
-          })();
+          armWatch();     // a slow line: still no picture after three and a half seconds, and the next lighter file takes over
         });
       };
 
@@ -750,6 +771,7 @@
         if (!wanted) { video.pause(); video.currentTime = 0; headIn(); return; }     // it was only warming up
         clearTimeout(slowTimer);
         clearTimeout(circleTimer);
+        if (stallOver() > 350 && ++stalls >= 2 && lighter()) return;     // a lighter file takes over at the same moment
         ba.classList.remove('is-loading');
         ba.classList.add('is-playing', 'is-started');
         if (shakeNext) { shakeNext = false; setTimeout(shakeTabs, 300); }
@@ -760,6 +782,7 @@
       video.addEventListener('pause', function () {
         clearTimeout(slowTimer);
         clearTimeout(circleTimer);
+        stallOver();
         ba.classList.remove('is-playing', 'is-loading');
         silence();
         if (ba.classList.contains('is-started')) readyNext();     // the line is free: the next one on screen gets ready
