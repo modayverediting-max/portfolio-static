@@ -476,7 +476,7 @@
       // Full quality where the device AND the line can take it, then the light file, then the small one that starts at once on a slow line
       var stage = ba.querySelector('.biz-ba-stage');
       var top = '', picked = null, stalls = 0, wanted = false, prepared = false, shakeNext = false, slowTimer = 0;
-      var headReady = false, headTimer = 0, restBusy = false, restTries = 0, circleTimer = 0;
+      var headReady = false, headTimer = 0, restBusy = false, restTries = 0, circleTimer = 0, soundsTried = false;
       var file = '';
       var smooth = function (codecs, width, height, bitrate) {
         return navigator.mediaCapabilities.decodingInfo({ type: 'file', video: { contentType: 'video/mp4; codecs="' + codecs + '"', width: width, height: height, bitrate: bitrate, framerate: 30 } })
@@ -605,6 +605,7 @@
           .then(function (buffer) {
             if (buffers[m]) return;     // a second copy of the same sound (its first fetch was given up while it was still being read): one is enough, two would play it twice as loud
             buffers[m] = buffer;
+            readyNext();     // the line may be free now for the next player
             if (!wanted || video.paused || video.seeking || scrubbing) return;
             if (sources.length) addSource(m, Math.max(0, ctx.currentTime - began));
             else if (video.readyState >= 3 && ba.classList.contains('is-playing')) sound();
@@ -620,8 +621,12 @@
         audioContext();
         ensureGains();
         var first = fetchSound(mode);
+        soundsTried = false;
         first.then(function () {
-          MODES.reduce(function (p, m) { return p.then(function () { if (prepared) return fetchSound(m); }); }, Promise.resolve());
+          MODES.reduce(function (p, m) { return p.then(function () { if (prepared) return fetchSound(m); }); }, Promise.resolve()).then(function () {
+            soundsTried = true;     // the three were asked for (in, or failed): the others may use the line again
+            readyNext();
+          });
         });
         return first;
       };
@@ -658,7 +663,10 @@
         pause: function () { leftPlaying = false; video.pause(); },
         // Is this player fetching right now? Its head or its sounds on the way, or pressed and still without a picture
         holds: function () {
-          return restBusy || (prepared && !headReady && !ba.classList.contains('is-started')) || (wanted && !video.paused && !ba.classList.contains('is-playing'));
+          if (restBusy || (prepared && !headReady && !ba.classList.contains('is-started'))) return true;
+          // The pressed player comes first: until its picture shows AND its three sounds are in, nothing else is fetched
+          // (2026-11-26: the others getting ready kept its «قبل» / «بعد» sound waiting for five seconds)
+          return wanted && !video.paused && (!ba.classList.contains('is-playing') || (!soundsTried && MODES.some(function (m) { return !buffers[m]; })));
         },
         playing: function () { return wanted && !video.paused; },
         // Gives the line to the player the visitor pressed: one whose head is still on its way stops downloading
