@@ -239,7 +239,7 @@
     var MODES = ['before', 'after', 'together'];
     // Raise this number whenever a video or sound file is replaced under the same name, so no browser
     // mixes pieces of the old file it kept with the new one (that leaves the player loading forever)
-    var V = '?v=2';
+    var V = '?v=3';
 
     var second = first.cloneNode(true);
     second.setAttribute('data-set', 'realty');
@@ -250,7 +250,12 @@
     third.setAttribute('data-set', 'villa');
     var lead = REAL_ESTATE ? second : first;
     lead.parentNode.insertBefore(third, lead.nextSibling);
-    first.parentNode.classList.add('has-3');
+    // 2026-11-27, his words «ارفعها على الموقع، الفيديوهين اللي منتجناهم»: the off-plan tower («الفيديو الثاني») is the fourth set on both pages,
+    // right after the villa, so the two real-estate tours stand together
+    var fourth = first.cloneNode(true);
+    fourth.setAttribute('data-set', 'offplan');
+    third.parentNode.insertBefore(fourth, third.nextSibling);
+    first.parentNode.classList.add('has-4');
 
     var players = [];
     // HIS ASK 2026-11-26: «الفيديو حمّل، مش لمّا تضغط عليه يقعد يحمّل». Once the page has shown, the players get ready by
